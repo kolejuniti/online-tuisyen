@@ -19,9 +19,9 @@
                                 <a href="{{ route('admin.students.downloadTemplate') }}" class="btn btn-info btn-rounded" style="margin-right: 8px;">
                                     <i class="fa fa-download"></i> Download Excel Template
                                 </a>
-                                <a href="{{ route('admin.students.downloadCsvTemplate') }}" class="btn btn-warning btn-rounded" style="margin-right: 8px;">
+                                {{-- <a href="{{ route('admin.students.downloadCsvTemplate') }}" class="btn btn-warning btn-rounded" style="margin-right: 8px;">
                                     <i class="fa fa-download"></i> Download CSV Template
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                         <!-- /.box-header -->
