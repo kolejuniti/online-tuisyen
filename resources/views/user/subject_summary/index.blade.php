@@ -62,7 +62,7 @@
                                                 <div class="box-body">
                                                     <div class="text-center">
                                                         <i data-feather="users" class="text-primary fs-30 mb-10"></i>
-                                                        <h3 class="fw-600 mb-0">24</h3>
+                                                        <h3 class="fw-600 mb-0">{{ $stats['students'] }}</h3>
                                                         <p class="mb-0 text-mute">Students</p>
                                                     </div>
                                                 </div>
@@ -73,7 +73,7 @@
                                                 <div class="box-body">
                                                     <div class="text-center">
                                                         <i data-feather="book" class="text-info fs-30 mb-10"></i>
-                                                        <h3 class="fw-600 mb-0">18</h3>
+                                                        <h3 class="fw-600 mb-0">{{ $stats['lessons'] }}</h3>
                                                         <p class="mb-0 text-mute">Lessons</p>
                                                     </div>
                                                 </div>
@@ -84,7 +84,7 @@
                                                 <div class="box-body">
                                                     <div class="text-center">
                                                         <i data-feather="clipboard" class="text-success fs-30 mb-10"></i>
-                                                        <h3 class="fw-600 mb-0">12</h3>
+                                                        <h3 class="fw-600 mb-0">{{ $stats['assignments'] }}</h3>
                                                         <p class="mb-0 text-mute">Assignments</p>
                                                     </div>
                                                 </div>
@@ -95,7 +95,7 @@
                                                 <div class="box-body">
                                                     <div class="text-center">
                                                         <i data-feather="award" class="text-warning fs-30 mb-10"></i>
-                                                        <h3 class="fw-600 mb-0">85%</h3>
+                                                        <h3 class="fw-600 mb-0">{{ $stats['completion'] }}%</h3>
                                                         <p class="mb-0 text-mute">Completion</p>
                                                     </div>
                                                 </div>
@@ -130,11 +130,11 @@
                                         <i data-feather="clipboard" class="me-5"></i> Assignments
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#schedule" role="tab">
                                         <i data-feather="calendar" class="me-5"></i> Schedule
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#resources" role="tab">
                                         <i data-feather="folder" class="me-5"></i> Resources
@@ -149,7 +149,7 @@
                                             <h4 class="mb-0">Students Enrolled</h4>
                                             <div class="d-flex">
                                                 <div class="lookup lookup-circle lookup-right me-15">
-                                                    <input type="text" name="s" placeholder="Search Students">
+                                                    <input type="text" name="s" placeholder="Search Students" id="studentSearch">
                                                 </div>
                                                 <button type="button" class="btn btn-primary-light">
                                                     <i data-feather="filter" class="me-5"></i> Filter
@@ -158,43 +158,88 @@
                                         </div>
                                         
                                         <div class="table-responsive">
-                                            <table class="table table-hover mb-0">
+                                            <table class="table table-hover mb-0" id="studentsTable">
                                                 <thead>
                                                     <tr>
                                                         <th style="width: 50px">#</th>
                                                         <th>Student Name</th>
                                                         <th>Progress</th>
                                                         <th>Assignments</th>
-                                                        <th>Attendance</th>
+                                                        <th>Average Score</th>
+                                                        <th>Last Activity</th>
                                                         <th style="width: 100px">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Sample student data - replace with real data -->
+                                                    @forelse($students as $index => $student)
                                                     <tr>
-                                                        <td>1</td>
+                                                        <td>{{ $index + 1 }}</td>
                                                         <td>
                                                             <div class="d-flex align-items-center">
-                                                                <img src="{{ asset('assets/images/avatar/avatar-1.png') }}" class="avatar avatar-sm me-10" alt="">
+                                                                <div class="avatar avatar-sm me-10 bg-primary-light">
+                                                                    <span class="avatar-title">{{ substr($student->name, 0, 2) }}</span>
+                                                                </div>
                                                                 <div>
-                                                                    <h5 class="mb-0 fs-16">John Smith</h5>
-                                                                    <p class="mb-0 text-muted fs-12">ID: ST12345</p>
+                                                                    <h5 class="mb-0 fs-16">{{ $student->name }}</h5>
+                                                                    <p class="mb-0 text-muted fs-12">IC: {{ $student->ic }}</p>
+                                                                    <p class="mb-0 text-muted fs-11">{{ $student->school_name }}</p>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <div class="progress flex-grow-1" style="height: 8px;">
-                                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div class="progress-bar 
+                                                                        @if($student->progress >= 80) bg-success
+                                                                        @elseif($student->progress >= 60) bg-primary
+                                                                        @else bg-warning
+                                                                        @endif
+                                                                    " role="progressbar" style="width: {{ $student->progress }}%" aria-valuenow="{{ $student->progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                                <span class="ms-10">85%</span>
+                                                                <span class="ms-10">{{ $student->progress }}%</span>
                                                             </div>
                                                         </td>
-                                                        <td>16/18 completed</td>
-                                                        <td>92%</td>
+                                                        <td>
+                                                            <span class="fw-bold">{{ $student->completed_assignments }}/{{ $student->total_assignments }}</span> completed
+                                                            @if(count($student->assignment_details) > 0)
+                                                                <br>
+                                                                <small class="text-muted">
+                                                                    @php
+                                                                        $pendingCount = collect($student->assignment_details)->where('submitted', false)->count();
+                                                                    @endphp
+                                                                    @if($pendingCount > 0)
+                                                                        <span class="text-warning">{{ $pendingCount }} pending</span>
+                                                                    @else
+                                                                        <span class="text-success">All submitted</span>
+                                                                    @endif
+                                                                </small>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="progress flex-grow-1" style="height: 6px; width: 80px;">
+                                                                    <div class="progress-bar 
+                                                                        @if($student->average_score >= 80) bg-success
+                                                                        @elseif($student->average_score >= 60) bg-primary
+                                                                        @else bg-warning
+                                                                        @endif
+                                                                    " role="progressbar" style="width: {{ $student->average_score }}%" aria-valuenow="{{ $student->average_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                                <span class="ms-10">{{ $student->average_score }}%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            @if($student->last_activity)
+                                                                <small>{{ \Carbon\Carbon::parse($student->last_activity)->format('d M Y') }}</small>
+                                                                <br>
+                                                                <small class="text-muted">{{ \Carbon\Carbon::parse($student->last_activity)->format('H:i') }}</small>
+                                                            @else
+                                                                <small class="text-muted">No activity</small>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
+                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="modal" data-bs-target="#studentDetailModal{{ $student->ic }}" title="View Details">
                                                                     <i data-feather="eye"></i>
                                                                 </a>
                                                                 <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Message">
@@ -203,73 +248,98 @@
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    @empty
                                                     <tr>
-                                                        <td>2</td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <img src="{{ asset('assets/images/avatar/avatar-2.png') }}" class="avatar avatar-sm me-10" alt="">
-                                                                <div>
-                                                                    <h5 class="mb-0 fs-16">Emily Johnson</h5>
-                                                                    <p class="mb-0 text-muted fs-12">ID: ST12346</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="progress flex-grow-1" style="height: 8px;">
-                                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 92%" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <span class="ms-10">92%</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>18/18 completed</td>
-                                                        <td>98%</td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
-                                                                    <i data-feather="eye"></i>
-                                                                </a>
-                                                                <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Message">
-                                                                    <i data-feather="message-circle"></i>
-                                                                </a>
-                                                            </div>
+                                                        <td colspan="7" class="text-center">
+                                                            <p class="text-muted">No students enrolled yet.</p>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <img src="{{ asset('assets/images/avatar/avatar-3.png') }}" class="avatar avatar-sm me-10" alt="">
-                                                                <div>
-                                                                    <h5 class="mb-0 fs-16">Michael Brown</h5>
-                                                                    <p class="mb-0 text-muted fs-12">ID: ST12347</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="progress flex-grow-1" style="height: 8px;">
-                                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <span class="ms-10">65%</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>12/18 completed</td>
-                                                        <td>78%</td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
-                                                                    <i data-feather="eye"></i>
-                                                                </a>
-                                                                <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Message">
-                                                                    <i data-feather="message-circle"></i>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        {{-- Student Detail Modals --}}
+                                        @foreach($students as $student)
+                                        <div class="modal fade" id="studentDetailModal{{ $student->ic }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">{{ $student->name }} - Assignment Details</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-6">
+                                                                <strong>IC:</strong> {{ $student->ic }}<br>
+                                                                <strong>School:</strong> {{ $student->school_name }}<br>
+                                                                <strong>Overall Progress:</strong> {{ $student->progress }}%
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <strong>Assignments Completed:</strong> {{ $student->completed_assignments }}/{{ $student->total_assignments }}<br>
+                                                                <strong>Average Score:</strong> {{ $student->average_score }}%<br>
+                                                                <strong>Last Activity:</strong> {{ $student->last_activity ? \Carbon\Carbon::parse($student->last_activity)->format('d M Y H:i') : 'No activity' }}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <h6>Assignment History:</h6>
+                                                        @if(count($student->assignment_details) > 0)
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Type</th>
+                                                                        <th>Title</th>
+                                                                        <th>Status</th>
+                                                                        <th>Submission Date</th>
+                                                                        <th>Score</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($student->assignment_details as $assignment)
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span class="badge 
+                                                                                @if($assignment['type'] === 'Quiz') badge-primary
+                                                                                @else badge-success
+                                                                                @endif
+                                                                            ">{{ $assignment['type'] }}</span>
+                                                                        </td>
+                                                                        <td>{{ $assignment['title'] }}</td>
+                                                                        <td>
+                                                                            @if($assignment['submitted'])
+                                                                                <span class="badge badge-success">Submitted</span>
+                                                                            @else
+                                                                                <span class="badge badge-warning">Pending</span>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ $assignment['submission_date'] ? \Carbon\Carbon::parse($assignment['submission_date'])->format('d M Y H:i') : '-' }}
+                                                                        </td>
+                                                                        <td>
+                                                                            @if($assignment['score'] !== null && $assignment['total'] > 0)
+                                                                                {{ $assignment['score'] }}/{{ $assignment['total'] }}
+                                                                                ({{ round(($assignment['score'] / $assignment['total']) * 100, 1) }}%)
+                                                                            @else
+                                                                                -
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        @else
+                                                        <p class="text-muted">No assignments attempted yet.</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                                 
@@ -278,86 +348,43 @@
                                     <div class="p-15">
                                         <div class="d-flex justify-content-between align-items-center mb-20">
                                             <h4 class="mb-0">Lesson Plan</h4>
-                                            <button type="button" class="btn btn-primary">
+                                            <a href="/user/content/{{ Session::get('subjects')->id }}/create" class="btn btn-primary">
                                                 <i data-feather="plus" class="me-5"></i> Add Lesson
-                                            </button>
+                                            </a>
                                         </div>
                                         
+                                        @forelse($lessons as $index => $lesson)
                                         <div class="box bg-light mb-20">
                                             <div class="box-body">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <div class="d-flex align-items-center">
                                                         <div class="me-15 bg-info rounded-circle h-50 w-50 l-h-50 text-center">
-                                                            <span class="text-white fs-24">1</span>
+                                                            <span class="text-white fs-24">{{ $lesson->ChapterNo ?: ($index + 1) }}</span>
                                                         </div>
                                                         <div>
-                                                            <h5 class="mb-0">Introduction to {{ Session::get('subjects')->name }}</h5>
-                                                            <p class="mb-0 text-muted">Basic concepts and fundamentals</p>
+                                                            <h5 class="mb-0">{{ $lesson->display_name }}</h5>
+                                                            <p class="mb-0 text-muted">{{ $lesson->main_folder }}</p>
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <span class="badge badge-success-light">Completed</span>
+                                                        <span class="badge 
+                                                            @if($lesson->status === 'completed') badge-success-light
+                                                            @elseif($lesson->status === 'in_progress') badge-primary-light
+                                                            @else badge-warning-light
+                                                            @endif
+                                                        ">{{ ucfirst(str_replace('_', ' ', $lesson->status)) }}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="box bg-light mb-20">
-                                            <div class="box-body">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-15 bg-info rounded-circle h-50 w-50 l-h-50 text-center">
-                                                            <span class="text-white fs-24">2</span>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="mb-0">Core Principles</h5>
-                                                            <p class="mb-0 text-muted">Understanding the key concepts</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="badge badge-success-light">Completed</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        @empty
+                                        <div class="text-center">
+                                            <p class="text-muted">No lessons created yet.</p>
+                                            <a href="/user/content/{{ Session::get('subjects')->id }}/create" class="btn btn-primary">
+                                                <i data-feather="plus" class="me-5"></i> Create Your First Lesson
+                                            </a>
                                         </div>
-                                        
-                                        <div class="box bg-light mb-20">
-                                            <div class="box-body">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-15 bg-info rounded-circle h-50 w-50 l-h-50 text-center">
-                                                            <span class="text-white fs-24">3</span>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="mb-0">Advanced Techniques</h5>
-                                                            <p class="mb-0 text-muted">Exploring complex concepts</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="badge badge-primary-light">In Progress</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="box bg-light mb-20">
-                                            <div class="box-body">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-15 bg-info rounded-circle h-50 w-50 l-h-50 text-center">
-                                                            <span class="text-white fs-24">4</span>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="mb-0">Practical Applications</h5>
-                                                            <p class="mb-0 text-muted">Real-world implementation</p>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="badge badge-warning-light">Upcoming</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @endforelse
                                     </div>
                                 </div>
                                 
@@ -366,9 +393,14 @@
                                     <div class="p-15">
                                         <div class="d-flex justify-content-between align-items-center mb-20">
                                             <h4 class="mb-0">Assignments</h4>
-                                            <button type="button" class="btn btn-primary">
-                                                <i data-feather="plus" class="me-5"></i> Add Assignment
-                                            </button>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ route('user.quiz.create', Session::get('subjects')->id) }}" class="btn btn-primary">
+                                                    <i data-feather="plus" class="me-5"></i> Add Quiz
+                                                </a>
+                                                <a href="{{ route('user.test.create', Session::get('subjects')->id) }}" class="btn btn-success">
+                                                    <i data-feather="plus" class="me-5"></i> Add Test
+                                                </a>
+                                            </div>
                                         </div>
                                         
                                         <div class="table-responsive">
@@ -376,6 +408,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Title</th>
+                                                        <th>Type</th>
                                                         <th>Due Date</th>
                                                         <th>Status</th>
                                                         <th>Submitted</th>
@@ -384,95 +417,79 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Sample assignment data - replace with real data -->
+                                                    @forelse($assignments as $assignment)
                                                     <tr>
                                                         <td>
-                                                            <h5 class="mb-0">Assignment 1: Fundamentals</h5>
-                                                            <p class="mb-0 text-muted fs-12">Basic concepts review</p>
+                                                            <h5 class="mb-0">{{ $assignment->title }}</h5>
+                                                            <p class="mb-0 text-muted fs-12">{{ ucfirst($assignment->type) }}</p>
                                                         </td>
-                                                        <td>{{ now()->subDays(10)->format('d M Y') }}</td>
-                                                        <td><span class="badge badge-success">Completed</span></td>
-                                                        <td>24/24 students</td>
+                                                        <td>
+                                                            <span class="badge 
+                                                                @if($assignment->type === 'quiz') badge-primary
+                                                                @else badge-success
+                                                                @endif
+                                                            ">{{ ucfirst($assignment->type) }}</span>
+                                                        </td>
+                                                        <td>
+                                                            @if($assignment->date_to)
+                                                                {{ \Carbon\Carbon::parse($assignment->date_to)->format('d M Y') }}
+                                                            @else
+                                                                <span class="text-muted">No deadline</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge 
+                                                                @if($assignment->statusname === 'PUBLISHED') badge-success
+                                                                @elseif($assignment->statusname === 'DRAFT') badge-warning
+                                                                @else badge-primary
+                                                                @endif
+                                                            ">{{ $assignment->statusname }}</span>
+                                                        </td>
+                                                        <td>{{ $assignment->submissions }}/{{ $assignment->total_students }} students</td>
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <div class="progress flex-grow-1" style="height: 6px; width: 80px;">
-                                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 88%" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div class="progress-bar 
+                                                                        @if($assignment->average_score >= 80) bg-success
+                                                                        @elseif($assignment->average_score >= 60) bg-primary
+                                                                        @else bg-warning
+                                                                        @endif
+                                                                    " role="progressbar" style="width: {{ $assignment->average_score }}%" aria-valuenow="{{ $assignment->average_score }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                                <span class="ms-10">88%</span>
+                                                                <span class="ms-10">{{ $assignment->average_score }}%</span>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
-                                                                    <i data-feather="eye"></i>
-                                                                </a>
+                                                                @if($assignment->type === 'quiz')
+                                                                    <a href="{{ route('user.quiz.status', ['id' => Session::get('subjects')->id, 'quiz' => $assignment->id]) }}" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
+                                                                        <i data-feather="eye"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{ route('user.test.status', ['id' => Session::get('subjects')->id, 'test' => $assignment->id]) }}" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
+                                                                        <i data-feather="eye"></i>
+                                                                    </a>
+                                                                @endif
                                                                 <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Download">
                                                                     <i data-feather="download"></i>
                                                                 </a>
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    @empty
                                                     <tr>
-                                                        <td>
-                                                            <h5 class="mb-0">Assignment 2: Core Principles</h5>
-                                                            <p class="mb-0 text-muted fs-12">Application of key concepts</p>
-                                                        </td>
-                                                        <td>{{ now()->subDays(3)->format('d M Y') }}</td>
-                                                        <td><span class="badge badge-primary">In Progress</span></td>
-                                                        <td>18/24 students</td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="progress flex-grow-1" style="height: 6px; width: 80px;">
-                                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <span class="ms-10">75%</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
-                                                                    <i data-feather="eye"></i>
-                                                                </a>
-                                                                <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Download">
-                                                                    <i data-feather="download"></i>
-                                                                </a>
-                                                            </div>
+                                                        <td colspan="7" class="text-center">
+                                                            <p class="text-muted">No assignments created yet.</p>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5 class="mb-0">Assignment 3: Advanced Topics</h5>
-                                                            <p class="mb-0 text-muted fs-12">Complex problem solving</p>
-                                                        </td>
-                                                        <td>{{ now()->addDays(7)->format('d M Y') }}</td>
-                                                        <td><span class="badge badge-warning">Upcoming</span></td>
-                                                        <td>0/24 students</td>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="progress flex-grow-1" style="height: 6px; width: 80px;">
-                                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                <span class="ms-10">0%</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <a href="#" class="btn btn-sm btn-icon btn-primary-light me-5" data-bs-toggle="tooltip" title="View Details">
-                                                                    <i data-feather="eye"></i>
-                                                                </a>
-                                                                <a href="#" class="btn btn-sm btn-icon btn-info-light" data-bs-toggle="tooltip" title="Download">
-                                                                    <i data-feather="download"></i>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!-- Schedule Tab -->
+                                {{-- <!-- Schedule Tab -->
                                 <div class="tab-pane" id="schedule" role="tabpanel">
                                     <div class="p-15">
                                         <div class="d-flex justify-content-between align-items-center mb-20">
@@ -538,30 +555,44 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 
                                 <!-- Resources Tab -->
                                 <div class="tab-pane" id="resources" role="tabpanel">
                                     <div class="p-15">
                                         <div class="d-flex justify-content-between align-items-center mb-20">
                                             <h4 class="mb-0">Teaching Resources</h4>
-                                            <button type="button" class="btn btn-primary">
-                                                <i data-feather="upload" class="me-5"></i> Upload Resource
-                                            </button>
+                                            <a href="{{ route('user.content', Session::get('subjects')->id) }}" class="btn btn-primary">
+                                                <i data-feather="upload" class="me-5"></i> Manage Resources
+                                            </a>
                                         </div>
                                         
                                         <div class="row">
+                                            @forelse($resources as $resource)
                                             <div class="col-xl-3 col-md-4 col-6">
                                                 <div class="box">
                                                     <div class="box-body text-center">
                                                         <div class="mb-10 mt-10">
-                                                            <i data-feather="file-text" class="fs-40 text-primary"></i>
+                                                            @if($resource['type'] === 'folder')
+                                                                <i data-feather="folder" class="fs-40 text-primary"></i>
+                                                            @elseif(str_contains($resource['name'], '.pdf'))
+                                                                <i data-feather="file-text" class="fs-40 text-danger"></i>
+                                                            @elseif(str_contains($resource['name'], '.mp4'))
+                                                                <i data-feather="film" class="fs-40 text-warning"></i>
+                                                            @else
+                                                                <i data-feather="file" class="fs-40 text-success"></i>
+                                                            @endif
                                                         </div>
-                                                        <h5 class="mb-0">Course Syllabus</h5>
-                                                        <p class="text-muted mb-10 fs-12">PDF Document • 2.4 MB</p>
+                                                        <h5 class="mb-0">{{ $resource['name'] }}</h5>
+                                                        <p class="text-muted mb-10 fs-12">
+                                                            {{ ucfirst($resource['type']) }}
+                                                            @if($resource['size'])
+                                                                • {{ $resource['size'] }}
+                                                            @endif
+                                                        </p>
                                                         <div class="d-flex justify-content-center">
-                                                            <a href="#" class="btn btn-sm btn-primary-light me-5">
-                                                                <i data-feather="download" class="me-5"></i> Download
+                                                            <a href="{{ route('user.content', Session::get('subjects')->id) }}" class="btn btn-sm btn-primary-light me-5">
+                                                                <i data-feather="external-link" class="me-5"></i> Open
                                                             </a>
                                                             <a href="#" class="btn btn-sm btn-info-light">
                                                                 <i data-feather="eye"></i>
@@ -570,66 +601,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-xl-3 col-md-4 col-6">
-                                                <div class="box">
-                                                    <div class="box-body text-center">
-                                                        <div class="mb-10 mt-10">
-                                                            <i data-feather="file-text" class="fs-40 text-danger"></i>
-                                                        </div>
-                                                        <h5 class="mb-0">Lecture Notes</h5>
-                                                        <p class="text-muted mb-10 fs-12">PDF Document • 1.8 MB</p>
-                                                        <div class="d-flex justify-content-center">
-                                                            <a href="#" class="btn btn-sm btn-primary-light me-5">
-                                                                <i data-feather="download" class="me-5"></i> Download
-                                                            </a>
-                                                            <a href="#" class="btn btn-sm btn-info-light">
-                                                                <i data-feather="eye"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                            @empty
+                                            <div class="col-12">
+                                                <div class="text-center">
+                                                    <p class="text-muted">No resources uploaded yet.</p>
+                                                    <a href="{{ route('user.content', Session::get('subjects')->id) }}" class="btn btn-primary">
+                                                        <i data-feather="upload" class="me-5"></i> Upload Your First Resource
+                                                    </a>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-xl-3 col-md-4 col-6">
-                                                <div class="box">
-                                                    <div class="box-body text-center">
-                                                        <div class="mb-10 mt-10">
-                                                            <i data-feather="file-text" class="fs-40 text-success"></i>
-                                                        </div>
-                                                        <h5 class="mb-0">Assignment Guidelines</h5>
-                                                        <p class="text-muted mb-10 fs-12">Word Document • 856 KB</p>
-                                                        <div class="d-flex justify-content-center">
-                                                            <a href="#" class="btn btn-sm btn-primary-light me-5">
-                                                                <i data-feather="download" class="me-5"></i> Download
-                                                            </a>
-                                                            <a href="#" class="btn btn-sm btn-info-light">
-                                                                <i data-feather="eye"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-xl-3 col-md-4 col-6">
-                                                <div class="box">
-                                                    <div class="box-body text-center">
-                                                        <div class="mb-10 mt-10">
-                                                            <i data-feather="film" class="fs-40 text-warning"></i>
-                                                        </div>
-                                                        <h5 class="mb-0">Tutorial Video</h5>
-                                                        <p class="text-muted mb-10 fs-12">MP4 Video • 128 MB</p>
-                                                        <div class="d-flex justify-content-center">
-                                                            <a href="#" class="btn btn-sm btn-primary-light me-5">
-                                                                <i data-feather="download" class="me-5"></i> Download
-                                                            </a>
-                                                            <a href="#" class="btn btn-sm btn-info-light">
-                                                                <i data-feather="play"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            @endforelse
                                         </div>
                                     </div>
                                 </div>
@@ -651,6 +632,14 @@
         
         // Initialize tooltips
         $('[data-bs-toggle="tooltip"]').tooltip();
+        
+        // Student search functionality
+        $('#studentSearch').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#studentsTable tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
     });
 </script>
 @endsection
