@@ -435,7 +435,7 @@
             <div id="courselist">
                 <div class="row">
                     @foreach ($subjects as $key => $subject)
-                    <div class="col-md-4 course-item mt-2">
+                    <div class="col-md-4 course-item mt-4">
                         <div class="course-card">
                             <div class="course-image">
                                 <img 
