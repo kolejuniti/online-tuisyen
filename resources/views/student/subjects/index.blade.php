@@ -189,7 +189,8 @@
         overflow: hidden;
         box-shadow: var(--card-shadow);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        height: 30em;
+        height: auto;
+        min-height: 33em;
         border: none;
         transform: translateY(20px);
         opacity: 0;
@@ -205,15 +206,13 @@
     .course-image {
         position: relative;
         overflow: hidden;
-        aspect-ratio: 16/9;
-        min-height: 180px;
-        max-height: 250px;
+        height: 300px;
     }
     
     .course-image img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         transition: all 0.5s ease;
     }
     
