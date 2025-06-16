@@ -9,6 +9,7 @@ use App\Models\School;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StudentsTemplateExport;
 use App\Imports\StudentsImport;
@@ -192,7 +193,119 @@ class StudentController extends Controller
      */
     public function downloadTemplate()
     {
-        // We need to create this Export class
-        return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
+        try {
+            // Log the start of download attempt
+            Log::info('Template download started', [
+                'user_id' => Auth::id(),
+                'memory_usage' => memory_get_usage(true),
+                'memory_limit' => ini_get('memory_limit'),
+                'max_execution_time' => ini_get('max_execution_time')
+            ]);
+
+            // Check if the class exists
+            if (!class_exists('App\Exports\StudentsTemplateExport')) {
+                Log::error('StudentsTemplateExport class does not exist');
+                return response()->json(['error' => 'Export class not found'], 500);
+            }
+
+            // Check if maatwebsite/excel is properly installed
+            if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
+                Log::error('Laravel Excel package not found');
+                return response()->json(['error' => 'Excel package not available'], 500);
+            }
+
+            // Try to create the export instance
+            $export = new StudentsTemplateExport();
+            Log::info('Export instance created successfully');
+
+            // Set memory limit temporarily for large exports
+            $originalMemoryLimit = ini_get('memory_limit');
+            ini_set('memory_limit', '512M');
+            
+            // Set execution time limit
+            set_time_limit(120);
+
+            // Generate the download with proper error handling
+            Log::info('Starting Excel download generation');
+            
+            $result = Excel::download($export, 'students_template.xlsx');
+            
+            // Restore original memory limit
+            ini_set('memory_limit', $originalMemoryLimit);
+            
+            Log::info('Template download completed successfully');
+            
+            return $result;
+
+        } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+            Log::error('PhpSpreadsheet error in template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Spreadsheet generation failed: ' . $e->getMessage()
+            ], 500);
+            
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            Log::error('Excel validation error in template download', [
+                'error' => $e->getMessage(),
+                'failures' => $e->failures()
+            ]);
+            
+            return response()->json([
+                'error' => 'Excel validation failed: ' . $e->getMessage()
+            ], 500);
+            
+        } catch (\Exception $e) {
+            Log::error('General error in template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return response()->json([
+                'error' => 'Template download failed: ' . $e->getMessage()
+            ], 500);
+            
+        } catch (\Throwable $e) {
+            Log::error('Fatal error in template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Fatal error occurred during template download'
+            ], 500);
+        }
+    }
+
+    /**
+     * Download a simple CSV template as fallback
+     */
+    public function downloadCsvTemplate()
+    {
+        try {
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="students_template.csv"',
+            ];
+
+            $csvData = "full_name,email_address,ic_number,phone_number\n";
+            $csvData .= "Student Name,student@example.com,980123456789,0123456789\n";
+
+            return response($csvData, 200, $headers);
+
+        } catch (\Exception $e) {
+            Log::error('CSV template download failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'CSV template download failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

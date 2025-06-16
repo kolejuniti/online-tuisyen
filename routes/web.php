@@ -206,6 +206,35 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('students/bulk-create', [App\Http\Controllers\Admin\StudentController::class, 'bulkCreate'])->name('students.bulkCreate');
     Route::post('students/bulk-store', [App\Http\Controllers\Admin\StudentController::class, 'bulkStore'])->name('students.bulkStore');
     Route::get('students/download-template', [App\Http\Controllers\Admin\StudentController::class, 'downloadTemplate'])->name('students.downloadTemplate');
+    Route::get('students/download-csv-template', [App\Http\Controllers\Admin\StudentController::class, 'downloadCsvTemplate'])->name('students.downloadCsvTemplate');
+    // Diagnostic route for template download issues
+    Route::get('students/template-diagnostic', function () {
+        $diagnostics = [
+            'php_version' => PHP_VERSION,
+            'memory_limit' => ini_get('memory_limit'),
+            'max_execution_time' => ini_get('max_execution_time'),
+            'post_max_size' => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
+            'extensions' => [
+                'zip' => extension_loaded('zip'),
+                'xml' => extension_loaded('xml'),
+                'gd' => extension_loaded('gd'),
+                'mbstring' => extension_loaded('mbstring'),
+            ],
+            'classes' => [
+                'StudentsTemplateExport' => class_exists('App\Exports\StudentsTemplateExport'),
+                'Excel' => class_exists('Maatwebsite\Excel\Facades\Excel'),
+                'PhpSpreadsheet' => class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
+            ],
+            'storage_paths' => [
+                'temp_dir' => sys_get_temp_dir(),
+                'temp_writable' => is_writable(sys_get_temp_dir()),
+                'storage_app' => storage_path('app'),
+                'storage_writable' => is_writable(storage_path('app')),
+            ]
+        ];
+        return response()->json($diagnostics);
+    })->name('students.templateDiagnostic');
 
     // Student resource routes (MUST BE AFTER CUSTOM ROUTES)
     Route::resource('students', App\Http\Controllers\Admin\StudentController::class);
