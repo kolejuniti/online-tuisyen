@@ -41,7 +41,7 @@
               <div class="flex-grow-1 p-30 flex-grow-1 bg-img bg-none-md align-content-center" style="background-position: right bottom; background-size: auto 100%; background-image: url(images/svg-icon/color-svg/custom-30.svg)">
                 <div class="row">
                   <div class="col-12 col-xl-12">
-                    <h1 class="mb-0 fw-600" style="text-align:center">Welcome to eTutor!</h1>
+                    <h1 class="mb-0 fw-600" style="text-align:center">Welcome to eTuition!</h1>
                   </div>
                 </div>
               </div>

@@ -330,7 +330,7 @@ class DashboardController extends Controller
         // Return latest achievement or a default one
         return !empty($achievements) ? $achievements[0] : [
             'title' => 'Getting Started',
-            'description' => 'Welcome to eTutor! Complete your first quiz to unlock more achievements.',
+            'description' => 'Welcome to eTuition! Complete your first quiz to unlock more achievements.',
             'icon' => 'mdi-star',
             'color' => 'info'
         ];

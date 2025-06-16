@@ -7,7 +7,7 @@
   <meta name="description" content="Online Tuition Platform">
   <meta name="author" content="">
   <link rel="icon" href="favicon.ico">
-  <title>eTutor - Learn Without Limits</title>
+  <title>eTuition - Learn Without Limits</title>
   
   <!-- External CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -726,14 +726,16 @@ body {
   <div class="login-container" id="loginContainer">
     <div class="login-header">
       <div class="logo-container" id="logoContainer">
-        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTutor Logo" class="logo-img">
+        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
         <div class="logo-text">
           <span>e</span>
           <span>T</span>
           <span>u</span>
+          <span>i</span>
           <span>t</span>
+          <span>i</span>
           <span>o</span>
-          <span>r</span>
+          <span>n</span>
         </div>
       </div>
       
