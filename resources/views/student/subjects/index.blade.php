@@ -420,7 +420,7 @@
             <div id="courselist">
                 <div class="row">
                     @foreach ($subjects as $subject)
-                    <div class="col-md-4 course-item">
+                    <div class="col-md-4 course-item mt-4">
                         <div class="course-card">
                             <div class="course-image">
                                 <img src="{{ ($subject->subject->image) ? asset('storage/'.$subject->subject->image) : asset('assets/images/uniti.jpg') }}" 
