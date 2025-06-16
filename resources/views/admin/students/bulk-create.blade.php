@@ -16,12 +16,12 @@
                                 <a href="{{ route('admin.students.index') }}" class="btn btn-secondary btn-rounded">
                                     <i class="fa fa-list"></i> Back to List
                                 </a>
-                                <a href="{{ route('admin.students.downloadTemplate') }}" class="btn btn-info btn-rounded" style="margin-right: 8px;">
+                                {{-- <a href="{{ route('admin.students.downloadTemplate') }}" class="btn btn-info btn-rounded" style="margin-right: 8px;">
                                     <i class="fa fa-download"></i> Download Excel Template
-                                </a>
-                                {{-- <a href="{{ route('admin.students.downloadCsvTemplate') }}" class="btn btn-warning btn-rounded" style="margin-right: 8px;">
-                                    <i class="fa fa-download"></i> Download CSV Template
                                 </a> --}}
+                                <a href="{{ route('admin.students.downloadCsvTemplate') }}" class="btn btn-warning btn-rounded" style="margin-right: 8px;">
+                                    <i class="fa fa-download"></i> Download CSV Template
+                                </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
