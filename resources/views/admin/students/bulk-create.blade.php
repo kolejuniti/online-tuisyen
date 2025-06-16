@@ -66,8 +66,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="form-label" for="student_file">Student Data File (.xlsx, .xls) <p style="color:red; display:inline-block;">*</p></label>
-                                            <input type="file" name="student_file" class="form-control" id="student_file" accept=".xlsx, .xls" required>
+                                            <label class="form-label" for="student_file">Student Data File (.xlsx, .xls, .csv) <p style="color:red; display:inline-block;">*</p></label>
+                                            <input type="file" name="student_file" class="form-control" id="student_file" accept=".xlsx, .xls, .csv" required>
                                             <small class="form-text text-muted">Download the template file first. Columns: full_name, email_address, ic_number, phone_number (optional). <strong>Important:</strong> Format 'ic_number' and 'phone_number' columns as 'Text' in your spreadsheet before entering data. Phone numbers should include the leading '0'.</small>
                                         </div>
                                     </div>

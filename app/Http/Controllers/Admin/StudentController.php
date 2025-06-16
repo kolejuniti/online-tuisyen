@@ -160,7 +160,7 @@ class StudentController extends Controller
     {
         $request->validate([
             'school_id' => 'required|exists:schools,id',
-            'student_file' => 'required|file|mimes:xlsx,xls', // Validate file type
+            'student_file' => 'required|file|mimes:xlsx,xls,csv', // Validate file type
         ]);
 
         $schoolId = $request->input('school_id');
