@@ -288,12 +288,30 @@ class StudentController extends Controller
     {
         try {
             $headers = [
-                'Content-Type' => 'text/csv',
+                'Content-Type' => 'text/csv; charset=utf-8',
                 'Content-Disposition' => 'attachment; filename="students_template.csv"',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+                'Pragma' => 'public',
             ];
 
-            $csvData = "full_name,email_address,ic_number,phone_number\n";
-            $csvData .= "Student Name,student@example.com,980123456789,0123456789\n";
+            // Create CSV content with proper formatting to preserve leading zeros
+            $csvData = '';
+            
+            // Add BOM for UTF-8 encoding to ensure proper display in Excel
+            $csvData .= "\xEF\xBB\xBF";
+            
+            // Add headers
+            $csvData .= "full_name,email_address,ic_number,phone_number\n";
+            
+            // Add sample data with explicit text formatting
+            // For IC numbers and phone numbers, we'll wrap them in quotes and prefix with equals sign and quotes
+            // This forces Excel to treat them as text and preserve leading zeros
+            $csvData .= "\"Student Name\",\"student@example.com\",=\"980123456789\",=\"0123456789\"\n";
+            
+            // Add additional examples to show different formats
+            $csvData .= "\"Ahmad Bin Ali\",\"ahmad@example.com\",=\"980123012345\",=\"0123456789\"\n";
+            $csvData .= "\"Siti Nurhaliza\",\"siti@example.com\",=\"010123456789\",=\"0187654321\"\n";
 
             return response($csvData, 200, $headers);
 
