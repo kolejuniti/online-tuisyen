@@ -222,7 +222,7 @@
     .course-image {
         position: relative;
         overflow: hidden;
-        height: 300px;
+        height: 400px;
     }
     
     .course-image img {
