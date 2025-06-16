@@ -1,0 +1,198 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Student;
+use App\Models\User;
+use App\Models\School;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\StudentsTemplateExport;
+use App\Imports\StudentsImport;
+use Exception;
+use Illuminate\Support\Facades\Log;
+
+class StudentController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $students = Student::with('school')->get(); // Eager load school relationship
+        return view('admin.students.index', compact('students'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $schools = School::orderBy('name')->get();
+        return view('admin.students.create', compact('schools'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:students,email',
+            'ic' => 'required|string|max:20|unique:students,ic',
+            'phone_number' => 'nullable|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
+            'school_id' => 'required|exists:schools,id',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            // Create Student
+            $student = new Student();
+            $student->name= $request->name;
+            $student->email= $request->email;
+            $student->password= Hash::make($request->password);
+            $student->school_id = $request->school_id;
+            $student->ic = $request->ic;
+            $student->phone_number = $request->phone_number;
+            $student->status = $request->status;
+            $student->save();
+
+            DB::commit();
+
+            return redirect()->route('admin.students.index')->with('success', 'Student created successfully.');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Log the error message
+            Log::error('Student creation failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Student creation failed. Please try again. Error: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Student $student)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Student $student)
+    {
+        $schools = School::where('status', 'active')->get();
+        return view('admin.students.edit', compact('student', 'schools'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Student $student)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:students,email,' . $student->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'ic' => 'required|string|max:20|unique:students,ic,' . $student->id,
+            'phone_number' => 'nullable|string|max:20',
+            'school_id' => 'required|exists:schools,id',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        // Prepare data for update, excluding password if not provided
+        $updateData = $validatedData;
+        if (empty($validatedData['password'])) {
+            unset($updateData['password']); // Don't update password if empty
+        } else {
+            $updateData['password'] = Hash::make($validatedData['password']);
+        }
+
+        // Manually set phone number since it's in $fillable
+        // $updateData['phone_number'] = $request->phone_number; // No, $validatedData includes it already
+
+        $student->update($updateData);
+
+        return redirect()->route('admin.students.index')
+                         ->with('success', 'Student updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Student $student)
+    {
+        try {
+            $student->delete();
+            return redirect()->route('admin.students.index')
+                             ->with('success', 'Student deleted successfully.');
+        } catch (\Exception $e) {
+            // Handle potential errors, e.g., foreign key constraints
+            return redirect()->route('admin.students.index')
+                             ->with('error', 'Could not delete student. It might be associated with other records.');
+        }
+    }
+
+    /**
+     * Display the bulk student creation form.
+     */
+    public function bulkCreate()
+    {
+        $schools = School::orderBy('name')->get();
+        // We'll create this view next
+        return view('admin.students.bulk-create', compact('schools'));
+    }
+
+    /**
+     * Handle the bulk student upload.
+     */
+    public function bulkStore(Request $request)
+    {
+        $request->validate([
+            'school_id' => 'required|exists:schools,id',
+            'student_file' => 'required|file|mimes:xlsx,xls', // Validate file type
+        ]);
+
+        $schoolId = $request->input('school_id');
+        $file = $request->file('student_file');
+
+        try {
+            // We need to create this Import class
+            // It will handle validation and creation within the import process
+            Excel::import(new StudentsImport($schoolId), $file);
+
+            return redirect()->route('admin.students.index')->with('success', 'Students imported successfully.');
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+             $failures = $e->failures();
+             // Handle validation failures, e.g., return them back to the view
+             // You might want to format these errors nicely
+             $errorMessages = [];
+             foreach ($failures as $failure) {
+                 $errorMessages[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
+             }
+             return redirect()->back()->with('error', 'Import failed. Please check the following errors: <br>' . implode('<br>', $errorMessages))->withInput();
+        } catch (Exception $e) {
+            Log::error('Bulk student import failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An unexpected error occurred during import. Please check the file format and data. Error: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Download the Excel template for bulk student upload.
+     */
+    public function downloadTemplate()
+    {
+        // We need to create this Export class
+        return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
+    }
+}

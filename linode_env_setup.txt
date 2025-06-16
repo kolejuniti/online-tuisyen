@@ -1,0 +1,14 @@
+# Add these lines to your .env file
+
+# Linode Object Storage Configuration
+LINODE_ACCESS_KEY_ID=your_linode_access_key
+LINODE_SECRET_ACCESS_KEY=your_linode_secret_key
+LINODE_REGION=us-east-1  # Replace with your bucket region if different
+LINODE_BUCKET=your_bucket_name
+LINODE_ENDPOINT=https://your_bucket_region.linodeobjects.com
+LINODE_URL=https://your_bucket_name.your_bucket_region.linodeobjects.com
+
+# Note: Replace the placeholder values with your actual Linode credentials
+# For example:
+# LINODE_ENDPOINT=https://us-east-1.linodeobjects.com
+# LINODE_URL=https://mybucket.us-east-1.linodeobjects.com 
