@@ -779,7 +779,7 @@ body {
       
       <div class="tab-switcher">
         <span class="tab-slider" id="tabSlider"></span>
-        <button class="tab-btn active" id="userTab">User Login</button>
+        <button class="tab-btn active" id="userTab">Teacher Login</button>
         <button class="tab-btn" id="studentTab">Student Login</button>
       </div>
     </div>
@@ -792,7 +792,7 @@ body {
         </ul>
       </div>
       
-      <!-- User Login Form -->
+      <!-- Teacher Login Form -->
       <div class="tab-content active" id="userContent">
         <form action="{{ route('login') }}" method="post" id="userForm">
           @csrf
