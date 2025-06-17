@@ -185,6 +185,16 @@ body {
   animation: pulse 3s infinite;
 }
 
+/* Specific styling for the first logo (pkibs) */
+.logo-img:first-child {
+  width: 100px;
+  height: 65px;
+  object-fit: contain;
+  background: white;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+}
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
@@ -198,7 +208,7 @@ body {
 }
 
 .logo-text {
-  font-size: 2.4rem;
+  font-size: 2.0rem;
   font-weight: 700;
   line-height: 1;
   position: relative;
@@ -663,6 +673,31 @@ body {
   .forgot-link {
     align-self: flex-end;
   }
+
+  /* Mobile logo adjustments */
+  .logo-container {
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .logo-img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .logo-img:first-child {
+    width: 70px;
+    height: 45px;
+  }
+
+  .logo-text {
+    font-size: 1.8rem;
+  }
+
+  .welcome-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
 }
 
 /* Focus Indicator */
@@ -726,7 +761,7 @@ body {
   <div class="login-container" id="loginContainer">
     <div class="login-header">
       <div class="logo-container" id="logoContainer">
-        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
+        <img src="assets/images/logo/pkibs.png" alt="eTuition Logo" class="logo-img">
         <div class="logo-text">
           <span>e</span>
           <span>T</span>
@@ -737,6 +772,7 @@ body {
           <span>o</span>
           <span>n</span>
         </div>
+        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
       </div>
       
       <h5 class="welcome-text">Welcome back! Sign in to continue learning</h5>
