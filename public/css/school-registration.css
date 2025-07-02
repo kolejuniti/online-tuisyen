@@ -1,0 +1,186 @@
+/* Additional styling for School Registration Landing Page */
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Enhanced form styling */
+.form-control.is-invalid {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-control.is-valid {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Progress step enhancements */
+.step-circle.loading {
+    animation: pulse 1.5s infinite;
+}
+
+.step.completed .step-circle::after {
+    content: "✓";
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* File upload enhancements */
+.upload-area.processing {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.upload-area .upload-icon.processing {
+    animation: pulse 1s infinite;
+}
+
+/* Student card enhancements */
+.student-card.newly-added {
+    animation: slideInFromLeft 0.5s ease;
+}
+
+/* Button hover effects */
+.btn-custom:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .student-card {
+        padding: 1rem;
+    }
+    
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+    }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    .main-container {
+        background: #1e293b;
+        color: #f1f5f9;
+    }
+    
+    .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+    
+    .student-card {
+        background: #334155;
+        border-color: #475569;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navigation-buttons,
+    .loading-overlay,
+    .upload-area {
+        display: none !important;
+    }
+    
+    .main-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+/* Accessibility enhancements */
+.form-control:focus,
+.btn-custom:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Smooth scrolling for better UX */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading states */
+.btn-custom.loading {
+    pointer-events: none;
+    position: relative;
+}
+
+.btn-custom.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+} 

@@ -240,6 +240,18 @@ body {
   }
 }
 
+.partnership-text {
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 0.7s;
+  padding: 0 1rem;
+}
+
 .welcome-text {
   color: var(--text-secondary);
   font-weight: 500;
@@ -774,6 +786,8 @@ body {
         </div>
         <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
       </div>
+      
+      <p class="partnership-text">Program bekerjasama Penglibatan Ibu Bapa, Komuniti Dan Sektor Swasta (PIBKS) dan Kolej UNITI</p>
       
       <h5 class="welcome-text">Welcome back! Sign in to continue learning</h5>
       

@@ -12,6 +12,32 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Public School Registration Routes (no authentication required)
+Route::prefix('school')->name('school.')->group(function () {
+    // School registration landing page
+    Route::get('/register', function () {
+        return view('guest.school.register');
+    })->name('register');
+    
+    // Excel template download
+    Route::get('/student-template', function () {
+        return view('guest.school.student-template');
+    })->name('student-template');
+    
+    // Download Excel template file
+    Route::get('/download-template', function () {
+        // This would generate and download an actual Excel file
+        // For now, redirect to the template view
+        return redirect()->route('school.student-template');
+    })->name('download-template');
+    
+    // Handle school registration form submission
+    Route::post('/register', function () {
+        // This will be handled by a controller once created
+        return redirect()->back()->with('success', 'Registration submitted successfully! We will review your application and contact you soon.');
+    })->name('register.submit');
+});
+
 // User Routes
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', function () {
