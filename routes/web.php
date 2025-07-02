@@ -7,6 +7,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Registration Choice Page (for selecting between student and school registration)
+Route::get('/register', function () {
+    return view('guest.register-choice');
+})->name('register.choice');
+
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -30,6 +35,18 @@ Route::prefix('school')->name('school.')->group(function () {
     
     // Download Excel template file
     Route::get('/download-template', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'downloadTemplate'])->name('download-template');
+});
+
+// Public Student Registration Routes (no authentication required)
+Route::prefix('student')->name('student.')->group(function () {
+    // Student registration landing page
+    Route::get('/register', [App\Http\Controllers\Guest\StudentRegistrationController::class, 'show'])->name('register');
+    
+    // Handle student registration form submission
+    Route::post('/register', [App\Http\Controllers\Guest\StudentRegistrationController::class, 'submit'])->name('register.submit');
+    
+    // AJAX endpoint for school search (optional)
+    Route::get('/search-schools', [App\Http\Controllers\Guest\StudentRegistrationController::class, 'searchSchools'])->name('search-schools');
 });
 
 // User Routes
