@@ -979,72 +979,95 @@
                         Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.
                     </p>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
-                                </label>
-                                <input type="text" name="school_name" class="form-control" data-placeholder-key="form.school.name_placeholder" placeholder="Masukkan nama sekolah anda" required>
+                    <!-- School Information Section -->
+                    <div class="feature-highlight mb-4">
+                        <h4><i class="fas fa-building text-primary"></i> <span data-key="form.school.info_title">Maklumat Sekolah</span></h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="school_name" class="form-control" data-placeholder-key="form.school.name_placeholder" placeholder="Masukkan nama sekolah anda" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.phone">Telefon Hubungan</span> <span class="required">*</span>
+                                    </label>
+                                    <input type="tel" name="phone" class="form-control" data-placeholder-key="form.school.phone_placeholder" placeholder="+60 12-345 6789" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.phone">Telefon Hubungan</span> <span class="required">*</span>
-                                </label>
-                                <input type="tel" name="phone" class="form-control" data-placeholder-key="form.school.phone_placeholder" placeholder="+60 12-345 6789" required>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.email">Alamat E-mel Sekolah</span> <span class="required">*</span>
+                                    </label>
+                                    <input type="email" name="school_email" class="form-control" data-placeholder-key="form.school.email_placeholder" placeholder="sekolah@contoh.com" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.type">Jenis Sekolah</span> <span class="required">*</span>
+                                    </label>
+                                    <select name="school_type" class="form-control" id="schoolTypeSelect" required>
+                                        <option value="" data-key="form.school.type_placeholder">Pilih jenis sekolah</option>
+                                        <option value="public" data-key="form.school.types.public">Sekolah Kerajaan</option>
+                                        <option value="private" data-key="form.school.types.private">Sekolah Swasta</option>
+                                        <option value="charter" data-key="form.school.types.charter">Sekolah Piagam</option>
+                                        <option value="international" data-key="form.school.types.international">Sekolah Antarabangsa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.address">Alamat Sekolah</span> <span class="required">*</span>
+                                    </label>
+                                    <textarea name="address" class="form-control" rows="3" data-placeholder-key="form.school.address_placeholder" placeholder="Masukkan alamat lengkap sekolah" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.school.total_students">Jumlah Pelajar (Anggaran)</span>
+                                    </label>
+                                    <input type="number" name="total_students" class="form-control" data-placeholder-key="form.school.total_placeholder" placeholder="cth: 500" min="1">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.email">Alamat E-mel</span> <span class="required">*</span>
-                                </label>
-                                <input type="email" name="email" class="form-control" data-placeholder-key="form.school.email_placeholder" placeholder="sekolah@contoh.com" required>
+                    <!-- Guru Pembimbing Section -->
+                    <div class="feature-highlight">
+                        <h4><i class="fas fa-user-tie text-success"></i> <span data-key="form.teacher.title">Guru Pembimbing</span></h4>
+                        <p class="text-muted mb-3" data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.teacher.name">Nama Guru Pembimbing</span> <span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="teacher_name" class="form-control" data-placeholder-key="form.teacher.name_placeholder" placeholder="Nama penuh guru pembimbing" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.principal">Nama Pengetua</span> <span class="required">*</span>
-                                </label>
-                                <input type="text" name="principal_name" class="form-control" data-placeholder-key="form.school.principal_placeholder" placeholder="Nama penuh pengetua" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span data-key="form.school.address">Alamat Sekolah</span> <span class="required">*</span>
-                        </label>
-                        <textarea name="address" class="form-control" rows="3" data-placeholder-key="form.school.address_placeholder" placeholder="Masukkan alamat lengkap sekolah" required></textarea>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.type">Jenis Sekolah</span> <span class="required">*</span>
-                                </label>
-                                <select name="school_type" class="form-control" id="schoolTypeSelect" required>
-                                    <option value="" data-key="form.school.type_placeholder">Pilih jenis sekolah</option>
-                                    <option value="public" data-key="form.school.types.public">Sekolah Kerajaan</option>
-                                    <option value="private" data-key="form.school.types.private">Sekolah Swasta</option>
-                                    <option value="charter" data-key="form.school.types.charter">Sekolah Piagam</option>
-                                    <option value="international" data-key="form.school.types.international">Sekolah Antarabangsa</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <span data-key="form.school.total_students">Jumlah Pelajar (Anggaran)</span>
-                                </label>
-                                <input type="number" name="total_students" class="form-control" data-placeholder-key="form.school.total_placeholder" placeholder="cth: 500" min="1">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <span data-key="form.teacher.email">E-mel Guru Pembimbing</span> <span class="required">*</span>
+                                    </label>
+                                    <input type="email" name="teacher_email" class="form-control" data-placeholder-key="form.teacher.email_placeholder" placeholder="guru@contoh.com" required>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1177,14 +1200,13 @@
                 // Form - School
                 'form.school.title': 'Maklumat Sekolah',
                 'form.school.description': 'Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.',
+                'form.school.info_title': 'Maklumat Sekolah',
                 'form.school.name': 'Nama Sekolah',
                 'form.school.name_placeholder': 'Masukkan nama sekolah anda',
-                'form.school.phone': 'Telefon Hubungan',
+                'form.school.phone': 'No. Telefon Sekolah',
                 'form.school.phone_placeholder': '+60 12-345 6789',
-                'form.school.email': 'Alamat E-mel',
+                'form.school.email': 'Alamat E-mel Sekolah',
                 'form.school.email_placeholder': 'sekolah@contoh.com',
-                'form.school.principal': 'Nama Pengetua',
-                'form.school.principal_placeholder': 'Nama penuh pengetua',
                 'form.school.address': 'Alamat Sekolah',
                 'form.school.address_placeholder': 'Masukkan alamat lengkap sekolah',
                 'form.school.type': 'Jenis Sekolah',
@@ -1195,6 +1217,14 @@
                 'form.school.types.international': 'Sekolah Antarabangsa',
                 'form.school.total_students': 'Jumlah Pelajar (Anggaran)',
                 'form.school.total_placeholder': 'cth: 500',
+                
+                // Form - Teacher/Mentor
+                'form.teacher.title': 'Guru Pembimbing',
+                'form.teacher.description': 'Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.',
+                'form.teacher.name': 'Nama Guru Pembimbing',
+                'form.teacher.name_placeholder': 'Nama penuh guru pembimbing',
+                'form.teacher.email': 'E-mel Guru Pembimbing',
+                'form.teacher.email_placeholder': 'guru@contoh.com',
                 
                 // Form - Students
                 'form.students.title': 'Pengurusan Pelajar',
@@ -1270,14 +1300,13 @@
                 // Form - School
                 'form.school.title': 'School Information',
                 'form.school.description': 'Please provide your school\'s basic information to get started with our platform.',
+                'form.school.info_title': 'School Information',
                 'form.school.name': 'School Name',
                 'form.school.name_placeholder': 'Enter your school name',
-                'form.school.phone': 'Contact Phone',
+                'form.school.phone': 'School Phone Number',
                 'form.school.phone_placeholder': '+1 (555) 123-4567',
-                'form.school.email': 'Email Address',
+                'form.school.email': 'School Email Address',
                 'form.school.email_placeholder': 'school@example.com',
-                'form.school.principal': 'Principal Name',
-                'form.school.principal_placeholder': 'Principal\'s full name',
                 'form.school.address': 'School Address',
                 'form.school.address_placeholder': 'Enter complete school address',
                 'form.school.type': 'School Type',
@@ -1288,6 +1317,14 @@
                 'form.school.types.international': 'International School',
                 'form.school.total_students': 'Total Students (Approximate)',
                 'form.school.total_placeholder': 'e.g., 500',
+                
+                // Form - Teacher/Mentor
+                'form.teacher.title': 'Teacher Coordinator',
+                'form.teacher.description': 'Information of teacher or administrator who will be responsible for managing this platform.',
+                'form.teacher.name': 'Teacher Coordinator Name',
+                'form.teacher.name_placeholder': 'Teacher coordinator\'s full name',
+                'form.teacher.email': 'Teacher Coordinator Email',
+                'form.teacher.email_placeholder': 'teacher@example.com',
                 
                 // Form - Students
                 'form.students.title': 'Student Management',
@@ -1663,18 +1700,35 @@
             
             // School Information Review
             reviewHTML += `
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-primary text-white">
                             <h5 class="mb-0"><i class="fas fa-school"></i> School Information</h5>
                         </div>
                         <div class="card-body">
-                            <p><strong>School Name:</strong> ${formData.get('school_name') || 'Not provided'}</p>
-                            <p><strong>Principal:</strong> ${formData.get('principal_name') || 'Not provided'}</p>
-                            <p><strong>Email:</strong> ${formData.get('email') || 'Not provided'}</p>
-                            <p><strong>Phone:</strong> ${formData.get('phone') || 'Not provided'}</p>
-                            <p><strong>Type:</strong> ${formData.get('school_type') || 'Not provided'}</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>School Name:</strong> ${formData.get('school_name') || 'Not provided'}</p>
+                                    <p><strong>School Email:</strong> ${formData.get('school_email') || 'Not provided'}</p>
+                                    <p><strong>Phone:</strong> ${formData.get('phone') || 'Not provided'}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Type:</strong> ${formData.get('school_type') || 'Not provided'}</p>
+                                    <p><strong>Total Students:</strong> ${formData.get('total_students') || 'Not specified'}</p>
+                                </div>
+                            </div>
                             <p><strong>Address:</strong> ${formData.get('address') || 'Not provided'}</p>
+                            
+                            <hr>
+                            <h6 class="text-success"><i class="fas fa-user-tie"></i> Teacher Coordinator</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Name:</strong> ${formData.get('teacher_name') || 'Not provided'}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Email:</strong> ${formData.get('teacher_email') || 'Not provided'}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1683,15 +1737,14 @@
             // Students Review
             const studentCount = document.querySelectorAll('.student-card').length;
             reviewHTML += `
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0"><i class="fas fa-users"></i> Students Summary</h5>
                         </div>
                         <div class="card-body">
-                            <p><strong>Individual Students Added:</strong> ${studentCount}</p>
-                            <p><strong>Bulk Upload File:</strong> ${document.getElementById('excelFile').files.length > 0 ? 'File uploaded' : 'No file uploaded'}</p>
-                            <p><strong>Total Estimated Students:</strong> ${formData.get('total_students') || 'Not specified'}</p>
+                            <p><strong>Individual Students:</strong> ${studentCount}</p>
+                            <p><strong>Bulk Upload:</strong> ${document.getElementById('excelFile').files.length > 0 ? 'File uploaded' : 'No file'}</p>
                         </div>
                     </div>
                 </div>

@@ -32,8 +32,13 @@ class SchoolController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'address' => 'required|string',
             'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'type' => 'nullable|in:public,private,charter,international',
+            'total_students' => 'nullable|integer|min:0',
+            'teacher_name' => 'nullable|string|max:255',
+            'teacher_email' => 'nullable|email|max:255',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -58,8 +63,13 @@ class SchoolController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'address' => 'required|string',
             'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'type' => 'nullable|in:public,private,charter,international',
+            'total_students' => 'nullable|integer|min:0',
+            'teacher_name' => 'nullable|string|max:255',
+            'teacher_email' => 'nullable|email|max:255',
             'status' => 'required|in:active,inactive',
         ]);
 

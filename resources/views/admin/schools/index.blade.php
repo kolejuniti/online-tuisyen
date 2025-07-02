@@ -2,6 +2,10 @@
 
 @section('title', 'Manage Schools')
 
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @section('main')
 <div class="content-wrapper">
     <div class="container-full">
@@ -33,8 +37,12 @@
                                         <tr>
                                             <th width="5%">#</th>
                                             <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Type</th>
                                             <th>Address</th>
                                             <th>Phone</th>
+                                            <th>Students</th>
+                                            <th>Teacher</th>
                                             <th>Status</th>
                                             <th width="15%">Actions</th>
                                         </tr>
@@ -44,8 +52,27 @@
                                         <tr>
                                             <td></td>
                                             <td>{{ $school->name }}</td>
-                                            <td>{{ $school->address }}</td>
+                                            <td>{{ $school->email ?? '-' }}</td>
+                                            <td>
+                                                @if($school->type)
+                                                    <span class="badge badge-info">{{ ucfirst($school->type) }}</span>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td>{{ Str::limit($school->address, 50) }}</td>
                                             <td>{{ $school->phone }}</td>
+                                            <td>{{ $school->total_students ?? '-' }}</td>
+                                            <td>
+                                                @if($school->teacher_name)
+                                                    <div class="text-sm">
+                                                        <strong>{{ $school->teacher_name }}</strong><br>
+                                                        <small class="text-muted">{{ $school->teacher_email }}</small>
+                                                    </div>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td>
                                                 <span class="badge badge-{{ $school->status == 'active' ? 'success' : 'danger' }}">
                                                     {{ ucfirst($school->status) }}
@@ -73,7 +100,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">No schools found.</td>
+                                            <td colspan="10" class="text-center">No schools found.</td>
                                         </tr>
                                         @endforelse
                                     </tbody>

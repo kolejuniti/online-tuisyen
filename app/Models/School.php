@@ -13,6 +13,11 @@ class School extends Model
         'name',
         'address',
         'phone',
+        'email',
+        'type',
+        'total_students',
+        'teacher_name',
+        'teacher_email',
         'status',
     ];
 

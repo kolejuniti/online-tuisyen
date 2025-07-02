@@ -15,8 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Call the SchoolSeeder first
-        $this->call(SchoolSeeder::class);
+        // User::factory(10)->create();
+
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        $this->call([
+            SchoolSeeder::class,
+            SchoolListSeeder::class,
+            NegaraSembilanSchoolSeeder::class,
+        ]);
 
         // Get the first school for the student
         $school = School::first();

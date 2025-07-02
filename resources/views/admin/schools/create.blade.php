@@ -33,6 +33,9 @@
 
                             <form action="{{ route('admin.schools.store') }}" method="POST">
                                 @csrf
+                                
+                                <!-- School Basic Information -->
+                                <h5 class="mb-3"><i class="fa fa-school"></i> School Information</h5>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -42,17 +45,68 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="phone">Phone Number <p style="color:red; display:inline-block;">*</p></label>
-                                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                            <label for="email">School Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="address">Address <p style="color:red; display:inline-block;">*</p></label>
-                                    <textarea class="form-control" id="address" name="address" rows="3" required>{{ old('address') }}</textarea>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="phone">Phone Number <p style="color:red; display:inline-block;">*</p></label>
+                                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="type">School Type</label>
+                                            <select class="form-control" id="type" name="type">
+                                                <option value="">Select Type</option>
+                                                <option value="public" {{ old('type') == 'public' ? 'selected' : '' }}>Public School</option>
+                                                <option value="private" {{ old('type') == 'private' ? 'selected' : '' }}>Private School</option>
+                                                <option value="charter" {{ old('type') == 'charter' ? 'selected' : '' }}>Charter School</option>
+                                                <option value="international" {{ old('type') == 'international' ? 'selected' : '' }}>International School</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="address">Address <p style="color:red; display:inline-block;">*</p></label>
+                                            <textarea class="form-control" id="address" name="address" rows="3" required>{{ old('address') }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="total_students">Total Students (Approximate)</label>
+                                            <input type="number" class="form-control" id="total_students" name="total_students" value="{{ old('total_students') }}" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Teacher Coordinator Information -->
+                                <hr>
+                                <h5 class="mb-3"><i class="fa fa-user-tie"></i> Teacher Coordinator</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="teacher_name">Teacher Name</label>
+                                            <input type="text" class="form-control" id="teacher_name" name="teacher_name" value="{{ old('teacher_name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="teacher_email">Teacher Email</label>
+                                            <input type="email" class="form-control" id="teacher_email" name="teacher_email" value="{{ old('teacher_email') }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status -->
+                                <hr>
                                 <div class="form-group">
                                     <label for="status">Status <p style="color:red; display:inline-block;">*</p></label>
                                     <select class="form-control" id="status" name="status" required>
