@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
@@ -754,6 +755,76 @@
             }
         }
 
+        /* Select2 Custom Styling */
+        .select2-container--default .select2-selection--single {
+            border: 2px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.25rem !important;
+            font-size: 1rem !important;
+            height: auto !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 4px 20px rgba(99, 102, 241, 0.1) !important;
+            outline: none !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            transform: translateY(-1px);
+        }
+
+        .select2-container--default .select2-selection--single:hover:not(.select2-container--focus .select2-selection--single) {
+            border-color: rgba(99, 102, 241, 0.5) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--dark-text) !important;
+            line-height: 1.5 !important;
+            padding: 0 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: var(--gray-text) !important;
+        }
+
+        .select2-dropdown {
+            border: 2px solid rgba(99, 102, 241, 0.3) !important;
+            border-radius: 12px !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15) !important;
+        }
+
+        .select2-results__option {
+            padding: 0.75rem 1rem !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .select2-results__option--highlighted {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color)) !important;
+            color: white !important;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            border: 2px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 8px !important;
+            padding: 0.5rem !important;
+            margin: 0.5rem !important;
+            width: calc(100% - 1rem) !important;
+        }
+
+        .select2-search--dropdown .select2-search__field:focus {
+            border-color: var(--primary-color) !important;
+            outline: none !important;
+        }
+
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -989,7 +1060,12 @@
                                     <label class="form-label">
                                         <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
                                     </label>
-                                    <input type="text" name="school_name" class="form-control" data-placeholder-key="form.school.name_placeholder" placeholder="Masukkan nama sekolah anda" required>
+                                    <select name="school_id" id="schoolSelect" class="form-control" data-placeholder-key="form.school.name_placeholder" required>
+                                        <option value="" data-key="form.school.name_placeholder">Pilih sekolah anda</option>
+                                        @foreach($schools as $school)
+                                            <option value="{{ $school->id }}">{{ $school->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1176,6 +1252,10 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
@@ -1202,7 +1282,7 @@
                 'form.school.description': 'Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.',
                 'form.school.info_title': 'Maklumat Sekolah',
                 'form.school.name': 'Nama Sekolah',
-                'form.school.name_placeholder': 'Masukkan nama sekolah anda',
+                'form.school.name_placeholder': 'Pilih sekolah anda',
                 'form.school.phone': 'No. Telefon Sekolah',
                 'form.school.phone_placeholder': '+60 12-345 6789',
                 'form.school.email': 'Alamat E-mel Sekolah',
@@ -1302,7 +1382,7 @@
                 'form.school.description': 'Please provide your school\'s basic information to get started with our platform.',
                 'form.school.info_title': 'School Information',
                 'form.school.name': 'School Name',
-                'form.school.name_placeholder': 'Enter your school name',
+                'form.school.name_placeholder': 'Select your school',
                 'form.school.phone': 'School Phone Number',
                 'form.school.phone_placeholder': '+1 (555) 123-4567',
                 'form.school.email': 'School Email Address',
@@ -1427,6 +1507,12 @@
                     option.textContent = translations[lang][key];
                 }
             });
+            
+            // Reinitialize Select2 with new language
+            if (typeof initializeSchoolSelect === 'function') {
+                $('#schoolSelect').select2('destroy');
+                initializeSchoolSelect();
+            }
         }
 
         // Form step management
@@ -1442,7 +1528,44 @@
             switchLanguage('ms');
         });
 
+        function initializeSchoolSelect() {
+            const placeholder = currentLanguage === 'ms' ? 'Cari dan pilih sekolah anda...' : 'Search and select your school...';
+            
+            $('#schoolSelect').select2({
+                placeholder: placeholder,
+                allowClear: true,
+                width: '100%',
+                ajax: {
+                    url: '{{ route("school.search") }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.map(function(school) {
+                                return {
+                                    id: school.id,
+                                    text: school.name
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+        }
+
         function setupEventListeners() {
+            // Initialize Select2 for school selection
+            initializeSchoolSelect();
+            
             // Language switcher
             document.querySelectorAll('.language-option').forEach(option => {
                 option.addEventListener('click', () => {
@@ -1696,6 +1819,9 @@
             const form = document.getElementById('registrationForm');
             const formData = new FormData(form);
             
+            // Get selected school name from Select2
+            const selectedSchoolText = $('#schoolSelect option:selected').text() || 'Not selected';
+            
             let reviewHTML = '<div class="row">';
             
             // School Information Review
@@ -1708,7 +1834,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>School Name:</strong> ${formData.get('school_name') || 'Not provided'}</p>
+                                    <p><strong>School Name:</strong> ${selectedSchoolText}</p>
                                     <p><strong>School Email:</strong> ${formData.get('school_email') || 'Not provided'}</p>
                                     <p><strong>Phone:</strong> ${formData.get('phone') || 'Not provided'}</p>
                                 </div>

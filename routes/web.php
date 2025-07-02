@@ -15,9 +15,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Public School Registration Routes (no authentication required)
 Route::prefix('school')->name('school.')->group(function () {
     // School registration landing page
-    Route::get('/register', function () {
-        return view('guest.school.register');
-    })->name('register');
+    Route::get('/register', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'show'])->name('register');
+    
+    // Handle school registration form submission
+    Route::post('/register', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'submit'])->name('register.submit');
+    
+    // AJAX endpoint for school search
+    Route::get('/search', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'searchSchools'])->name('search');
     
     // Excel template download
     Route::get('/student-template', function () {
@@ -25,17 +29,7 @@ Route::prefix('school')->name('school.')->group(function () {
     })->name('student-template');
     
     // Download Excel template file
-    Route::get('/download-template', function () {
-        // This would generate and download an actual Excel file
-        // For now, redirect to the template view
-        return redirect()->route('school.student-template');
-    })->name('download-template');
-    
-    // Handle school registration form submission
-    Route::post('/register', function () {
-        // This will be handled by a controller once created
-        return redirect()->back()->with('success', 'Registration submitted successfully! We will review your application and contact you soon.');
-    })->name('register.submit');
+    Route::get('/download-template', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'downloadTemplate'])->name('download-template');
 });
 
 // User Routes
