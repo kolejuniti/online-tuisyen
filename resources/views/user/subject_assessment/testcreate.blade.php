@@ -15,8 +15,7 @@
 </style>
 
 <link rel="stylesheet" href="{{ asset('css/customCSS.css') }}">
-<!-- Bootstrap CSS for modal functionality -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <!-- jQuery UI CSS required for form-builder's sortable functionality -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
 
@@ -436,17 +435,18 @@
                                             font-style: italic;
                                         }
 
-                                        .modal-header {
+                                        #answerOptionsModal .modal-header {
                                             background: linear-gradient(135deg, #6610f2 0%, #9333ea 100%);
                                             color: white;
                                             border-bottom: none;
                                         }
 
-                                        .modal-header .btn-close {
-                                            filter: invert(1);
+                                        #answerOptionsModal .modal-header .close {
+                                            color: white;
+                                            opacity: 1;
                                         }
 
-                                        .modal-title {
+                                        #answerOptionsModal .modal-title {
                                             font-weight: 600;
                                         }
 
@@ -1186,7 +1186,9 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="answerOptionsModalLabel">Set Answer Options</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
@@ -1233,7 +1235,7 @@ You can paste from clipboard or type directly here."></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                     <button type="button" class="btn btn-primary" id="applyOptions">Apply Options</button>
                                                 </div>
                                             </div>
@@ -1284,8 +1286,7 @@ You can paste from clipboard or type directly here."></textarea>
 
 
 
-<!-- Bootstrap JS for modal functionality -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <!-- jQuery UI required for form-builder's sortable functionality -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-builder.min.js"></script>
@@ -1722,36 +1723,43 @@ $(document).ready(function() {
  * Modal utility functions for compatibility
  */
 function showModal(modalId) {
-    var modalElement = document.getElementById(modalId);
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-        var modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    } else if (typeof $ !== 'undefined' && $.fn.modal) {
-        $('#' + modalId).modal('show');
-    } else {
-        // Fallback: simple show
-        $(modalElement).addClass('show').css('display', 'block');
-        $('body').addClass('modal-open');
+    // Try jQuery modal first (most likely to work with existing layout)
+    if (typeof $ !== 'undefined' && $.fn.modal) {
+        try {
+            $('#' + modalId).modal('show');
+            return;
+        } catch (e) {
+            console.log('jQuery modal failed, trying fallback');
+        }
+    }
+    
+    // Fallback: simple show with proper modal classes
+    var modalElement = $('#' + modalId);
+    modalElement.addClass('show').css('display', 'block');
+    $('body').addClass('modal-open');
+    
+    // Add backdrop
+    if (!$('.modal-backdrop').length) {
+        $('body').append('<div class="modal-backdrop fade show"></div>');
     }
 }
 
 function hideModal(modalId) {
-    var modalElement = document.getElementById(modalId);
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-        var modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-            modal.hide();
-        } else {
-            $(modalElement).removeClass('show').css('display', 'none');
-            $('body').removeClass('modal-open');
+    // Try jQuery modal first
+    if (typeof $ !== 'undefined' && $.fn.modal) {
+        try {
+            $('#' + modalId).modal('hide');
+            return;
+        } catch (e) {
+            console.log('jQuery modal hide failed, trying fallback');
         }
-    } else if (typeof $ !== 'undefined' && $.fn.modal) {
-        $('#' + modalId).modal('hide');
-    } else {
-        // Fallback: simple hide
-        $(modalElement).removeClass('show').css('display', 'none');
-        $('body').removeClass('modal-open');
     }
+    
+    // Fallback: simple hide
+    var modalElement = $('#' + modalId);
+    modalElement.removeClass('show').css('display', 'none');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
 }
 
 /**
@@ -1805,13 +1813,13 @@ function initializeAnswerOptionsModal() {
     
     // Close button handlers - Enhanced for better compatibility
     // Handle the X close button
-    $(document).on('click', '#answerOptionsModal .btn-close', function(e) {
+    $(document).on('click', '#answerOptionsModal .close', function(e) {
         e.preventDefault();
         hideModal('answerOptionsModal');
     });
     
-    // Handle data-bs-dismiss and data-dismiss attributes
-    $(document).on('click', '#answerOptionsModal [data-bs-dismiss="modal"], #answerOptionsModal [data-dismiss="modal"]', function(e) {
+    // Handle data-dismiss attributes
+    $(document).on('click', '#answerOptionsModal [data-dismiss="modal"]', function(e) {
         e.preventDefault();
         hideModal('answerOptionsModal');
     });
