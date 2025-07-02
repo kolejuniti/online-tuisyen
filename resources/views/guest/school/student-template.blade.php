@@ -48,7 +48,7 @@
             <li>Fill in student information in the rows below the header</li>
             <li>Fields marked with <span class="required">*</span> are required</li>
             <li>Use the exact date format shown in the examples (YYYY-MM-DD)</li>
-            <li>Tingkatan/Darjah should use Malaysian education levels (Darjah 1-6, Tingkatan 1-6)</li>
+            <li>Tingkatan should be "Tingkatan 5" only</li>
             <li>Delete the sample rows before uploading</li>
             <li>Save as Excel format (.xlsx) when complete</li>
         </ol>
@@ -58,11 +58,11 @@
     <table>
         <thead>
             <tr>
-                <th>First Name <span class="required">*</span></th>
-                <th>Last Name <span class="required">*</span></th>
+                <th>Student Name <span class="required">*</span></th>
+                <th>IC Number <span class="required">*</span></th>
                 <th>Email <span class="optional">(Optional)</span></th>
-                <th>Tingkatan/Darjah <span class="required">*</span></th>
-                <th>Phone <span class="optional">(Optional)</span></th>
+                <th>Tingkatan <span class="required">*</span></th>
+                <th>Student's Phone Number <span class="optional">(Optional)</span></th>
                 <th>Date of Birth <span class="optional">(Optional)</span></th>
                 <th>Gender <span class="optional">(Optional)</span></th>
                 <th>Parent/Guardian Name <span class="optional">(Optional)</span></th>
@@ -73,10 +73,10 @@
         <tbody>
             <!-- Sample Data Rows -->
             <tr class="sample-row">
-                <td>Ahmad</td>
-                <td>Bin Hassan</td>
+                <td>Ahmad Bin Hassan</td>
+                <td>980123456789</td>
                 <td>ahmad.hassan@email.com</td>
-                <td>Tingkatan 4</td>
+                <td>Tingkatan 5</td>
                 <td>012-345-6789</td>
                 <td>2008-05-15</td>
                 <td>Male</td>
@@ -85,10 +85,10 @@
                 <td>123 Jalan Utama, Kuala Lumpur 50000</td>
             </tr>
             <tr class="sample-row">
-                <td>Siti</td>
-                <td>Binti Abdullah</td>
+                <td>Siti Binti Abdullah</td>
+                <td>010123456789</td>
                 <td>siti.abdullah@email.com</td>
-                <td>Darjah 5</td>
+                <td>Tingkatan 5</td>
                 <td>012-345-6791</td>
                 <td>2009-03-22</td>
                 <td>Female</td>
@@ -97,8 +97,8 @@
                 <td>456 Jalan Oak, Petaling Jaya 47300</td>
             </tr>
             <tr class="sample-row">
-                <td>Raj</td>
-                <td>A/L Kumar</td>
+                <td>Raj A/L Kumar</td>
+                <td>070810123456</td>
                 <td>raj.kumar@email.com</td>
                 <td>Tingkatan 5</td>
                 <td>012-345-6793</td>
@@ -176,10 +176,11 @@
     <div class="instructions" style="margin-top: 20px;">
         <h3>📝 Field Descriptions:</h3>
         <ul>
-            <li><strong>First Name & Last Name:</strong> Student's full name</li>
+            <li><strong>Student Name:</strong> Student's full name (combine first and last name)</li>
+            <li><strong>IC Number:</strong> Malaysian identity card number (12 digits)</li>
             <li><strong>Email:</strong> Student's email address (if available)</li>
-            <li><strong>Tingkatan/Darjah:</strong> Malaysian education levels - Darjah 1-6 (Primary), Tingkatan 1-6 (Secondary)</li>
-            <li><strong>Phone:</strong> Student's contact number</li>
+            <li><strong>Tingkatan:</strong> Must be "Tingkatan 5" only</li>
+            <li><strong>Student's Phone Number:</strong> Student's contact number</li>
             <li><strong>Date of Birth:</strong> Format: YYYY-MM-DD (e.g., 2008-05-15)</li>
             <li><strong>Gender:</strong> Male, Female, or Other</li>
             <li><strong>Parent/Guardian Name:</strong> Primary contact person</li>
@@ -189,10 +190,11 @@
         
         <h3>✅ Validation Rules:</h3>
         <ul>
-            <li>First Name and Last Name are required</li>
-            <li>Tingkatan/Darjah must be valid Malaysian education level (Darjah 1-6 or Tingkatan 1-6)</li>
+            <li>Student Name and IC Number are required</li>
+            <li>IC Number must be 12 digits (format as text to preserve leading zeros)</li>
+            <li>Tingkatan must be exactly "Tingkatan 5"</li>
             <li>Email must be in valid format (if provided)</li>
-            <li>Phone numbers should include country/area codes</li>
+            <li>Phone numbers should include area codes and be formatted as text</li>
             <li>Date of Birth must be in YYYY-MM-DD format</li>
         </ul>
     </div>

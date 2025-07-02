@@ -49,6 +49,12 @@ class StudentController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'school_id' => 'required|exists:schools,id',
             'status' => 'required|in:active,inactive',
+            'tingkatan' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:Male,Female',
+            'parent_guardian_name' => 'nullable|string|max:255',
+            'parent_guardian_phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -64,6 +70,12 @@ class StudentController extends Controller
             $student->ic = $request->ic;
             $student->phone_number = $request->phone_number;
             $student->status = $request->status;
+            $student->tingkatan = $request->tingkatan;
+            $student->date_of_birth = $request->date_of_birth;
+            $student->gender = $request->gender;
+            $student->parent_guardian_name = $request->parent_guardian_name;
+            $student->parent_guardian_phone = $request->parent_guardian_phone;
+            $student->address = $request->address;
             $student->save();
 
             DB::commit();
@@ -108,6 +120,12 @@ class StudentController extends Controller
             'phone_number' => 'nullable|string|max:20',
             'school_id' => 'required|exists:schools,id',
             'status' => 'required|in:active,inactive',
+            'tingkatan' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:Male,Female',
+            'parent_guardian_name' => 'nullable|string|max:255',
+            'parent_guardian_phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
         ]);
 
         // Prepare data for update, excluding password if not provided
@@ -166,15 +184,32 @@ class StudentController extends Controller
         $schoolId = $request->input('school_id');
         $file = $request->file('student_file');
 
+        Log::info('Starting bulk student import', [
+            'school_id' => $schoolId,
+            'file_name' => $file->getClientOriginalName(),
+            'file_size' => $file->getSize(),
+            'mime_type' => $file->getMimeType()
+        ]);
+
+        // Get count before import
+        $countBefore = Student::count();
+        Log::info("Student count before import: {$countBefore}");
+
         try {
             // We need to create this Import class
             // It will handle validation and creation within the import process
             Excel::import(new StudentsImport($schoolId), $file);
 
-            return redirect()->route('admin.students.index')->with('success', 'Students imported successfully.');
+            // Get count after import
+            $countAfter = Student::count();
+            $studentsAdded = $countAfter - $countBefore;
+            Log::info("Student count after import: {$countAfter}, Students added: {$studentsAdded}");
+
+            return redirect()->route('admin.students.index')->with('success', "Students imported successfully. {$studentsAdded} students were added.");
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
              $failures = $e->failures();
+             Log::error('Import validation failed', ['failures' => $failures]);
              // Handle validation failures, e.g., return them back to the view
              // You might want to format these errors nicely
              $errorMessages = [];
@@ -184,6 +219,7 @@ class StudentController extends Controller
              return redirect()->back()->with('error', 'Import failed. Please check the following errors: <br>' . implode('<br>', $errorMessages))->withInput();
         } catch (Exception $e) {
             Log::error('Bulk student import failed: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()->with('error', 'An unexpected error occurred during import. Please check the file format and data. Error: ' . $e->getMessage())->withInput();
         }
     }
@@ -302,16 +338,14 @@ class StudentController extends Controller
             $csvData .= "\xEF\xBB\xBF";
             
             // Add headers
-            $csvData .= "full_name,email_address,ic_number,phone_number\n";
+            $csvData .= "Student Name,IC Number,Email,Tingkatan,Student's Phone Number,Date of Birth,Gender,Parent/Guardian Name,Parent/Guardian Phone,Address\n";
             
-            // Add sample data with explicit text formatting
-            // For IC numbers and phone numbers, we'll wrap them in quotes and prefix with equals sign and quotes
-            // This forces Excel to treat them as text and preserve leading zeros
-            $csvData .= "\"Student Name\",\"student@example.com\",=\"980123456789\",=\"0123456789\"\n";
+            // Add sample data - IC numbers and phone numbers as regular text
+            // Important: Users should format IC Number and phone number columns as 'Text' in Excel to preserve leading zeros
+            $csvData .= "\"Ahmad Bin Hassan\",\"980123456789\",\"ahmad.hassan@email.com\",\"Tingkatan 5\",\"0123456789\",\"2008-05-15\",\"Male\",\"Hassan Bin Ali\",\"0123456790\",\"123 Jalan Utama, Kuala Lumpur 50000\"\n";
             
             // Add additional examples to show different formats
-            $csvData .= "\"Ahmad Bin Ali\",\"ahmad@example.com\",=\"980123012345\",=\"0123456789\"\n";
-            $csvData .= "\"Siti Nurhaliza\",\"siti@example.com\",=\"010123456789\",=\"0187654321\"\n";
+            $csvData .= "\"Siti Binti Abdullah\",\"010123456789\",\"siti.abdullah@email.com\",\"Tingkatan 5\",\"0187654321\",\"2009-03-22\",\"Female\",\"Fatimah Binti Omar\",\"0123456792\",\"456 Jalan Oak, Petaling Jaya 47300\"\n";
 
             return response($csvData, 200, $headers);
 

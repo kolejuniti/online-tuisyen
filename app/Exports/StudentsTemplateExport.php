@@ -18,13 +18,31 @@ class StudentsTemplateExport implements FromCollection, WithHeadings, ShouldAuto
     */
     public function collection()
     {
-        // Return a sample row to show expected format
+        // Return sample rows to show expected format
         return collect([
             [
-                'full_name' => 'Student Name',
-                'email_address' => 'student@example.com',
+                'student_name' => 'Ahmad Bin Hassan',
                 'ic_number' => '980123456789',  // Sample IC number
-                'phone_number' => '0123456789', // Sample phone with leading zero
+                'email' => 'ahmad.hassan@email.com',
+                'tingkatan' => 'Tingkatan 5',
+                'students_phone_number' => '0123456789', // Sample phone with leading zero
+                'date_of_birth' => '2008-05-15',
+                'gender' => 'Male',
+                'parent_guardian_name' => 'Hassan Bin Ali',
+                'parent_guardian_phone' => '0123456790',
+                'address' => '123 Jalan Utama, Kuala Lumpur 50000',
+            ],
+            [
+                'student_name' => 'Siti Binti Abdullah',
+                'ic_number' => '010123456789',
+                'email' => 'siti.abdullah@email.com',
+                'tingkatan' => 'Tingkatan 5',
+                'students_phone_number' => '0187654321',
+                'date_of_birth' => '2009-03-22',
+                'gender' => 'Female',
+                'parent_guardian_name' => 'Fatimah Binti Omar',
+                'parent_guardian_phone' => '0123456792',
+                'address' => '456 Jalan Oak, Petaling Jaya 47300',
             ]
         ]);
     }
@@ -36,10 +54,16 @@ class StudentsTemplateExport implements FromCollection, WithHeadings, ShouldAuto
     {
         // Define the column headers required for student import
         return [
-            'full_name',      // Use lowercase_with_underscores consistent with import validation
-            'email_address',
-            'ic_number',
-            'phone_number',   // Added phone number column
+            'Student Name',      
+            'IC Number',
+            'Email',
+            'Tingkatan',
+            'Student\'s Phone Number',
+            'Date of Birth',
+            'Gender',
+            'Parent/Guardian Name',
+            'Parent/Guardian Phone',
+            'Address',
         ];
     }
     
@@ -49,8 +73,9 @@ class StudentsTemplateExport implements FromCollection, WithHeadings, ShouldAuto
     public function columnFormats(): array
     {
         return [
-            'C' => NumberFormat::FORMAT_TEXT, // ic_number column as text
-            'D' => NumberFormat::FORMAT_TEXT, // phone_number column as text
+            'B' => NumberFormat::FORMAT_TEXT, // ic_number column as text
+            'E' => NumberFormat::FORMAT_TEXT, // student_phone_number column as text
+            'I' => NumberFormat::FORMAT_TEXT, // parent_guardian_phone column as text
         ];
     }
     
@@ -64,22 +89,24 @@ class StudentsTemplateExport implements FromCollection, WithHeadings, ShouldAuto
                 // Get worksheet
                 $sheet = $event->sheet->getDelegate();
                 
-                // Apply explicit DataType::TYPE_STRING to IC and phone number columns in the example row
-                $sheet->getCell('C2')->setValueExplicit('980123456789', DataType::TYPE_STRING);
-                $sheet->getCell('D2')->setValueExplicit('0123456789', DataType::TYPE_STRING);
+                // Apply explicit DataType::TYPE_STRING to IC and phone number columns in the example rows
+                $sheet->getCell('B2')->setValueExplicit('980123456789', DataType::TYPE_STRING);
+                $sheet->getCell('E2')->setValueExplicit('0123456789', DataType::TYPE_STRING);
+                $sheet->getCell('I2')->setValueExplicit('0123456790', DataType::TYPE_STRING);
                 
-                // Add data validation to ensure data entered is treated as text
-                // Apply to IC column (column C) and phone column (column D)
-                $icColumn = $sheet->getColumnDimension('C');
-                $phoneColumn = $sheet->getColumnDimension('D');
+                $sheet->getCell('B3')->setValueExplicit('010123456789', DataType::TYPE_STRING);
+                $sheet->getCell('E3')->setValueExplicit('0187654321', DataType::TYPE_STRING);
+                $sheet->getCell('I3')->setValueExplicit('0123456792', DataType::TYPE_STRING);
                 
-                // Format the columns differently
-                $sheet->getStyle('C:C')->getNumberFormat()->setFormatCode('@');
-                $sheet->getStyle('D:D')->getNumberFormat()->setFormatCode('@');
+                // Format the columns as text
+                $sheet->getStyle('B:B')->getNumberFormat()->setFormatCode('@'); // IC Number
+                $sheet->getStyle('E:E')->getNumberFormat()->setFormatCode('@'); // Student's Phone Number
+                $sheet->getStyle('I:I')->getNumberFormat()->setFormatCode('@'); // Parent/Guardian Phone
                 
-                // Add a note explaining the format (optional)
-                $sheet->getComment('C1')->getText()->createTextRun('Important: IC numbers must be entered as text to preserve all digits');
-                $sheet->getComment('D1')->getText()->createTextRun('Important: Phone numbers must be entered as text to preserve leading zeros');
+                // Add comments explaining the format
+                $sheet->getComment('B1')->getText()->createTextRun('Important: IC numbers must be entered as text to preserve all digits');
+                $sheet->getComment('E1')->getText()->createTextRun('Important: Phone numbers must be entered as text to preserve leading zeros');
+                $sheet->getComment('I1')->getText()->createTextRun('Important: Phone numbers must be entered as text to preserve leading zeros');
             },
         ];
     }

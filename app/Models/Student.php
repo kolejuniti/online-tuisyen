@@ -24,6 +24,12 @@ class Student extends Authenticatable
         'phone_number',
         'school_id',
         'status',
+        'tingkatan',
+        'date_of_birth',
+        'gender',
+        'parent_guardian_name',
+        'parent_guardian_phone',
+        'address',
     ];
 
     /**
@@ -46,6 +52,7 @@ class Student extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
         ];
     }
 

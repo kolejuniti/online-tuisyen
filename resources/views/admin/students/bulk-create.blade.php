@@ -16,9 +16,9 @@
                                 <a href="{{ route('admin.students.index') }}" class="btn btn-secondary btn-rounded">
                                     <i class="fa fa-list"></i> Back to List
                                 </a>
-                                {{-- <a href="{{ route('admin.students.downloadTemplate') }}" class="btn btn-info btn-rounded" style="margin-right: 8px;">
-                                    <i class="fa fa-download"></i> Download Excel Template
-                                </a> --}}
+                                <a href="{{ route('admin.students.downloadTemplate') }}" class="btn btn-success btn-rounded" style="margin-right: 8px;">
+                                    <i class="fa fa-download"></i> Download Excel Template (Recommended)
+                                </a>
                                 <a href="{{ route('admin.students.downloadCsvTemplate') }}" class="btn btn-warning btn-rounded" style="margin-right: 8px;">
                                     <i class="fa fa-download"></i> Download CSV Template
                                 </a>
@@ -67,8 +67,20 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="student_file">Student Data File (.xlsx, .xls, .csv) <p style="color:red; display:inline-block;">*</p></label>
-                                            <input type="file" name="student_file" class="form-control" id="student_file" accept=".xlsx, .xls, .csv" required>
-                                            <small class="form-text text-muted">Download the template file first. Columns: full_name, email_address, ic_number, phone_number (optional). <strong>Important:</strong> Format 'ic_number' and 'phone_number' columns as 'Text' in your spreadsheet before entering data. Phone numbers should include the leading '0'.</small>
+                                            <input type="file" name="student_file" class="form-control" id="student_file" accept=".xlsx,.xls,.csv" required>
+                                            <small class="form-text text-muted">
+                                                <strong>📊 Use Excel Template (XLSX) - Recommended!</strong>
+                                                <br>The Excel template (.xlsx) automatically formats IC and phone number columns as text to preserve leading zeros.
+                                                <br><br><strong>📝 Instructions:</strong>
+                                                <br>1. Download the <strong>Excel Template</strong> (green button above)
+                                                <br>2. Fill in the data - the IC and phone columns are pre-formatted as text
+                                                <br>3. Save and upload the file
+                                                <br><br><strong>⚠️ Important:</strong>
+                                                <br>• Use "Tingkatan 5" exactly as shown
+                                                <br>• Phone numbers must include leading '0' (e.g., 0123456789)
+                                                <br>• IC numbers will preserve all digits (e.g., 010123456789)
+                                                <br>• CSV format may lose leading zeros - use Excel (.xlsx) instead
+                                            </small>
                                         </div>
                                     </div>
                                 </div>

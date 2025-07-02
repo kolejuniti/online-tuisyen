@@ -753,6 +753,293 @@
             .feature-highlight {
                 padding: 1.5rem;
             }
+
+            .excel-data-table .table thead th {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.75rem;
+            }
+
+            .excel-data-table .table tbody td {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.75rem;
+                max-width: 80px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            body::before {
+                display: none !important;
+            }
+
+            .hero-section,
+            .language-switcher,
+            .action-buttons,
+            .loading-overlay {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 20pt !important;
+            }
+
+            .main-container {
+                background: white !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 20pt !important;
+            }
+
+            .success-container {
+                padding: 0 !important;
+            }
+
+            .success-icon i {
+                color: #28a745 !important;
+                font-size: 48pt !important;
+            }
+
+            .success-title {
+                color: black !important;
+                font-size: 24pt !important;
+                margin: 20pt 0 !important;
+                text-align: center !important;
+            }
+
+            .alert {
+                background: #f8f9fa !important;
+                border: 1px solid #28a745 !important;
+                color: black !important;
+                padding: 15pt !important;
+                margin: 15pt 0 !important;
+                border-radius: 0 !important;
+            }
+
+            .success-details .row {
+                display: block !important;
+            }
+
+            .success-details .col-md-4 {
+                width: 100% !important;
+                margin-bottom: 15pt !important;
+                page-break-inside: avoid !important;
+            }
+
+            .success-step {
+                border: 1px solid #dee2e6 !important;
+                padding: 15pt !important;
+                margin-bottom: 10pt !important;
+            }
+
+            .success-step .step-icon i {
+                font-size: 18pt !important;
+                color: black !important;
+            }
+
+            .success-step h5 {
+                color: black !important;
+                font-size: 14pt !important;
+                margin: 10pt 0 5pt 0 !important;
+            }
+
+            .success-step p {
+                color: #666 !important;
+                font-size: 10pt !important;
+                margin: 0 !important;
+            }
+
+            .next-steps {
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                padding: 15pt !important;
+                margin: 20pt 0 !important;
+                page-break-inside: avoid !important;
+            }
+
+            .next-steps h4 {
+                color: black !important;
+                font-size: 16pt !important;
+                margin-bottom: 10pt !important;
+            }
+
+            .next-steps ul {
+                margin: 0 !important;
+                padding-left: 20pt !important;
+            }
+
+            .next-steps li {
+                margin-bottom: 8pt !important;
+                font-size: 11pt !important;
+            }
+
+            .next-steps i {
+                color: black !important;
+            }
+
+            .contact-info {
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                padding: 15pt !important;
+                margin: 15pt 0 !important;
+                page-break-inside: avoid !important;
+            }
+
+            .contact-info h6 {
+                color: black !important;
+                font-size: 14pt !important;
+                margin-bottom: 10pt !important;
+            }
+
+            .contact-info p {
+                color: black !important;
+                font-size: 11pt !important;
+                margin: 5pt 0 !important;
+            }
+
+            .print-header {
+                display: block !important;
+                text-align: center !important;
+                margin-bottom: 30pt !important;
+                padding-bottom: 15pt !important;
+                border-bottom: 2px solid #333 !important;
+            }
+
+            .print-date {
+                display: block !important;
+                text-align: right !important;
+                font-size: 10pt !important;
+                color: #666 !important;
+                margin-bottom: 20pt !important;
+            }
+
+            .print-section {
+                margin-bottom: 25pt !important;
+                page-break-inside: avoid-page !important;
+                break-inside: avoid !important;
+            }
+
+            .print-section-title {
+                color: black !important;
+                font-size: 16pt !important;
+                font-weight: bold !important;
+                margin-bottom: 10pt !important;
+                padding-bottom: 5pt !important;
+                border-bottom: 1px solid #ccc !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+
+            /* Page break rules */
+            .page-break-before {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+
+            .page-break-after {
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .no-page-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Table page break handling */
+            table {
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+
+            thead {
+                display: table-header-group !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            tbody {
+                display: table-row-group !important;
+            }
+
+            tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            th, td {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Specific section breaks */
+            .registration-details-section {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+
+            .student-section {
+                page-break-before: auto !important;
+                break-before: auto !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .student-table-container {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 20pt !important;
+            }
+
+            .notes-section {
+                page-break-before: auto !important;
+                break-before: auto !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .submission-details {
+                display: block !important;
+            }
+
+            .detail-row {
+                display: flex !important;
+                justify-content: space-between !important;
+                margin-bottom: 8pt !important;
+                font-size: 11pt !important;
+            }
+
+            .detail-label {
+                font-weight: bold !important;
+                color: black !important;
+            }
+
+            .detail-value {
+                color: #333 !important;
+            }
+
+            /* Hide screen-only elements */
+            .screen-only {
+                display: none !important;
+            }
+
+            /* Show print-only elements */
+            .print-only {
+                display: block !important;
+            }
         }
 
         /* Select2 Custom Styling */
@@ -867,6 +1154,67 @@
 
         .alert .btn-close {
             filter: invert(1);
+        }
+
+        /* Excel Data Table Styles */
+        .excel-data-table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .excel-data-table .table {
+            margin: 0;
+        }
+
+        .excel-data-table .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 1rem 0.75rem;
+            font-size: 0.9rem;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .excel-data-table .table tbody td {
+            padding: 0.75rem;
+            border-color: rgba(226, 232, 240, 0.5);
+            font-size: 0.85rem;
+            vertical-align: middle;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .excel-data-table .table tbody tr:nth-child(odd) {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+
+        .excel-data-table .table tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.08);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+        }
+
+        .data-summary {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .data-summary i {
+            font-size: 1.2rem;
         }
 
         /* Language Switcher Styles */
@@ -985,15 +1333,128 @@
 
     <!-- Main Registration Container -->
     <div class="container">
-        <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+            <!-- Success State - Hide form and show success message -->
+            <div class="main-container animate__animated animate__fadeInUp">
+                <!-- Print Header (Print Only) -->
+                <div class="print-only print-header" style="display: none;">
+                    <h1 style="margin: 0; font-size: 24pt; color: #333;">School Registration Confirmation</h1>
+                    <p style="margin: 5pt 0 0 0; font-size: 14pt; color: #666;">Online Tuition Platform</p>
+                </div>
+                
+                <!-- Print Date (Print Only) -->
+                <div class="print-only print-date" style="display: none;">
+                    Registration Date: <span id="printDate"></span>
+                </div>
+
+                <div class="success-container text-center" style="padding: 4rem 2rem;">
+                    <div class="success-icon mb-4 screen-only">
+                        <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--success-color);"></i>
+                    </div>
+                    
+                    <h2 class="success-title mb-3" style="color: var(--dark-text); font-weight: 700;">
+                        <span data-key="success.title">Pendaftaran Berjaya!</span>
+                    </h2>
+
+                    <!-- Print-Only Submission Details -->
+                    <div class="print-only print-section registration-details-section no-page-break" style="display: none;">
+                        <h3 class="print-section-title">Registration Details</h3>
+                        <div id="printSubmissionDetails">
+                            <!-- Details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success border-0" style="background: linear-gradient(135deg, #10b981, #059669); max-width: 600px; margin: 0 auto 2rem;">
                 <i class="fas fa-check-circle me-2"></i>
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        @endif
 
+                    <div class="success-details" style="max-width: 700px; margin: 0 auto;">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="success-step">
+                                    <div class="step-icon mb-2">
+                                        <i class="fas fa-school" style="font-size: 2rem; color: var(--primary-color);"></i>
+                                    </div>
+                                    <h5 data-key="success.step1.title">Sekolah Diaktifkan</h5>
+                                    <p class="text-muted small" data-key="success.step1.desc">Sekolah anda telah berjaya diaktifkan dalam sistem kami</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="success-step">
+                                    <div class="step-icon mb-2">
+                                        <i class="fas fa-users" style="font-size: 2rem; color: var(--accent-color);"></i>
+                                    </div>
+                                    <h5 data-key="success.step2.title">Pelajar Didaftarkan</h5>
+                                    <p class="text-muted small" data-key="success.step2.desc">Akaun pelajar telah dicipta dengan kata laluan default</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="success-step">
+                                    <div class="step-icon mb-2">
+                                        <i class="fas fa-envelope" style="font-size: 2rem; color: var(--warning-color);"></i>
+                                    </div>
+                                    <h5 data-key="success.step3.title">E-mel Pengesahan</h5>
+                                    <p class="text-muted small" data-key="success.step3.desc">Maklumat login akan dihantar ke e-mel anda</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="next-steps mt-4 p-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.03)); border-radius: 15px; max-width: 600px; margin: 2rem auto;">
+                        <h4 class="mb-3" data-key="success.next.title">Langkah Seterusnya:</h4>
+                        <ul class="list-unstyled text-left" style="max-width: 500px; margin: 0 auto;">
+                            <li class="mb-2" data-key="success.next.step1"><i class="fas fa-clock text-primary me-2"></i>Tunggu e-mel pengesahan dalam masa 24-48 jam</li>
+                            <li class="mb-2" data-key="success.next.step2"><i class="fas fa-key text-success me-2"></i>Kongsikan maklumat login dengan pelajar</li>
+                            <li class="mb-2" data-key="success.next.step3"><i class="fas fa-rocket text-warning me-2"></i>Mula gunakan platform setelah kelulusan</li>
+                            <li class="mb-2" data-key="success.next.step4"><i class="fas fa-headset text-info me-2"></i>Hubungi sokongan jika ada pertanyaan</li>
+                        </ul>
+                    </div>
+
+                    <div class="contact-info mt-4 p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; max-width: 500px; margin: 2rem auto;">
+                        <h6 class="mb-2" data-key="success.contact.title">Butuh Bantuan?</h6>
+                        <p class="mb-2 small">
+                            <i class="fas fa-envelope me-2"></i>
+                            <span data-key="success.contact.email">E-mel: support@onlinetuition.com</span>
+                        </p>
+                        <p class="mb-0 small">
+                            <i class="fas fa-phone me-2"></i>
+                            <span data-key="success.contact.phone">Telefon: +60 12-345 6789</span>
+                        </p>
+                    </div>
+
+                    <!-- Print-Only Student Information -->
+                    <div class="print-only print-section student-section" style="display: none;">
+                        <h3 class="print-section-title">Student Information</h3>
+                        <div id="printStudentDetails">
+                            <!-- Student details will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Print-Only Important Notes -->
+                    <div class="print-only print-section notes-section no-page-break" style="display: none;">
+                        <h3 class="print-section-title">Important Notes</h3>
+                        <ul style="margin: 0; padding-left: 20pt; font-size: 11pt;">
+                            <li style="margin-bottom: 8pt;">Default student passwords have been set to "student123" for individual entries</li>
+                            <li style="margin-bottom: 8pt;">Students imported via Excel have default password "password"</li>
+                            <li style="margin-bottom: 8pt;">Please ensure students change their passwords after first login</li>
+                            <li style="margin-bottom: 8pt;">Login credentials will be sent via email within 24-48 hours</li>
+                            <li style="margin-bottom: 8pt;">Keep this document for your records</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-buttons mt-4 screen-only">
+                        <a href="{{ url('/') }}" class="btn btn-primary-custom me-3">
+                            <i class="fas fa-home"></i> <span data-key="success.btn.home">Kembali ke Laman Utama</span>
+                        </a>
+                        <button onclick="printRegistrationDetails()" class="btn btn-outline-custom">
+                            <i class="fas fa-print"></i> <span data-key="success.btn.print">Cetak Maklumat</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Error Messages -->
         @if(session('error'))
             <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i>
@@ -1015,6 +1476,7 @@
             </div>
         @endif
 
+            <!-- Registration Form -->
         <div class="main-container animate__animated animate__fadeInUp animate__delay-2s">
             <!-- Progress Bar -->
             <div class="progress-bar-container">
@@ -1184,7 +1646,7 @@
 
                         <div id="uploadProgress" class="mt-3" style="display: none;">
                             <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
                             </div>
                             <p class="mt-2 text-center" data-key="form.bulk.processing">Memproses fail Excel...</p>
                         </div>
@@ -1248,6 +1710,7 @@
                 </div>
             </form>
         </div>
+        @endif
     </div>
 
     <!-- Bootstrap JS -->
@@ -1256,6 +1719,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- SheetJS for Excel reading -->
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
@@ -1320,6 +1785,20 @@
                 'form.bulk.browse_text': 'atau klik untuk cari fail',
                 'form.bulk.format_info': 'Format disokong: .xlsx, .xls (Saiz maksimum: 10MB)',
                 'form.bulk.processing': 'Memproses fail Excel...',
+                'form.bulk.file_selected': 'Fail "{filename}" dipilih dengan jayanya. Data pelajar akan diproses apabila anda menghantar borang pendaftaran.',
+                'form.bulk.file_processed': 'Berjaya memproses "{filename}" - Dijumpai {count} pelajar',
+                'form.bulk.no_data': 'Fail Excel kosong atau tidak mempunyai data.',
+                'form.bulk.no_students': 'Tiada data pelajar dijumpai dalam fail.',
+                'form.bulk.headers.student_name': 'Nama Pelajar',
+                'form.bulk.headers.ic_number': 'No. Kad Pengenalan',
+                'form.bulk.headers.email': 'E-mel',
+                'form.bulk.headers.tingkatan': 'Tingkatan',
+                'form.bulk.headers.phone': 'No. Telefon Pelajar',
+                'form.bulk.headers.dob': 'Tarikh Lahir',
+                'form.bulk.headers.gender': 'Jantina',
+                'form.bulk.headers.parent_name': 'Nama Ibu Bapa/Penjaga',
+                'form.bulk.headers.parent_phone': 'Telefon Ibu Bapa/Penjaga',
+                'form.bulk.headers.address': 'Alamat',
                 
                 // Form - Individual
                 'form.individual.title': 'Tambah Pelajar Individu',
@@ -1328,26 +1807,17 @@
                 
                 // Form - Student Details
                 'form.student.title': 'Pelajar',
-                'form.student.first_name': 'Nama Pertama',
-                'form.student.first_name_placeholder': 'Nama pertama pelajar',
-                'form.student.last_name': 'Nama Akhir',
-                'form.student.last_name_placeholder': 'Nama akhir pelajar',
+                'form.student.name': 'Nama Pelajar',
+                'form.student.name_placeholder': 'Nama penuh pelajar',
+                'form.student.ic': 'No. Kad Pengenalan',
+                'form.student.ic_placeholder': '980123456789',
                 'form.student.email': 'E-mel',
                 'form.student.email_placeholder': 'e-mel@contoh.com',
-                'form.student.grade': 'Tingkatan/Darjah',
-                'form.student.grade_placeholder': 'Pilih tingkatan/darjah',
-                'form.student.grades.darjah1': 'Darjah 1',
-                'form.student.grades.darjah2': 'Darjah 2',
-                'form.student.grades.darjah3': 'Darjah 3',
-                'form.student.grades.darjah4': 'Darjah 4',
-                'form.student.grades.darjah5': 'Darjah 5',
-                'form.student.grades.darjah6': 'Darjah 6',
-                'form.student.grades.form1': 'Tingkatan 1',
-                'form.student.grades.form2': 'Tingkatan 2',
-                'form.student.grades.form3': 'Tingkatan 3',
-                'form.student.grades.form4': 'Tingkatan 4',
-                'form.student.grades.form5': 'Tingkatan 5',
-                'form.student.grades.form6': 'Tingkatan 6',
+                'form.student.phone': 'No. Telefon Pelajar',
+                'form.student.phone_placeholder': '0123456789',
+                'form.student.grade': 'Tingkatan',
+                'form.student.grade_placeholder': 'Pilih tingkatan',
+                'form.student.grade.form5': 'Tingkatan 5',
                 
                 // Form - Review
                 'form.review.title': 'Semak & Hantar',
@@ -1361,7 +1831,31 @@
                 // Navigation
                 'nav.previous': 'Sebelumnya',
                 'nav.next': 'Seterusnya',
-                'nav.submit': 'Hantar Pendaftaran'
+                'nav.submit': 'Hantar Pendaftaran',
+                
+                // Validation messages
+                'validation.students_required': 'Sila tambah pelajar sama ada secara individu atau muat naik fail Excel.',
+                'validation.students_required_step': 'Sila tambah pelajar sama ada secara individu atau muat naik fail Excel sebelum meneruskan.',
+                'validation.required_fields': 'Sila lengkapkan semua medan yang diperlukan sebelum meneruskan.',
+                
+                // Success page
+                'success.title': 'Pendaftaran Berjaya!',
+                'success.step1.title': 'Sekolah Diaktifkan',
+                'success.step1.desc': 'Sekolah anda telah berjaya diaktifkan dalam sistem kami',
+                'success.step2.title': 'Pelajar Didaftarkan',
+                'success.step2.desc': 'Akaun pelajar telah dicipta dengan kata laluan default',
+                'success.step3.title': 'E-mel Pengesahan',
+                'success.step3.desc': 'Maklumat login akan dihantar ke e-mel anda',
+                'success.next.title': 'Langkah Seterusnya:',
+                'success.next.step1': 'Tunggu e-mel pengesahan dalam masa 24-48 jam',
+                'success.next.step2': 'Kongsikan maklumat login dengan pelajar',
+                'success.next.step3': 'Mula gunakan platform setelah kelulusan',
+                'success.next.step4': 'Hubungi sokongan jika ada pertanyaan',
+                'success.contact.title': 'Butuh Bantuan?',
+                'success.contact.email': 'E-mel: support@onlinetuition.com',
+                'success.contact.phone': 'Telefon: +60 12-345 6789',
+                'success.btn.home': 'Kembali ke Laman Utama',
+                'success.btn.print': 'Cetak Maklumat'
             },
             en: {
                 // Hero section
@@ -1420,6 +1914,20 @@
                 'form.bulk.browse_text': 'or click to browse files',
                 'form.bulk.format_info': 'Supported formats: .xlsx, .xls (Max size: 10MB)',
                 'form.bulk.processing': 'Processing Excel file...',
+                'form.bulk.file_selected': 'File "{filename}" selected successfully. Student data will be processed when you submit the registration form.',
+                'form.bulk.file_processed': 'Successfully processed "{filename}" - Found {count} students',
+                'form.bulk.no_data': 'Excel file is empty or contains no data.',
+                'form.bulk.no_students': 'No student data found in the file.',
+                'form.bulk.headers.student_name': 'Student Name',
+                'form.bulk.headers.ic_number': 'IC Number',
+                'form.bulk.headers.email': 'Email',
+                'form.bulk.headers.tingkatan': 'Tingkatan',
+                'form.bulk.headers.phone': 'Student\'s Phone Number',
+                'form.bulk.headers.dob': 'Date of Birth',
+                'form.bulk.headers.gender': 'Gender',
+                'form.bulk.headers.parent_name': 'Parent/Guardian Name',
+                'form.bulk.headers.parent_phone': 'Parent/Guardian Phone',
+                'form.bulk.headers.address': 'Address',
                 
                 // Form - Individual
                 'form.individual.title': 'Add Individual Students',
@@ -1428,26 +1936,17 @@
                 
                 // Form - Student Details
                 'form.student.title': 'Student',
-                'form.student.first_name': 'First Name',
-                'form.student.first_name_placeholder': 'Student\'s first name',
-                'form.student.last_name': 'Last Name',
-                'form.student.last_name_placeholder': 'Student\'s last name',
+                'form.student.name': 'Student Name',
+                'form.student.name_placeholder': 'Full student name',
+                'form.student.ic': 'IC Number',
+                'form.student.ic_placeholder': '980123456789',
                 'form.student.email': 'Email',
                 'form.student.email_placeholder': 'email@example.com',
-                'form.student.grade': 'Form/Standard',
-                'form.student.grade_placeholder': 'Select form/standard',
-                'form.student.grades.darjah1': 'Standard 1',
-                'form.student.grades.darjah2': 'Standard 2',
-                'form.student.grades.darjah3': 'Standard 3',
-                'form.student.grades.darjah4': 'Standard 4',
-                'form.student.grades.darjah5': 'Standard 5',
-                'form.student.grades.darjah6': 'Standard 6',
-                'form.student.grades.form1': 'Form 1',
-                'form.student.grades.form2': 'Form 2',
-                'form.student.grades.form3': 'Form 3',
-                'form.student.grades.form4': 'Form 4',
-                'form.student.grades.form5': 'Form 5',
-                'form.student.grades.form6': 'Form 6',
+                'form.student.phone': 'Student\'s Phone Number',
+                'form.student.phone_placeholder': '0123456789',
+                'form.student.grade': 'Tingkatan',
+                'form.student.grade_placeholder': 'Select tingkatan',
+                'form.student.grade.form5': 'Tingkatan 5',
                 
                 // Form - Review
                 'form.review.title': 'Review & Submit',
@@ -1461,7 +1960,31 @@
                 // Navigation
                 'nav.previous': 'Previous',
                 'nav.next': 'Next',
-                'nav.submit': 'Submit Registration'
+                'nav.submit': 'Submit Registration',
+                
+                // Validation messages
+                'validation.students_required': 'Please add students either individually or by uploading an Excel file.',
+                'validation.students_required_step': 'Please add students either individually or by uploading an Excel file before proceeding.',
+                'validation.required_fields': 'Please fill in all required fields before proceeding.',
+                
+                // Success page
+                'success.title': 'Registration Successful!',
+                'success.step1.title': 'School Activated',
+                'success.step1.desc': 'Your school has been successfully activated in our system',
+                'success.step2.title': 'Students Registered',
+                'success.step2.desc': 'Student accounts have been created with default passwords',
+                'success.step3.title': 'Confirmation Email',
+                'success.step3.desc': 'Login information will be sent to your email',
+                'success.next.title': 'Next Steps:',
+                'success.next.step1': 'Wait for confirmation email within 24-48 hours',
+                'success.next.step2': 'Share login information with students',
+                'success.next.step3': 'Start using the platform after approval',
+                'success.next.step4': 'Contact support if you have questions',
+                'success.contact.title': 'Need Help?',
+                'success.contact.email': 'Email: support@onlinetuition.com',
+                'success.contact.phone': 'Phone: +60 12-345 6789',
+                'success.btn.home': 'Back to Home',
+                'success.btn.print': 'Print Information'
             }
         };
 
@@ -1664,8 +2187,19 @@
                 }
             });
 
-            if (!isValid) {
-                alert('Please fill in all required fields before proceeding.');
+            // For step 2 (students), validate that at least one method of adding students is used
+            if (currentStep === 2) {
+                const hasIndividualStudents = document.querySelectorAll('.student-card').length > 0;
+                const hasExcelFile = document.getElementById('excelFile').files.length > 0;
+                
+                if (!hasIndividualStudents && !hasExcelFile) {
+                    isValid = false;
+                    alert(translations[currentLanguage]['validation.students_required_step']);
+                }
+            }
+
+            if (!isValid && currentStep !== 2) {
+                alert(translations[currentLanguage]['validation.required_fields']);
             }
 
             return isValid;
@@ -1683,41 +2217,36 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.first_name">Nama Pertama</span> <span class="required">*</span></label>
-                            <input type="text" name="students[${studentIndex}][first_name]" class="form-control" data-placeholder-key="form.student.first_name_placeholder" placeholder="Nama pertama pelajar" required>
+                            <label class="form-label"><span data-key="form.student.name">Nama Pelajar</span> <span class="required">*</span></label>
+                            <input type="text" name="students[${studentIndex}][name]" class="form-control" data-placeholder-key="form.student.name_placeholder" placeholder="Nama penuh pelajar" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.last_name">Nama Akhir</span> <span class="required">*</span></label>
-                            <input type="text" name="students[${studentIndex}][last_name]" class="form-control" data-placeholder-key="form.student.last_name_placeholder" placeholder="Nama akhir pelajar" required>
+                            <label class="form-label"><span data-key="form.student.ic">No. Kad Pengenalan</span> <span class="required">*</span></label>
+                            <input type="text" name="students[${studentIndex}][ic_number]" class="form-control" data-placeholder-key="form.student.ic_placeholder" placeholder="980123456789" required>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label"><span data-key="form.student.email">E-mel</span></label>
                             <input type="email" name="students[${studentIndex}][email]" class="form-control" data-placeholder-key="form.student.email_placeholder" placeholder="e-mel@contoh.com">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.grade">Tingkatan/Darjah</span> <span class="required">*</span></label>
+                            <label class="form-label"><span data-key="form.student.phone">No. Telefon Pelajar</span></label>
+                            <input type="tel" name="students[${studentIndex}][phone]" class="form-control" data-placeholder-key="form.student.phone_placeholder" placeholder="0123456789">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label"><span data-key="form.student.grade">Tingkatan</span> <span class="required">*</span></label>
                             <select name="students[${studentIndex}][grade]" class="form-control" required>
-                                <option value="" data-key="form.student.grade_placeholder">Pilih tingkatan/darjah</option>
-                                <option value="darjah1" data-key="form.student.grades.darjah1">Darjah 1</option>
-                                <option value="darjah2" data-key="form.student.grades.darjah2">Darjah 2</option>
-                                <option value="darjah3" data-key="form.student.grades.darjah3">Darjah 3</option>
-                                <option value="darjah4" data-key="form.student.grades.darjah4">Darjah 4</option>
-                                <option value="darjah5" data-key="form.student.grades.darjah5">Darjah 5</option>
-                                <option value="darjah6" data-key="form.student.grades.darjah6">Darjah 6</option>
-                                <option value="form1" data-key="form.student.grades.form1">Tingkatan 1</option>
-                                <option value="form2" data-key="form.student.grades.form2">Tingkatan 2</option>
-                                <option value="form3" data-key="form.student.grades.form3">Tingkatan 3</option>
-                                <option value="form4" data-key="form.student.grades.form4">Tingkatan 4</option>
-                                <option value="form5" data-key="form.student.grades.form5">Tingkatan 5</option>
-                                <option value="form6" data-key="form.student.grades.form6">Tingkatan 6</option>
+                                <option value="" data-key="form.student.grade_placeholder">Pilih tingkatan</option>
+                                <option value="form5" data-key="form.student.grade.form5">Tingkatan 5</option>
                             </select>
                         </div>
                     </div>
@@ -1794,25 +2323,121 @@
             // Show upload progress
             document.getElementById('uploadProgress').style.display = 'block';
             
-            // Simulate file processing (replace with actual upload logic)
-            setTimeout(() => {
-                document.getElementById('uploadProgress').style.display = 'none';
-                document.getElementById('uploadResults').style.display = 'block';
+            // Read and process the Excel file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get the first worksheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Process the data
+                    processExcelData(jsonData, file.name);
+                    
+                } catch (error) {
+                    document.getElementById('uploadProgress').style.display = 'none';
+                    document.getElementById('uploadResults').style.display = 'block';
+                    document.getElementById('uploadResults').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Error reading Excel file: ${error.message}
+                        </div>
+                    `;
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processExcelData(data, fileName) {
+            document.getElementById('uploadProgress').style.display = 'none';
+            document.getElementById('uploadResults').style.display = 'block';
+            
+            if (data.length < 2) {
                 document.getElementById('uploadResults').innerHTML = `
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i>
-                        Successfully processed "${file.name}" - Found 25 students
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${translations[currentLanguage]['form.bulk.no_data']}
                     </div>
                 `;
-            }, 2000);
+                return;
+            }
+            
+            // Get headers and data rows
+            const headers = data[0];
+            const rows = data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim()));
+            
+            if (rows.length === 0) {
+                document.getElementById('uploadResults').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${translations[currentLanguage]['form.bulk.no_students']}
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create table HTML with improved styling
+            let tableHTML = `
+                <div class="data-summary">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${translations[currentLanguage]['form.bulk.file_processed'].replace('{filename}', fileName).replace('{count}', rows.length)}</span>
+                </div>
+                <div class="excel-data-table">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>`;
+            
+            // Add headers
+            const expectedHeaders = [
+                translations[currentLanguage]['form.bulk.headers.student_name'] || 'Student Name',
+                translations[currentLanguage]['form.bulk.headers.ic_number'] || 'IC Number', 
+                translations[currentLanguage]['form.bulk.headers.email'] || 'Email',
+                translations[currentLanguage]['form.bulk.headers.tingkatan'] || 'Tingkatan',
+                translations[currentLanguage]['form.bulk.headers.phone'] || 'Student\'s Phone Number',
+                translations[currentLanguage]['form.bulk.headers.dob'] || 'Date of Birth',
+                translations[currentLanguage]['form.bulk.headers.gender'] || 'Gender',
+                translations[currentLanguage]['form.bulk.headers.parent_name'] || 'Parent/Guardian Name',
+                translations[currentLanguage]['form.bulk.headers.parent_phone'] || 'Parent/Guardian Phone',
+                translations[currentLanguage]['form.bulk.headers.address'] || 'Address'
+            ];
+            
+            expectedHeaders.forEach(header => {
+                tableHTML += `<th>${header}</th>`;
+            });
+            
+            tableHTML += `</tr></thead><tbody>`;
+            
+            // Add data rows
+            rows.forEach((row, index) => {
+                tableHTML += '<tr>';
+                for (let i = 0; i < 10; i++) { // Ensure we show all 10 columns
+                    const cellValue = row[i] || '';
+                    const displayValue = cellValue.toString().length > 30 ? 
+                        cellValue.toString().substring(0, 30) + '...' : cellValue;
+                    tableHTML += `<td title="${cellValue}">${displayValue}</td>`;
+                }
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += `</tbody></table></div></div>`;
+            
+            document.getElementById('uploadResults').innerHTML = tableHTML;
         }
 
         function downloadTemplate() {
-            // Open the Excel template page in a new window/tab
-            window.open('{{ route("school.student-template") }}', '_blank');
+            // Trigger direct download of Excel template
+            window.location.href = '{{ route("school.download-template") }}';
             
-            // Optionally, you can also trigger a direct download link
-            // window.location.href = '{{ route("school.download-template") }}';
+            // Optionally, also open the template view in a new tab for reference
+            // window.open('{{ route("school.student-template") }}', '_blank');
         }
 
         function populateReview() {
@@ -1882,18 +2507,265 @@
         }
 
         function handleSubmit(e) {
-            e.preventDefault();
-            
-            // Show loading overlay
+            // Show loading overlay first
             document.getElementById('loadingOverlay').style.display = 'flex';
             
-            // Simulate form submission (replace with actual submission logic)
-            setTimeout(() => {
+            // Check if students have been added
+            const hasIndividualStudents = document.querySelectorAll('.student-card').length > 0;
+            const hasExcelFile = document.getElementById('excelFile').files.length > 0;
+            
+            if (!hasIndividualStudents && !hasExcelFile) {
+                e.preventDefault();
+                // Hide loading overlay since we're not submitting
                 document.getElementById('loadingOverlay').style.display = 'none';
-                alert('Registration submitted successfully! You will receive a confirmation email shortly.');
-                // Redirect or reset form as needed
-            }, 3000);
+                alert(translations[currentLanguage]['validation.students_required']);
+                return false;
+            }
+            
+            // Store form data for printing
+            storeFormDataForPrint();
+            
+            // Form will now submit to the server
+            return true;
         }
+
+        function storeFormDataForPrint() {
+            const form = document.getElementById('registrationForm');
+            const formData = new FormData(form);
+            
+            // Get selected school name
+            const selectedSchoolText = $('#schoolSelect option:selected').text() || 'Not selected';
+            
+            // Collect individual students data
+            const individualStudents = [];
+            document.querySelectorAll('.student-card').forEach((card, index) => {
+                const nameInput = card.querySelector('input[name*="[name]"]');
+                const icInput = card.querySelector('input[name*="[ic_number]"]');
+                const emailInput = card.querySelector('input[name*="[email]"]');
+                const phoneInput = card.querySelector('input[name*="[phone]"]');
+                const gradeSelect = card.querySelector('select[name*="[grade]"]');
+                
+                if (nameInput && nameInput.value) {
+                    individualStudents.push({
+                        name: nameInput.value,
+                        ic: icInput ? icInput.value : '',
+                        email: emailInput ? emailInput.value : '',
+                        phone: phoneInput ? phoneInput.value : '',
+                        grade: gradeSelect ? gradeSelect.options[gradeSelect.selectedIndex].text : ''
+                    });
+                }
+            });
+            
+            // Get Excel file info
+            const excelFile = document.getElementById('excelFile').files[0];
+            const hasExcelFile = excelFile ? true : false;
+            const excelFileName = excelFile ? excelFile.name : null;
+            
+            // Store data in localStorage
+            const printData = {
+                schoolName: selectedSchoolText,
+                schoolEmail: formData.get('school_email') || '',
+                phone: formData.get('phone') || '',
+                schoolType: formData.get('school_type') || '',
+                address: formData.get('address') || '',
+                totalStudents: formData.get('total_students') || '',
+                teacherName: formData.get('teacher_name') || '',
+                teacherEmail: formData.get('teacher_email') || '',
+                individualStudents: individualStudents,
+                hasExcelFile: hasExcelFile,
+                excelFileName: excelFileName,
+                submissionDate: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('registrationPrintData', JSON.stringify(printData));
+        }
+
+        function printRegistrationDetails() {
+            // Populate print sections with stored data
+            populatePrintDetails();
+            
+            // Set print date
+            document.getElementById('printDate').textContent = new Date().toLocaleString();
+            
+            // Trigger print
+            window.print();
+        }
+
+        function generateStudentTable(students, startIndex, title) {
+            let tableHTML = `
+                <div class="student-table-container" style="margin-bottom: 20pt; page-break-inside: avoid;">
+                    <h4 style="color: black; font-size: 14pt; margin-bottom: 10pt; page-break-after: avoid;">${title} (${students.length} ${students.length === 1 ? 'student' : 'students'})</h4>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                        <thead style="display: table-header-group;">
+                            <tr style="background: #f8f9fa; page-break-inside: avoid; break-inside: avoid;">
+                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 8%;">#</th>
+                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 30%;">Name</th>
+                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 20%;">IC Number</th>
+                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 27%;">Email</th>
+                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 15%;">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            students.forEach((student, index) => {
+                tableHTML += `
+                    <tr style="page-break-inside: avoid; break-inside: avoid;">
+                        <td style="border: 1px solid #ccc; padding: 8pt;">${startIndex + index + 1}</td>
+                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.name || ''}</td>
+                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.ic || ''}</td>
+                        <td style="border: 1px solid #ccc; padding: 8pt; word-break: break-all;">${student.email || ''}</td>
+                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.grade || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            return tableHTML;
+        }
+
+        function populatePrintDetails() {
+            const printData = JSON.parse(localStorage.getItem('registrationPrintData') || '{}');
+            
+            // Calculate if we need page breaks based on content size
+            const studentCount = (printData.individualStudents?.length || 0);
+            const hasExcelFile = printData.hasExcelFile;
+            const needsStudentPageBreak = studentCount > 15; // If more than 15 students, start on new page
+            
+            // Populate submission details
+            const submissionDetails = document.getElementById('printSubmissionDetails');
+            if (submissionDetails) {
+                submissionDetails.innerHTML = `
+                    <div class="detail-row">
+                        <span class="detail-label">School Name:</span>
+                        <span class="detail-value">${printData.schoolName || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">School Email:</span>
+                        <span class="detail-value">${printData.schoolEmail || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone Number:</span>
+                        <span class="detail-value">${printData.phone || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">School Type:</span>
+                        <span class="detail-value">${getSchoolTypeText(printData.schoolType)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${printData.address || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Estimated Total Students:</span>
+                        <span class="detail-value">${printData.totalStudents || 'Not specified'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Teacher Coordinator:</span>
+                        <span class="detail-value">${printData.teacherName || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Teacher Email:</span>
+                        <span class="detail-value">${printData.teacherEmail || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Submission Date:</span>
+                        <span class="detail-value">${printData.submissionDate || 'N/A'}</span>
+                    </div>
+                `;
+            }
+            
+                        // Populate student details
+            const studentDetails = document.getElementById('printStudentDetails');
+            if (studentDetails) {
+                let studentHTML = '';
+                
+                // Add page break before student section if needed
+                if (needsStudentPageBreak) {
+                    studentHTML += '<div class="page-break-before"></div>';
+                }
+                
+                                // Individual students
+                if (printData.individualStudents && printData.individualStudents.length > 0) {
+                    const students = printData.individualStudents;
+                    const studentsPerPage = 25; // Maximum students per table page
+                    
+                    if (students.length <= studentsPerPage) {
+                        // Single table for smaller lists
+                        studentHTML += generateStudentTable(students, 0, 'Individual Students');
+                    } else {
+                        // Split into multiple tables for large lists
+                        for (let i = 0; i < students.length; i += studentsPerPage) {
+                            const chunk = students.slice(i, i + studentsPerPage);
+                            const tableTitle = `Individual Students (Page ${Math.floor(i / studentsPerPage) + 1})`;
+                            const isFirstTable = i === 0;
+                            
+                            if (!isFirstTable) {
+                                studentHTML += '<div class="page-break-before"></div>';
+                            }
+                            
+                            studentHTML += generateStudentTable(chunk, i, tableTitle);
+                        }
+                    }
+                }
+                
+                                 // Excel file info
+                 if (printData.hasExcelFile) {
+                     studentHTML += `
+                         <div class="no-page-break" style="margin-bottom: 15pt; page-break-inside: avoid;">
+                             <h4 style="color: black; font-size: 14pt; margin-bottom: 10pt; page-break-after: avoid;">Bulk Upload</h4>
+                             <div class="detail-row">
+                                 <span class="detail-label">Excel File:</span>
+                                 <span class="detail-value">${printData.excelFileName}</span>
+                             </div>
+                             <p style="font-size: 10pt; color: #666; margin: 5pt 0;">
+                                 Students from Excel file will be processed and added to the system.
+                             </p>
+                         </div>
+                     `;
+                 }
+                
+                if (!printData.individualStudents?.length && !printData.hasExcelFile) {
+                    studentHTML = '<p style="font-size: 11pt; color: #666;">No student information available for printing.</p>';
+                }
+                
+                studentDetails.innerHTML = studentHTML;
+            }
+            
+            // Ensure notes section has proper page break handling
+            const notesSection = document.querySelector('.notes-section');
+            if (notesSection && needsStudentPageBreak) {
+                notesSection.style.pageBreakBefore = 'auto';
+                notesSection.style.breakBefore = 'auto';
+            }
+        }
+
+        function getSchoolTypeText(type) {
+            const types = {
+                'public': currentLanguage === 'ms' ? 'Sekolah Kerajaan' : 'Public School',
+                'private': currentLanguage === 'ms' ? 'Sekolah Swasta' : 'Private School',
+                'charter': currentLanguage === 'ms' ? 'Sekolah Piagam' : 'Charter School',
+                'international': currentLanguage === 'ms' ? 'Sekolah Antarabangsa' : 'International School'
+            };
+            return types[type] || type || 'N/A';
+        }
+
+        // Initialize print details if we're on the success page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.querySelector('.success-container')) {
+                populatePrintDetails();
+                // Set print date
+                const printDateElement = document.getElementById('printDate');
+                if (printDateElement) {
+                    printDateElement.textContent = new Date().toLocaleString();
+                }
+            }
+        });
     </script>
 </body>
 </html> 

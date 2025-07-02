@@ -71,6 +71,46 @@
                                                     <input type="text" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number') }}" placeholder="Enter phone number (e.g., 0123456789)">
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="tingkatan">Tingkatan</label>
+                                                    <input type="text" name="tingkatan" class="form-control" id="tingkatan" value="{{ old('tingkatan') }}" placeholder="Enter tingkatan (e.g., Tingkatan 5)">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="date_of_birth">Date of Birth</label>
+                                                    <input type="date" name="date_of_birth" class="form-control" id="date_of_birth" value="{{ old('date_of_birth') }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="gender">Gender</label>
+                                                    <select name="gender" id="gender" class="form-control">
+                                                        <option value="">Select Gender</option>
+                                                        <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                                                        <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="parent_guardian_name">Parent/Guardian Name</label>
+                                                    <input type="text" name="parent_guardian_name" class="form-control" id="parent_guardian_name" value="{{ old('parent_guardian_name') }}" placeholder="Enter parent/guardian name">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="parent_guardian_phone">Parent/Guardian Phone</label>
+                                                    <input type="text" name="parent_guardian_phone" class="form-control" id="parent_guardian_phone" value="{{ old('parent_guardian_phone') }}" placeholder="Enter parent/guardian phone (e.g., 0123456789)">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="address">Address</label>
+                                                    <textarea name="address" class="form-control" id="address" rows="3" placeholder="Enter full address">{{ old('address') }}</textarea>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

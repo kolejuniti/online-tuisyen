@@ -39,6 +39,8 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>IC Number</th>
+                                            <th>Tingkatan</th>
+                                            <th>Gender</th>
                                             <th>School</th>
                                             <th>Status</th>
                                             <th width="15%">Actions</th>
@@ -51,6 +53,8 @@
                                             <td>{{ $student->name }}</td>
                                             <td>{{ $student->email }}</td>
                                             <td>{{ $student->ic }}</td>
+                                            <td>{{ $student->tingkatan ?? 'N/A' }}</td>
+                                            <td>{{ $student->gender ?? 'N/A' }}</td>
                                             <td>{{ $student->school->name ?? 'N/A' }}</td>
                                             <td>
                                                 <span class="badge badge-{{ $student->status == 'active' ? 'success' : 'danger' }}">
@@ -79,7 +83,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="7" class="text-center">No students found.</td>
+                                            <td colspan="9" class="text-center">No students found.</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
