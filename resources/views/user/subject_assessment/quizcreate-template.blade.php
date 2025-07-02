@@ -1,4 +1,4 @@
-@extends('layouts.user.user')
+@extends('layouts.lecturer.lecturer')
 
 @section('main')
 
@@ -15,10 +15,6 @@
 </style>
 
 <link rel="stylesheet" href="{{ asset('css/customCSS.css') }}">
-<!-- Bootstrap CSS for modal functionality -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- jQuery UI CSS required for form-builder's sortable functionality -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -90,7 +86,7 @@
                                     </div>-->
                                     <div class="col-md-2 mb-4">
                                         <div class="form-group">
-                                          <label class="form-label" for="folder">Teacher Folder</label>
+                                          <label class="form-label" for="folder">Lecturer Folder</label>
                                           <select class="form-select" id="folder" name="folder" required>
                                               <option value="" disabled selected>-</option>
                                               @foreach ($folder as $fold)
@@ -117,23 +113,23 @@
                                                 <table id="table_registerstudent" class="w-100 table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100">
                                                     <thead class="thead-themed">
                                                     <th>Name</th>
-                                                    {{-- <th>Course</th> --}}
+                                                    <th>Course</th>
                                                     <th></th>
                                                     </thead>
                                                     <tbody>
                                                     @foreach ($group as $grp)
                                                         <tr>
                                                             <td>
-                                                                <label>{{$grp->name}}</label>
+                                                                <label>{{$grp->group_name}}</label>
                                                             </td>
-                                                            {{-- <td>
+                                                            <td>
                                                                 <label>{{$grp->course_name}}</label>
-                                                            </td> --}}
+                                                            </td>
                                                             <td>
                                                                 <div class="form-check pull-right">
-                                                                    <input type="checkbox" id="chapter_checkbox_{{$grp->name}}"
-                                                                        class="form-check-input" name="group[]" value="{{$tsubject->id}}|{{$grp->id}}">
-                                                                    <label class="form-check-label" for="chapter_checkbox_{{$grp->name}}"></label>
+                                                                    <input type="checkbox" id="chapter_checkbox_{{$grp->group_name}}"
+                                                                        class="form-check-input" name="group[]" value="{{$grp->id}}|{{$grp->group_name}}" required>
+                                                                    <label class="form-check-label" for="chapter_checkbox_{{$grp->group_name}}"></label>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -348,39 +344,6 @@
                                             border-radius: 10px;
                                             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
                                         }
-                                        
-                                        /* Tooltip for slider */
-                                        .slider-tooltip {
-                                            position: absolute;
-                                            top: -30px;
-                                            left: 0;
-                                            background-color: #6610f2;
-                                            color: white;
-                                            padding: 2px 8px;
-                                            border-radius: 4px;
-                                            font-size: 0.8rem;
-                                            opacity: 0;
-                                            transition: opacity 0.3s;
-                                            pointer-events: none;
-                                            transform: translateX(-50%);
-                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                                        }
-                                        
-                                        .slider-tooltip::after {
-                                            content: '';
-                                            position: absolute;
-                                            top: 100%;
-                                            left: 50%;
-                                            margin-left: -5px;
-                                            border-width: 5px;
-                                            border-style: solid;
-                                            border-color: #6610f2 transparent transparent transparent;
-                                        }
-                                        
-                                        #languageSlider:hover + .slider-tooltip,
-                                        #languageSlider:active + .slider-tooltip {
-                                            opacity: 1;
-                                        }
 
                                         /* Answer Options Modal Styles */
                                         .options-preview-list {
@@ -562,6 +525,23 @@
                                         .correct-answer-list::-webkit-scrollbar-thumb:hover {
                                             background: #1e7e34;
                                         }
+                                        
+                                        /* Tooltip for slider */
+                                        .slider-tooltip {
+                                            position: absolute;
+                                            top: -30px;
+                                            left: 0;
+                                            background-color: #6610f2;
+                                            color: white;
+                                            padding: 2px 8px;
+                                            border-radius: 4px;
+                                            font-size: 0.8rem;
+                                            opacity: 0;
+                                            transition: opacity 0.3s;
+                                            pointer-events: none;
+                                            transform: translateX(-50%);
+                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                                        }
 
                                         /* Correct Answer Styling */
                                         .correct-answer {
@@ -586,6 +566,22 @@
 
                                         #correctAnswerSection .alert-info small {
                                             color: #000000 !important;
+                                        }
+                                        
+                                        .slider-tooltip::after {
+                                            content: '';
+                                            position: absolute;
+                                            top: 100%;
+                                            left: 50%;
+                                            margin-left: -5px;
+                                            border-width: 5px;
+                                            border-style: solid;
+                                            border-color: #6610f2 transparent transparent transparent;
+                                        }
+                                        
+                                        #languageSlider:hover + .slider-tooltip,
+                                        #languageSlider:active + .slider-tooltip {
+                                            opacity: 1;
                                         }
                                     </style>
 
@@ -807,7 +803,7 @@
                                     });
                                     
                                     // Send the request to the server
-                                    fetch(`/user/quiz/${getCourseId()}/generate-ai-quiz`, {
+                                    fetch(`/lecturer/quiz/${getCourseId()}/generate-ai-quiz`, {
                                         method: 'POST',
                                         body: formData,
                                         headers: {
@@ -846,7 +842,7 @@
                                 * @returns {string} The course ID
                                 */
                                 function getCourseId() {
-                                    return '{{ Session::get('subjects')->id }}';
+                                    return '{{ Session::get("CourseID") }}';
                                 }
 
                                 /**
@@ -1284,10 +1280,6 @@ You can paste from clipboard or type directly here."></textarea>
 
 
 
-<!-- Bootstrap JS for modal functionality -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- jQuery UI required for form-builder's sortable functionality -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-builder.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-render.min.js"></script>
 
@@ -1393,7 +1385,7 @@ function getChapters(folder)
 
   return $.ajax({
         headers: {'X-CSRF-TOKEN':  $('meta[name="csrf-token"]').attr('content')},
-        url      : "{{ url('user/quiz/getChapters') }}",
+        url      : "{{ url('lecturer/quiz/getChapters') }}",
         method   : 'POST',
         data 	 : {folder: folder},
         error:function(err){
@@ -1417,7 +1409,7 @@ function getChapters(folder)
 <script>
 
 var questionnum     = $('#question-index').val();
-var selected_class  = "{{ Session::get('subjects')->id }}";
+var selected_class  = "{{ Session::get('CourseID') }}";
 var selected_quiz  = "{{ empty($data['quizid']) ? '' : $data['quizid'] }}";
 var reuse  = "{{ empty($data['reuse']) ? '' : $data['reuse'] }}";
 var quiz            = {!! empty($data['quiz']) ? "''" : json_encode($data['quiz']) !!};
@@ -1459,7 +1451,7 @@ jQuery(function($) {
             
             fbOptions = {
                 formData: quizFormData,
-                dataType: 'json',
+                dataType: 'xml',
                 disableFields: [
                 'autocomplete',
                 'button',
@@ -1515,7 +1507,7 @@ jQuery(function($) {
         
         fbOptions = {
                 formData: quizFormData,
-                dataType: 'json',
+                dataType: 'xml',
                 disableFields: [
                 'autocomplete',
                 'button',
@@ -1580,7 +1572,7 @@ for (let j = 0; j < buttons.length; j++) {
         $('#selectedCorrectAnswers').text('None');
         
         // Show modal
-        showModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('show');
     };
 }
 
@@ -1600,7 +1592,7 @@ for (let j = 0; j < buttons2.length; j++) {
         $('#selectedCorrectAnswers').text('None');
         
         // Show modal
-        showModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('show');
     };
 }
 
@@ -1719,42 +1711,6 @@ $(document).ready(function() {
 });
 
 /**
- * Modal utility functions for compatibility
- */
-function showModal(modalId) {
-    var modalElement = document.getElementById(modalId);
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-        var modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    } else if (typeof $ !== 'undefined' && $.fn.modal) {
-        $('#' + modalId).modal('show');
-    } else {
-        // Fallback: simple show
-        $(modalElement).addClass('show').css('display', 'block');
-        $('body').addClass('modal-open');
-    }
-}
-
-function hideModal(modalId) {
-    var modalElement = document.getElementById(modalId);
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-        var modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-            modal.hide();
-        } else {
-            $(modalElement).removeClass('show').css('display', 'none');
-            $('body').removeClass('modal-open');
-        }
-    } else if (typeof $ !== 'undefined' && $.fn.modal) {
-        $('#' + modalId).modal('hide');
-    } else {
-        // Fallback: simple hide
-        $(modalElement).removeClass('show').css('display', 'none');
-        $('body').removeClass('modal-open');
-    }
-}
-
-/**
  * Initialize the Answer Options Modal functionality
  */
 function initializeAnswerOptionsModal() {
@@ -1796,7 +1752,7 @@ function initializeAnswerOptionsModal() {
         createQuestionWithOptions(window.currentQuestionType, options, selectedCorrectAnswers);
         
         // Close modal
-        hideModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('hide');
         
         // Increment question number
         questionnum++;
@@ -1807,25 +1763,25 @@ function initializeAnswerOptionsModal() {
     // Handle the X close button
     $(document).on('click', '#answerOptionsModal .btn-close', function(e) {
         e.preventDefault();
-        hideModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('hide');
     });
     
     // Handle data-bs-dismiss and data-dismiss attributes
     $(document).on('click', '#answerOptionsModal [data-bs-dismiss="modal"], #answerOptionsModal [data-dismiss="modal"]', function(e) {
         e.preventDefault();
-        hideModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('hide');
     });
     
     // Cancel button handler - more specific selector
     $(document).on('click', '#answerOptionsModal .modal-footer .btn-secondary', function(e) {
         e.preventDefault();
-        hideModal('answerOptionsModal');
+        $('#answerOptionsModal').modal('hide');
     });
     
     // ESC key handler
     $(document).on('keydown', function(e) {
         if (e.key === 'Escape' && $('#answerOptionsModal').hasClass('show')) {
-            hideModal('answerOptionsModal');
+            $('#answerOptionsModal').modal('hide');
         }
     });
 }
@@ -2155,7 +2111,7 @@ function createQuestionWithOptions(questionType, customOptions, correctAnswers) 
                 // Perform the AJAX request
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url: "{{ url('user/quiz/insert') }}",
+                    url: "{{ url('lecturer/quiz/insert') }}",
                     type: 'POST',
                     data: formData,
                     processData: false, // Important: Do not process data
@@ -2164,7 +2120,7 @@ function createQuestionWithOptions(questionType, customOptions, correctAnswers) 
                         console.log(err);
                     },
                     success: function(res) {
-                        location.href= "/user/quiz/{{ Session::get('subjects')->id }}";
+                        location.href= "/lecturer/quiz/{{ Session::get('CourseIDS') }}";
                     }
                 });
 
