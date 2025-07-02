@@ -28,41 +28,105 @@
             --shadow-heavy: 0 20px 60px rgba(99, 102, 241, 0.2);
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .hero-section {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.8));
             color: white;
-            padding: 4rem 0;
+            padding: 5rem 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .hero-title {
-            font-size: 3rem;
+            font-size: 4rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             opacity: 0.95;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
+            font-weight: 400;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .main-container {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin: 1rem auto 3rem;
+            margin: -3rem auto 3rem;
             border-radius: 24px;
             box-shadow: var(--shadow-heavy);
-            max-width: 800px;
-            padding: 3rem;
+            overflow: hidden;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            pointer-events: none;
         }
 
         .error-messages-container {
@@ -91,71 +155,165 @@
         }
 
         .form-section {
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(248, 250, 252, 0.05));
             margin-bottom: 2rem;
         }
 
         .section-title {
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--dark-text);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-description {
+            color: var(--gray-text);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-label {
             font-weight: 600;
             color: var(--dark-text);
-            margin-bottom: 0.5rem;
-            display: block;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.025em;
         }
 
         .required {
             color: var(--danger-color);
+            font-weight: 700;
         }
 
         .form-control {
             border: 2px solid rgba(226, 232, 240, 0.8);
             border-radius: 12px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-weight: 500;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 4px 20px rgba(99, 102, 241, 0.1);
             outline: none;
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+        }
+
+        .form-control:hover:not(:focus) {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .btn-custom {
+            padding: 1rem 2.5rem;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.025em;
+        }
+
+        .btn-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-custom:hover::before {
+            left: 100%;
         }
 
         .btn-primary-custom {
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
         .btn-primary-custom:hover {
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-button-container {
+            margin-top: 3rem !important;
+            padding-top: 2rem !important;
         }
 
 
 
         .feature-highlight {
             background: linear-gradient(135deg, rgba(221, 214, 254, 0.8), rgba(224, 231, 255, 0.6));
-            border-left: 4px solid var(--primary-color);
-            padding: 1.5rem;
-            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: none;
+            border-left: 6px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 20px;
             margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.03));
+            pointer-events: none;
+        }
+
+        .feature-highlight h4 {
+            color: var(--dark-text);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-highlight p {
+            position: relative;
+            z-index: 2;
         }
 
         /* Select2 Custom Styling */
@@ -232,16 +390,187 @@
         .select2-container--default .select2-selection__arrow {
             height: 54px !important;
         }
+
+        /* Enhanced animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Language Switcher Styles */
+        .language-switcher {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .language-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-option {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-option:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .main-container {
+                margin: -2rem 1rem 2rem;
+            }
+            
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .language-switcher {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .language-selector {
+                padding: 0.25rem;
+            }
+
+            .language-option {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .form-section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .main-container {
+                margin: -2rem 0.5rem 2rem;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .btn-custom {
+                padding: 0.875rem 2rem;
+                font-size: 0.9rem;
+            }
+
+            .form-section {
+                padding: 1.5rem 0.75rem;
+            }
+
+            .feature-highlight {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
     <section class="hero-section">
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <div class="language-selector">
+                <div class="language-option active" data-lang="ms">
+                    <i class="fas fa-globe"></i>
+                    <span>Bahasa Malaysia</span>
+                </div>
+                <div class="language-option" data-lang="en">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
-            <h1 class="hero-title animate__animated animate__fadeInDown">Student Registration</h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
-                Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.
-            </p>
+            <div class="hero-content">
+                <h1 class="hero-title animate__animated animate__fadeInDown" data-key="hero.title">Student Registration</h1>
+                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s" data-key="hero.subtitle">
+                    Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -291,8 +620,8 @@
                             <li>Once approved, you can start accessing learning materials immediately</li>
                         </ul>
                     </div>
-                    <a href="{{ url('/') }}" class="btn btn-primary-custom">
-                        <i class="fas fa-home"></i> Back to Home
+                    <a href="{{ url('/') }}" class="btn btn-custom btn-primary-custom">
+                        <i class="fas fa-home"></i> <span data-key="success.back_home">Back to Home</span>
                     </a>
                 </div>
             </div>
@@ -306,8 +635,11 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-user text-primary"></i>
-                            Personal Information
+                            <span data-key="form.personal.title">Personal Information</span>
                         </h2>
+                        <p class="section-description" data-key="form.personal.description">
+                            Please provide your personal details to create your student account and join our online learning platform.
+                        </p>
                         
                         <div class="row">
                             <div class="col-12">
@@ -383,8 +715,11 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-users text-success"></i>
-                            Parent/Guardian Information
+                            <span data-key="form.parent.title">Parent/Guardian Information</span>
                         </h2>
+                        <p class="section-description" data-key="form.parent.description">
+                            Please provide your parent or guardian's contact information for emergency communication and account verification.
+                        </p>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -406,8 +741,11 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-school text-warning"></i>
-                            School & Account Information
+                            <span data-key="form.school.title">School & Account Information</span>
                         </h2>
+                        <p class="section-description" data-key="form.school.description">
+                            Select your school and create a secure password for your account. Your account will be activated after approval.
+                        </p>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -457,9 +795,9 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary-custom">
-                            <i class="fas fa-paper-plane"></i> Submit Registration
+                    <div class="text-center submit-button-container mb-4">
+                        <button type="submit" class="btn btn-custom btn-primary-custom">
+                            <i class="fas fa-paper-plane"></i> <span data-key="form.submit">Submit Registration</span>
                         </button>
                     </div>
                 </form>
@@ -473,10 +811,75 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
-        $(document).ready(function() {
-            // Initialize Select2 for school selection with AJAX search
+        // Language management
+        let currentLanguage = 'en';
+        
+        const translations = {
+            en: {
+                // Hero section
+                'hero.title': 'Student Registration',
+                'hero.subtitle': 'Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.',
+                
+                // Form sections
+                'form.personal.title': 'Personal Information',
+                'form.personal.description': 'Please provide your personal details to create your student account and join our online learning platform.',
+                'form.parent.title': 'Parent/Guardian Information',
+                'form.parent.description': 'Please provide your parent or guardian\'s contact information for emergency communication and account verification.',
+                'form.school.title': 'School & Account Information',
+                'form.school.description': 'Select your school and create a secure password for your account. Your account will be activated after approval.',
+                'form.submit': 'Submit Registration',
+                'success.back_home': 'Back to Home',
+            },
+            ms: {
+                // Hero section
+                'hero.title': 'Pendaftaran Pelajar',
+                'hero.subtitle': 'Sertai platform pembelajaran dalam talian kami dan buka potensi anda dengan bimbingan pakar dan sumber komprehensif.',
+                
+                // Form sections
+                'form.personal.title': 'Maklumat Peribadi',
+                'form.personal.description': 'Sila berikan butiran peribadi anda untuk mencipta akaun pelajar dan menyertai platform pembelajaran dalam talian kami.',
+                'form.parent.title': 'Maklumat Ibu Bapa/Penjaga',
+                'form.parent.description': 'Sila berikan maklumat hubungan ibu bapa atau penjaga anda untuk komunikasi kecemasan dan pengesahan akaun.',
+                'form.school.title': 'Maklumat Sekolah & Akaun',
+                'form.school.description': 'Pilih sekolah anda dan cipta kata laluan yang selamat untuk akaun anda. Akaun anda akan diaktifkan selepas kelulusan.',
+                'form.submit': 'Hantar Pendaftaran',
+                'success.back_home': 'Kembali ke Laman Utama',
+            }
+        };
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active language option
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.lang === lang) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update all text content
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.dataset.key;
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update Select2 placeholder
+            const placeholder = lang === 'ms' ? 'Cari dan pilih sekolah anda...' : 'Search and select your school...';
+            $('#schoolSelect').attr('data-placeholder', placeholder);
+            if ($('#schoolSelect').hasClass('select2-hidden-accessible')) {
+                $('#schoolSelect').select2('destroy');
+                initializeSchoolSelect();
+            }
+        }
+
+        function initializeSchoolSelect() {
+            const placeholder = currentLanguage === 'ms' ? 'Cari dan pilih sekolah anda...' : 'Search and select your school...';
+            
             $('#schoolSelect').select2({
-                placeholder: 'Search and select your school...',
+                placeholder: placeholder,
                 allowClear: true,
                 width: '100%',
                 ajax: {
@@ -504,6 +907,21 @@
                 },
                 minimumInputLength: 1
             });
+        }
+
+        $(document).ready(function() {
+            // Initialize Select2 for school selection with AJAX search
+            initializeSchoolSelect();
+            
+            // Language switcher
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    switchLanguage(option.dataset.lang);
+                });
+            });
+            
+            // Initialize with English as default
+            switchLanguage('en');
         });
     </script>
 </body>
