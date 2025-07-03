@@ -208,31 +208,14 @@ class SchoolRegistrationController extends Controller
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
             
-            // Create temporary file instead of direct download (to avoid disabled ignore_user_abort function)
-            $fileName = 'student_template_' . time() . '.xlsx';
-            $tempPath = storage_path('app/temp/' . $fileName);
+            // Generate Excel content directly in memory (bypass storage system)
+            Log::info('Generating Excel content in memory to bypass storage issues');
             
-            // Ensure temp directory exists and clean up old files
-            if (!file_exists(storage_path('app/temp'))) {
-                mkdir(storage_path('app/temp'), 0755, true);
-            }
-            $this->cleanupOldTempFiles();
+            $fileContents = \Maatwebsite\Excel\Facades\Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX);
             
-            // Store the Excel file temporarily
-            Log::info('Attempting to store Excel file', [
-                'fileName' => $fileName,
-                'tempPath' => $tempPath,
-                'storageArgument' => 'temp/' . $fileName,
-                'tempDirExists' => is_dir(storage_path('app/temp')),
-                'tempDirWritable' => is_writable(storage_path('app/temp'))
-            ]);
-            
-            \Maatwebsite\Excel\Facades\Excel::store($export, 'temp/' . $fileName);
-            
-            Log::info('Excel store command completed', [
-                'fileExists' => file_exists($tempPath),
-                'fileSize' => file_exists($tempPath) ? filesize($tempPath) : 'file not found',
-                'tempPath' => $tempPath
+            Log::info('Excel content generated successfully', [
+                'contentSize' => strlen($fileContents),
+                'hasContent' => !empty($fileContents)
             ]);
             
             // Restore original memory limit (only if ini_set is available)
@@ -242,52 +225,21 @@ class SchoolRegistrationController extends Controller
             
             Log::info('Guest template download completed successfully');
             
-            // Create manual response to avoid disabled functions
-            if (file_exists($tempPath)) {
-                $fileContents = file_get_contents($tempPath);
-                
-                Log::info('Excel file read successfully', [
-                    'fileSize' => strlen($fileContents),
-                    'fileName' => $fileName
-                ]);
-                
-                // Clean up temp file
-                unlink($tempPath);
-                
-                return response($fileContents, 200, [
-                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'Content-Disposition' => 'attachment; filename="student_template.xlsx"',
-                    'Content-Length' => strlen($fileContents),
-                    'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-                    'Pragma' => 'public',
-                    'Expires' => '0'
-                ]);
-            } else {
-                // List files in temp directory for debugging
-                $tempDir = storage_path('app/temp');
-                $filesInTemp = is_dir($tempDir) ? scandir($tempDir) : [];
-                
-                Log::error('Excel file not found after generation', [
-                    'expectedPath' => $tempPath,
-                    'tempDir' => $tempDir,
-                    'filesInTempDir' => $filesInTemp,
-                    'tempDirExists' => is_dir($tempDir),
-                    'tempDirWritable' => is_writable($tempDir)
-                ]);
-                
-                throw new \Exception('Failed to generate Excel file - file not found at expected location');
-            }
+            // Return the Excel content directly
+            return response($fileContents, 200, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="student_template.xlsx"',
+                'Content-Length' => strlen($fileContents),
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Pragma' => 'public',
+                'Expires' => '0'
+            ]);
 
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
             Log::error('PhpSpreadsheet error in guest template download', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
-            // Clean up any temp files
-            if (isset($tempPath) && file_exists($tempPath)) {
-                unlink($tempPath);
-            }
             
             return $this->fallbackToHtmlTemplate('Spreadsheet generation failed: ' . $e->getMessage());
             
@@ -296,11 +248,6 @@ class SchoolRegistrationController extends Controller
                 'error' => $e->getMessage(),
                 'failures' => $e->failures()
             ]);
-            
-            // Clean up any temp files
-            if (isset($tempPath) && file_exists($tempPath)) {
-                unlink($tempPath);
-            }
             
             return $this->fallbackToHtmlTemplate('Excel validation failed: ' . $e->getMessage());
             
@@ -312,11 +259,6 @@ class SchoolRegistrationController extends Controller
                 'line' => $e->getLine()
             ]);
             
-            // Clean up any temp files
-            if (isset($tempPath) && file_exists($tempPath)) {
-                unlink($tempPath);
-            }
-            
             return $this->fallbackToHtmlTemplate('Template download failed: ' . $e->getMessage());
             
         } catch (\Throwable $e) {
@@ -324,11 +266,6 @@ class SchoolRegistrationController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
-            // Clean up any temp files
-            if (isset($tempPath) && file_exists($tempPath)) {
-                unlink($tempPath);
-            }
             
             return $this->fallbackToHtmlTemplate('Fatal error occurred during template download');
         }
