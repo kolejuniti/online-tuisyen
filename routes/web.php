@@ -39,6 +39,24 @@ Route::prefix('school')->name('school.')->group(function () {
     // Download CSV template as alternative
     Route::get('/download-csv-template', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'downloadCsvTemplate'])->name('download-csv-template');
     
+    // Simple Excel test route
+    Route::get('/test-excel', function () {
+        try {
+            // Test creating a simple Excel file
+            $data = collect([['Name', 'Test'], ['Ahmad', 'Student']]);
+            
+            $export = new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection {
+                private $data;
+                public function __construct($data) { $this->data = $data; }
+                public function collection() { return $this->data; }
+            };
+            
+            return \Maatwebsite\Excel\Facades\Excel::download($export, 'test.xlsx');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        }
+    })->name('test-excel');
+    
     // Diagnostic route for template download issues
     Route::get('/template-diagnostic', function () {
         $diagnostics = [

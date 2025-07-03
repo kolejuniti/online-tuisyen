@@ -196,10 +196,15 @@ class SchoolRegistrationController extends Controller
 
             // Set memory limit temporarily for large exports
             $originalMemoryLimit = ini_get('memory_limit');
-            ini_set('memory_limit', '512M');
+            ini_set('memory_limit', '1024M'); // Increased to 1GB
             
             // Set execution time limit
-            set_time_limit(120);
+            set_time_limit(300); // Increased to 5 minutes
+            
+            // Disable output buffering to prevent memory issues
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
 
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
@@ -242,10 +247,18 @@ class SchoolRegistrationController extends Controller
         } catch (\Throwable $e) {
             Log::error('Fatal error in guest template download', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'memory_usage' => memory_get_usage(true),
+                'memory_peak' => memory_get_peak_usage(true)
             ]);
             
-            return $this->fallbackToHtmlTemplate('Fatal error occurred during template download');
+            // Also log to PHP error log for easier debugging
+            error_log('Excel Template Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+            
+            return $this->fallbackToHtmlTemplate('Fatal error: ' . $e->getMessage());
         }
     }
 
