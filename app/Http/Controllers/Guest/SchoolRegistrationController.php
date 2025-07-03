@@ -196,18 +196,24 @@ class SchoolRegistrationController extends Controller
 
             // Set memory limit temporarily for large exports
             $originalMemoryLimit = ini_get('memory_limit');
-            ini_set('memory_limit', '512M');
+            if (function_exists('ini_set')) {
+                ini_set('memory_limit', '512M');
+            }
             
-            // Set execution time limit
-            set_time_limit(120);
+            // Set execution time limit (only if function exists and is not disabled)
+            if (function_exists('set_time_limit')) {
+                set_time_limit(120);
+            }
 
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
             
             $result = \Maatwebsite\Excel\Facades\Excel::download($export, 'student_template.xlsx');
             
-            // Restore original memory limit
-            ini_set('memory_limit', $originalMemoryLimit);
+            // Restore original memory limit (only if ini_set is available)
+            if (function_exists('ini_set')) {
+                ini_set('memory_limit', $originalMemoryLimit);
+            }
             
             Log::info('Guest template download completed successfully');
             
