@@ -208,7 +208,18 @@ class SchoolRegistrationController extends Controller
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
             
-            $result = \Maatwebsite\Excel\Facades\Excel::download($export, 'student_template.xlsx');
+            // Create temporary file instead of direct download (to avoid disabled ignore_user_abort function)
+            $fileName = 'student_template_' . time() . '.xlsx';
+            $tempPath = storage_path('app/temp/' . $fileName);
+            
+            // Ensure temp directory exists and clean up old files
+            if (!file_exists(storage_path('app/temp'))) {
+                mkdir(storage_path('app/temp'), 0755, true);
+            }
+            $this->cleanupOldTempFiles();
+            
+            // Store the Excel file temporarily
+            \Maatwebsite\Excel\Facades\Excel::store($export, 'temp/' . $fileName);
             
             // Restore original memory limit (only if ini_set is available)
             if (function_exists('ini_set')) {
@@ -217,13 +228,35 @@ class SchoolRegistrationController extends Controller
             
             Log::info('Guest template download completed successfully');
             
-            return $result;
+            // Create manual response to avoid disabled functions
+            if (file_exists($tempPath)) {
+                $fileContents = file_get_contents($tempPath);
+                
+                // Clean up temp file
+                unlink($tempPath);
+                
+                return response($fileContents, 200, [
+                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'attachment; filename="student_template.xlsx"',
+                    'Content-Length' => strlen($fileContents),
+                    'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                    'Pragma' => 'public',
+                    'Expires' => '0'
+                ]);
+            } else {
+                throw new \Exception('Failed to generate Excel file');
+            }
 
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
             Log::error('PhpSpreadsheet error in guest template download', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+            
+            // Clean up any temp files
+            if (isset($tempPath) && file_exists($tempPath)) {
+                unlink($tempPath);
+            }
             
             return $this->fallbackToHtmlTemplate('Spreadsheet generation failed: ' . $e->getMessage());
             
@@ -232,6 +265,11 @@ class SchoolRegistrationController extends Controller
                 'error' => $e->getMessage(),
                 'failures' => $e->failures()
             ]);
+            
+            // Clean up any temp files
+            if (isset($tempPath) && file_exists($tempPath)) {
+                unlink($tempPath);
+            }
             
             return $this->fallbackToHtmlTemplate('Excel validation failed: ' . $e->getMessage());
             
@@ -243,6 +281,11 @@ class SchoolRegistrationController extends Controller
                 'line' => $e->getLine()
             ]);
             
+            // Clean up any temp files
+            if (isset($tempPath) && file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+            
             return $this->fallbackToHtmlTemplate('Template download failed: ' . $e->getMessage());
             
         } catch (\Throwable $e) {
@@ -251,7 +294,37 @@ class SchoolRegistrationController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
+            // Clean up any temp files
+            if (isset($tempPath) && file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+            
             return $this->fallbackToHtmlTemplate('Fatal error occurred during template download');
+        }
+    }
+
+    /**
+     * Clean up old temporary Excel files (older than 1 hour)
+     */
+    private function cleanupOldTempFiles()
+    {
+        try {
+            $tempDir = storage_path('app/temp');
+            if (!is_dir($tempDir)) {
+                return;
+            }
+
+            $files = glob($tempDir . '/student_template_*.xlsx');
+            $oneHourAgo = time() - 3600; // 1 hour ago
+
+            foreach ($files as $file) {
+                if (is_file($file) && filemtime($file) < $oneHourAgo) {
+                    unlink($file);
+                    Log::info('Cleaned up old temp file: ' . basename($file));
+                }
+            }
+        } catch (\Exception $e) {
+            Log::warning('Error during temp file cleanup: ' . $e->getMessage());
         }
     }
 
