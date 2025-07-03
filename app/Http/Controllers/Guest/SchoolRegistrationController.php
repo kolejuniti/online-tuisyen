@@ -159,19 +159,19 @@ class SchoolRegistrationController extends Controller
         try {
             // Log the start of download attempt
             Log::info('Guest template download started', [
-                'memory_usage' => \memory_get_usage(true),
-                'memory_limit' => \ini_get('memory_limit'),
-                'max_execution_time' => \ini_get('max_execution_time')
+                'memory_usage' => memory_get_usage(true),
+                'memory_limit' => ini_get('memory_limit'),
+                'max_execution_time' => ini_get('max_execution_time')
             ]);
 
             // Check if the class exists
-            if (!\class_exists('App\Exports\StudentsTemplateExport')) {
+            if (!class_exists('App\Exports\StudentsTemplateExport')) {
                 Log::error('StudentsTemplateExport class does not exist');
                 return $this->fallbackToHtmlTemplate('Export class not found');
             }
 
             // Check if maatwebsite/excel is properly installed
-            if (!\class_exists('Maatwebsite\Excel\Facades\Excel')) {
+            if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
                 Log::error('Laravel Excel package not found');
                 return $this->fallbackToHtmlTemplate('Excel package not available - please install maatwebsite/excel');
             }
@@ -180,14 +180,14 @@ class SchoolRegistrationController extends Controller
             $missingExtensions = [];
             $requiredExtensions = ['zip', 'xml', 'mbstring'];
             foreach ($requiredExtensions as $ext) {
-                if (!\extension_loaded($ext)) {
+                if (!extension_loaded($ext)) {
                     $missingExtensions[] = $ext;
                 }
             }
 
             if (!empty($missingExtensions)) {
-                Log::error('Missing PHP extensions: ' . \implode(', ', $missingExtensions));
-                return $this->fallbackToHtmlTemplate('Missing PHP extensions: ' . \implode(', ', $missingExtensions));
+                Log::error('Missing PHP extensions: ' . implode(', ', $missingExtensions));
+                return $this->fallbackToHtmlTemplate('Missing PHP extensions: ' . implode(', ', $missingExtensions));
             }
 
             // Try to create the export instance
@@ -195,16 +195,11 @@ class SchoolRegistrationController extends Controller
             Log::info('Export instance created successfully');
 
             // Set memory limit temporarily for large exports
-            $originalMemoryLimit = \ini_get('memory_limit');
-            \ini_set('memory_limit', '1024M'); // Increased to 1GB
+            $originalMemoryLimit = ini_get('memory_limit');
+            ini_set('memory_limit', '512M');
             
             // Set execution time limit
-            \set_time_limit(300); // Increased to 5 minutes
-            
-            // Disable output buffering to prevent memory issues
-            if (\ob_get_level()) {
-                \ob_end_clean();
-            }
+            set_time_limit(120);
 
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
@@ -212,7 +207,7 @@ class SchoolRegistrationController extends Controller
             $result = \Maatwebsite\Excel\Facades\Excel::download($export, 'student_template.xlsx');
             
             // Restore original memory limit
-            \ini_set('memory_limit', $originalMemoryLimit);
+            ini_set('memory_limit', $originalMemoryLimit);
             
             Log::info('Guest template download completed successfully');
             
@@ -247,18 +242,10 @@ class SchoolRegistrationController extends Controller
         } catch (\Throwable $e) {
             Log::error('Fatal error in guest template download', [
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'code' => $e->getCode(),
-                'trace' => $e->getTraceAsString(),
-                'memory_usage' => \memory_get_usage(true),
-                'memory_peak' => \memory_get_peak_usage(true)
+                'trace' => $e->getTraceAsString()
             ]);
             
-            // Also log to PHP error log for easier debugging
-            \error_log('Excel Template Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
-            
-            return $this->fallbackToHtmlTemplate('Fatal error: ' . $e->getMessage());
+            return $this->fallbackToHtmlTemplate('Fatal error occurred during template download');
         }
     }
 

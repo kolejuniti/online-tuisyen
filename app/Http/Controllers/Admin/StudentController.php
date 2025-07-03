@@ -233,19 +233,19 @@ class StudentController extends Controller
             // Log the start of download attempt
             Log::info('Template download started', [
                 'user_id' => Auth::id(),
-                'memory_usage' => \memory_get_usage(true),
-                'memory_limit' => \ini_get('memory_limit'),
-                'max_execution_time' => \ini_get('max_execution_time')
+                'memory_usage' => memory_get_usage(true),
+                'memory_limit' => ini_get('memory_limit'),
+                'max_execution_time' => ini_get('max_execution_time')
             ]);
 
             // Check if the class exists
-            if (!\class_exists('App\Exports\StudentsTemplateExport')) {
+            if (!class_exists('App\Exports\StudentsTemplateExport')) {
                 Log::error('StudentsTemplateExport class does not exist');
                 return response()->json(['error' => 'Export class not found'], 500);
             }
 
             // Check if maatwebsite/excel is properly installed
-            if (!\class_exists('Maatwebsite\Excel\Facades\Excel')) {
+            if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
                 Log::error('Laravel Excel package not found');
                 return response()->json(['error' => 'Excel package not available'], 500);
             }
@@ -255,11 +255,11 @@ class StudentController extends Controller
             Log::info('Export instance created successfully');
 
             // Set memory limit temporarily for large exports
-            $originalMemoryLimit = \ini_get('memory_limit');
-            \ini_set('memory_limit', '512M');
+            $originalMemoryLimit = ini_get('memory_limit');
+            ini_set('memory_limit', '512M');
             
             // Set execution time limit
-            \set_time_limit(120);
+            set_time_limit(120);
 
             // Generate the download with proper error handling
             Log::info('Starting Excel download generation');
@@ -267,7 +267,7 @@ class StudentController extends Controller
             $result = Excel::download($export, 'students_template.xlsx');
             
             // Restore original memory limit
-            \ini_set('memory_limit', $originalMemoryLimit);
+            ini_set('memory_limit', $originalMemoryLimit);
             
             Log::info('Template download completed successfully');
             

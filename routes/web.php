@@ -39,56 +39,38 @@ Route::prefix('school')->name('school.')->group(function () {
     // Download CSV template as alternative
     Route::get('/download-csv-template', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'downloadCsvTemplate'])->name('download-csv-template');
     
-    // Simple Excel test route
-    Route::get('/test-excel', function () {
-        try {
-            // Test creating a simple Excel file
-            $data = collect([['Name', 'Test'], ['Ahmad', 'Student']]);
-            
-            $export = new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection {
-                private $data;
-                public function __construct($data) { $this->data = $data; }
-                public function collection() { return $this->data; }
-            };
-            
-            return \Maatwebsite\Excel\Facades\Excel::download($export, 'test.xlsx');
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-        }
-    })->name('test-excel');
-    
     // Diagnostic route for template download issues
     Route::get('/template-diagnostic', function () {
         $diagnostics = [
             'php_version' => PHP_VERSION,
-            'memory_limit' => \ini_get('memory_limit'),
-            'max_execution_time' => \ini_get('max_execution_time'),
-            'post_max_size' => \ini_get('post_max_size'),
-            'upload_max_filesize' => \ini_get('upload_max_filesize'),
+            'memory_limit' => ini_get('memory_limit'),
+            'max_execution_time' => ini_get('max_execution_time'),
+            'post_max_size' => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
             'extensions' => [
-                'zip' => \extension_loaded('zip'),
-                'xml' => \extension_loaded('xml'),
-                'gd' => \extension_loaded('gd'),
-                'mbstring' => \extension_loaded('mbstring'),
-                'simplexml' => \extension_loaded('simplexml'),
-                'xmlreader' => \extension_loaded('xmlreader'),
-                'xmlwriter' => \extension_loaded('xmlwriter'),
+                'zip' => extension_loaded('zip'),
+                'xml' => extension_loaded('xml'),
+                'gd' => extension_loaded('gd'),
+                'mbstring' => extension_loaded('mbstring'),
+                'simplexml' => extension_loaded('simplexml'),
+                'xmlreader' => extension_loaded('xmlreader'),
+                'xmlwriter' => extension_loaded('xmlwriter'),
             ],
             'classes' => [
-                'StudentsTemplateExport' => \class_exists('App\Exports\StudentsTemplateExport'),
-                'Excel' => \class_exists('Maatwebsite\Excel\Facades\Excel'),
-                'PhpSpreadsheet' => \class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
-                'ZipArchive' => \class_exists('ZipArchive'),
+                'StudentsTemplateExport' => class_exists('App\Exports\StudentsTemplateExport'),
+                'Excel' => class_exists('Maatwebsite\Excel\Facades\Excel'),
+                'PhpSpreadsheet' => class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
+                'ZipArchive' => class_exists('ZipArchive'),
             ],
             'storage_paths' => [
-                'temp_dir' => \sys_get_temp_dir(),
-                'temp_writable' => \is_writable(\sys_get_temp_dir()),
+                'temp_dir' => sys_get_temp_dir(),
+                'temp_writable' => is_writable(sys_get_temp_dir()),
                 'storage_app' => storage_path('app'),
-                'storage_writable' => \is_writable(storage_path('app')),
+                'storage_writable' => is_writable(storage_path('app')),
             ],
             'composer_packages' => [
-                'maatwebsite_excel_installed' => \class_exists('Maatwebsite\Excel\Excel'),
-                'phpoffice_phpspreadsheet_installed' => \class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
+                'maatwebsite_excel_installed' => class_exists('Maatwebsite\Excel\Excel'),
+                'phpoffice_phpspreadsheet_installed' => class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
             ]
         ];
         return response()->json($diagnostics, 200, [], JSON_PRETTY_PRINT);
@@ -306,26 +288,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('students/template-diagnostic', function () {
         $diagnostics = [
             'php_version' => PHP_VERSION,
-            'memory_limit' => \ini_get('memory_limit'),
-            'max_execution_time' => \ini_get('max_execution_time'),
-            'post_max_size' => \ini_get('post_max_size'),
-            'upload_max_filesize' => \ini_get('upload_max_filesize'),
+            'memory_limit' => ini_get('memory_limit'),
+            'max_execution_time' => ini_get('max_execution_time'),
+            'post_max_size' => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
             'extensions' => [
-                'zip' => \extension_loaded('zip'),
-                'xml' => \extension_loaded('xml'),
-                'gd' => \extension_loaded('gd'),
-                'mbstring' => \extension_loaded('mbstring'),
+                'zip' => extension_loaded('zip'),
+                'xml' => extension_loaded('xml'),
+                'gd' => extension_loaded('gd'),
+                'mbstring' => extension_loaded('mbstring'),
             ],
             'classes' => [
-                'StudentsTemplateExport' => \class_exists('App\Exports\StudentsTemplateExport'),
-                'Excel' => \class_exists('Maatwebsite\Excel\Facades\Excel'),
-                'PhpSpreadsheet' => \class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
+                'StudentsTemplateExport' => class_exists('App\Exports\StudentsTemplateExport'),
+                'Excel' => class_exists('Maatwebsite\Excel\Facades\Excel'),
+                'PhpSpreadsheet' => class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet'),
             ],
             'storage_paths' => [
-                'temp_dir' => \sys_get_temp_dir(),
-                'temp_writable' => \is_writable(\sys_get_temp_dir()),
+                'temp_dir' => sys_get_temp_dir(),
+                'temp_writable' => is_writable(sys_get_temp_dir()),
                 'storage_app' => storage_path('app'),
-                'storage_writable' => \is_writable(storage_path('app')),
+                'storage_writable' => is_writable(storage_path('app')),
             ]
         ];
         return response()->json($diagnostics);
