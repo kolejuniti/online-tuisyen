@@ -219,7 +219,21 @@ class SchoolRegistrationController extends Controller
             $this->cleanupOldTempFiles();
             
             // Store the Excel file temporarily
+            Log::info('Attempting to store Excel file', [
+                'fileName' => $fileName,
+                'tempPath' => $tempPath,
+                'storageArgument' => 'temp/' . $fileName,
+                'tempDirExists' => is_dir(storage_path('app/temp')),
+                'tempDirWritable' => is_writable(storage_path('app/temp'))
+            ]);
+            
             \Maatwebsite\Excel\Facades\Excel::store($export, 'temp/' . $fileName);
+            
+            Log::info('Excel store command completed', [
+                'fileExists' => file_exists($tempPath),
+                'fileSize' => file_exists($tempPath) ? filesize($tempPath) : 'file not found',
+                'tempPath' => $tempPath
+            ]);
             
             // Restore original memory limit (only if ini_set is available)
             if (function_exists('ini_set')) {
@@ -231,6 +245,11 @@ class SchoolRegistrationController extends Controller
             // Create manual response to avoid disabled functions
             if (file_exists($tempPath)) {
                 $fileContents = file_get_contents($tempPath);
+                
+                Log::info('Excel file read successfully', [
+                    'fileSize' => strlen($fileContents),
+                    'fileName' => $fileName
+                ]);
                 
                 // Clean up temp file
                 unlink($tempPath);
@@ -244,7 +263,19 @@ class SchoolRegistrationController extends Controller
                     'Expires' => '0'
                 ]);
             } else {
-                throw new \Exception('Failed to generate Excel file');
+                // List files in temp directory for debugging
+                $tempDir = storage_path('app/temp');
+                $filesInTemp = is_dir($tempDir) ? scandir($tempDir) : [];
+                
+                Log::error('Excel file not found after generation', [
+                    'expectedPath' => $tempPath,
+                    'tempDir' => $tempDir,
+                    'filesInTempDir' => $filesInTemp,
+                    'tempDirExists' => is_dir($tempDir),
+                    'tempDirWritable' => is_writable($tempDir)
+                ]);
+                
+                throw new \Exception('Failed to generate Excel file - file not found at expected location');
             }
 
         } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
