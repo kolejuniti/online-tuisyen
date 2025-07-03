@@ -157,13 +157,153 @@ class SchoolRegistrationController extends Controller
     public function downloadTemplate()
     {
         try {
-            // Use the same export class as admin
+            // Log the start of download attempt
+            Log::info('Guest template download started', [
+                'memory_usage' => memory_get_usage(true),
+                'memory_limit' => ini_get('memory_limit'),
+                'max_execution_time' => ini_get('max_execution_time')
+            ]);
+
+            // Check if the class exists
+            if (!class_exists('App\Exports\StudentsTemplateExport')) {
+                Log::error('StudentsTemplateExport class does not exist');
+                return $this->fallbackToHtmlTemplate('Export class not found');
+            }
+
+            // Check if maatwebsite/excel is properly installed
+            if (!class_exists('Maatwebsite\Excel\Facades\Excel')) {
+                Log::error('Laravel Excel package not found');
+                return $this->fallbackToHtmlTemplate('Excel package not available - please install maatwebsite/excel');
+            }
+
+            // Check required PHP extensions
+            $missingExtensions = [];
+            $requiredExtensions = ['zip', 'xml', 'mbstring'];
+            foreach ($requiredExtensions as $ext) {
+                if (!extension_loaded($ext)) {
+                    $missingExtensions[] = $ext;
+                }
+            }
+
+            if (!empty($missingExtensions)) {
+                Log::error('Missing PHP extensions: ' . implode(', ', $missingExtensions));
+                return $this->fallbackToHtmlTemplate('Missing PHP extensions: ' . implode(', ', $missingExtensions));
+            }
+
+            // Try to create the export instance
             $export = new \App\Exports\StudentsTemplateExport();
+            Log::info('Export instance created successfully');
+
+            // Set memory limit temporarily for large exports
+            $originalMemoryLimit = ini_get('memory_limit');
+            ini_set('memory_limit', '512M');
             
-            return \Maatwebsite\Excel\Facades\Excel::download($export, 'student_template.xlsx');
+            // Set execution time limit
+            set_time_limit(120);
+
+            // Generate the download with proper error handling
+            Log::info('Starting Excel download generation');
+            
+            $result = \Maatwebsite\Excel\Facades\Excel::download($export, 'student_template.xlsx');
+            
+            // Restore original memory limit
+            ini_set('memory_limit', $originalMemoryLimit);
+            
+            Log::info('Guest template download completed successfully');
+            
+            return $result;
+
+        } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+            Log::error('PhpSpreadsheet error in guest template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return $this->fallbackToHtmlTemplate('Spreadsheet generation failed: ' . $e->getMessage());
+            
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            Log::error('Excel validation error in guest template download', [
+                'error' => $e->getMessage(),
+                'failures' => $e->failures()
+            ]);
+            
+            return $this->fallbackToHtmlTemplate('Excel validation failed: ' . $e->getMessage());
+            
         } catch (\Exception $e) {
-            // Fallback to template view if Excel generation fails
-            return redirect()->route('school.student-template');
+            Log::error('General error in guest template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return $this->fallbackToHtmlTemplate('Template download failed: ' . $e->getMessage());
+            
+        } catch (\Throwable $e) {
+            Log::error('Fatal error in guest template download', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return $this->fallbackToHtmlTemplate('Fatal error occurred during template download');
+        }
+    }
+
+    /**
+     * Fallback method when Excel generation fails
+     */
+    private function fallbackToHtmlTemplate($errorMessage = null)
+    {
+        Log::info('Falling back to HTML template view');
+        
+        // Add flash message about the issue
+        $message = 'Excel template generation is currently unavailable. ';
+        $message .= 'Please use the HTML template below or contact support. ';
+        if ($errorMessage) {
+            $message .= 'Technical details: ' . $errorMessage;
+        }
+        
+        return redirect()->route('school.student-template')
+                        ->with('warning', $message);
+    }
+
+    /**
+     * Download CSV template as alternative
+     */
+    public function downloadCsvTemplate()
+    {
+        try {
+            $headers = [
+                'Content-Type' => 'text/csv; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="students_template.csv"',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Expires' => '0',
+                'Pragma' => 'public',
+            ];
+
+            // Create CSV content with proper formatting to preserve leading zeros
+            $csvData = '';
+            
+            // Add BOM for UTF-8 encoding to ensure proper display in Excel
+            $csvData .= "\xEF\xBB\xBF";
+            
+            // Add headers
+            $csvData .= "Student Name,IC Number,Email,Tingkatan,Student's Phone Number,Date of Birth,Gender,Parent/Guardian Name,Parent/Guardian Phone,Address\n";
+            
+            // Add sample data
+            $csvData .= "\"Ahmad Bin Hassan\",\"980123456789\",\"ahmad.hassan@email.com\",\"Tingkatan 5\",\"0123456789\",\"2008-05-15\",\"Male\",\"Hassan Bin Ali\",\"0123456790\",\"123 Jalan Utama, Kuala Lumpur 50000\"\n";
+            $csvData .= "\"Siti Binti Abdullah\",\"010123456789\",\"siti.abdullah@email.com\",\"Tingkatan 5\",\"0187654321\",\"2009-03-22\",\"Female\",\"Fatimah Binti Omar\",\"0123456792\",\"456 Jalan Oak, Petaling Jaya 47300\"\n";
+
+            return response($csvData, 200, $headers);
+
+        } catch (\Exception $e) {
+            Log::error('CSV template download failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('school.student-template')
+                           ->with('error', 'CSV template download failed: ' . $e->getMessage());
         }
     }
 
