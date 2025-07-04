@@ -15,7 +15,6 @@
 </style>
 
 <link rel="stylesheet" href="{{ asset('css/customCSS.css') }}">
-
 <!-- jQuery UI CSS required for form-builder's sortable functionality -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
 
@@ -347,39 +346,6 @@
                                             border-radius: 10px;
                                             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
                                         }
-                                        
-                                        /* Tooltip for slider */
-                                        .slider-tooltip {
-                                            position: absolute;
-                                            top: -30px;
-                                            left: 0;
-                                            background-color: #6610f2;
-                                            color: white;
-                                            padding: 2px 8px;
-                                            border-radius: 4px;
-                                            font-size: 0.8rem;
-                                            opacity: 0;
-                                            transition: opacity 0.3s;
-                                            pointer-events: none;
-                                            transform: translateX(-50%);
-                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                                        }
-                                        
-                                        .slider-tooltip::after {
-                                            content: '';
-                                            position: absolute;
-                                            top: 100%;
-                                            left: 50%;
-                                            margin-left: -5px;
-                                            border-width: 5px;
-                                            border-style: solid;
-                                            border-color: #6610f2 transparent transparent transparent;
-                                        }
-                                        
-                                        #languageSlider:hover + .slider-tooltip,
-                                        #languageSlider:active + .slider-tooltip {
-                                            opacity: 1;
-                                        }
 
                                         /* Answer Options Modal Styles */
                                         .options-preview-list {
@@ -435,18 +401,17 @@
                                             font-style: italic;
                                         }
 
-                                        #answerOptionsModal .modal-header {
+                                        .modal-header {
                                             background: linear-gradient(135deg, #6610f2 0%, #9333ea 100%);
                                             color: white;
                                             border-bottom: none;
                                         }
 
-                                        #answerOptionsModal .modal-header .close {
-                                            color: white;
-                                            opacity: 1;
+                                        .modal-header .btn-close {
+                                            filter: invert(1);
                                         }
 
-                                        #answerOptionsModal .modal-title {
+                                        .modal-title {
                                             font-weight: 600;
                                         }
 
@@ -562,6 +527,23 @@
                                         .correct-answer-list::-webkit-scrollbar-thumb:hover {
                                             background: #1e7e34;
                                         }
+                                        
+                                        /* Tooltip for slider */
+                                        .slider-tooltip {
+                                            position: absolute;
+                                            top: -30px;
+                                            left: 0;
+                                            background-color: #6610f2;
+                                            color: white;
+                                            padding: 2px 8px;
+                                            border-radius: 4px;
+                                            font-size: 0.8rem;
+                                            opacity: 0;
+                                            transition: opacity 0.3s;
+                                            pointer-events: none;
+                                            transform: translateX(-50%);
+                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                                        }
 
                                         /* Correct Answer Styling */
                                         .correct-answer {
@@ -586,6 +568,206 @@
 
                                         #correctAnswerSection .alert-info small {
                                             color: #000000 !important;
+                                        }
+                                        
+                                        .slider-tooltip::after {
+                                            content: '';
+                                            position: absolute;
+                                            top: 100%;
+                                            left: 50%;
+                                            margin-left: -5px;
+                                            border-width: 5px;
+                                            border-style: solid;
+                                            border-color: #6610f2 transparent transparent transparent;
+                                        }
+                                        
+                                        #languageSlider:hover + .slider-tooltip,
+                                        #languageSlider:active + .slider-tooltip {
+                                            opacity: 1;
+                                        }
+
+                                        /* Enhanced Modal Styles */
+                                        #answerOptionsModal .modal-xl {
+                                            max-width: 1200px;
+                                        }
+
+                                        #answerOptionsModal .modal-body {
+                                            max-height: 80vh;
+                                            overflow-y: auto;
+                                        }
+
+                                        #answerOptionsModal .text-primary {
+                                            color: #6610f2 !important;
+                                        }
+
+                                        #answerOptionsModal .form-label {
+                                            font-weight: 600;
+                                            margin-bottom: 0.5rem;
+                                        }
+
+                                        #answerOptionsModal .form-control {
+                                            border-radius: 8px;
+                                            border: 2px solid #e9ecef;
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        #answerOptionsModal .form-control:focus {
+                                            border-color: #6610f2;
+                                            box-shadow: 0 0 0 0.2rem rgba(102, 16, 242, 0.25);
+                                        }
+
+                                        #imagePreview {
+                                            border-radius: 8px;
+                                            overflow: hidden;
+                                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                        }
+
+                                        #imagePreview img {
+                                            transition: transform 0.3s ease;
+                                        }
+
+                                        #imagePreview:hover img {
+                                            transform: scale(1.05);
+                                        }
+
+                                        /* Section headers styling */
+                                        #answerOptionsModal h6 {
+                                            border-bottom: 2px solid #6610f2;
+                                            padding-bottom: 8px;
+                                            margin-bottom: 15px;
+                                            font-weight: 600;
+                                        }
+
+                                        /* Button styling */
+                                        #answerOptionsModal .btn-primary {
+                                            background: linear-gradient(135deg, #6610f2 0%, #9333ea 100%);
+                                            border: none;
+                                            border-radius: 8px;
+                                            padding: 10px 25px;
+                                            font-weight: 600;
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        #answerOptionsModal .btn-primary:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 4px 15px rgba(102, 16, 242, 0.4);
+                                        }
+
+                                        #answerOptionsModal .btn-secondary {
+                                            border-radius: 8px;
+                                            padding: 10px 25px;
+                                            font-weight: 600;
+                                        }
+
+                                        /* Alert styling */
+                                        #answerOptionsModal .alert-info {
+                                            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                                            border: none;
+                                            border-radius: 8px;
+                                            border-left: 4px solid #1976d2;
+                                        }
+
+                                        /* Uploaded image preview styling */
+                                        .uploaded-image-preview {
+                                            max-width: 300px;
+                                            max-height: 200px;
+                                            width: auto;
+                                            height: auto;
+                                            border: 2px solid #e9ecef;
+                                            border-radius: 8px;
+                                            margin-top: 10px;
+                                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        }
+
+                                        .uploaded-image-preview:hover {
+                                            transform: scale(1.05);
+                                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                                        }
+
+                                        /* Selected file name display */
+                                        .selected-file-name {
+                                            background-color: #d4edda;
+                                            border: 1px solid #c3e6cb;
+                                            border-radius: 6px;
+                                            padding: 5px 10px;
+                                            margin-top: 5px;
+                                        }
+
+                                        .selected-file-name small {
+                                            margin: 0;
+                                            font-weight: 500;
+                                        }
+
+                                        /* Subjective Question Modal Styles */
+                                        #subjectiveQuestionModal .modal-header {
+                                            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                                            color: white;
+                                            border-bottom: none;
+                                        }
+
+                                        #subjectiveQuestionModal .modal-header .btn-close {
+                                            filter: invert(1);
+                                        }
+
+                                        #subjectiveQuestionModal .modal-title {
+                                            font-weight: 600;
+                                        }
+
+                                        #subjectiveQuestionModal .text-success {
+                                            color: #28a745 !important;
+                                        }
+
+                                        #subjectiveQuestionModal h6 {
+                                            border-bottom: 2px solid #28a745;
+                                            padding-bottom: 8px;
+                                            margin-bottom: 15px;
+                                            font-weight: 600;
+                                        }
+
+                                        #subjectiveQuestionModal .btn-success {
+                                            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                                            border: none;
+                                            border-radius: 8px;
+                                            padding: 10px 25px;
+                                            font-weight: 600;
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        #subjectiveQuestionModal .btn-success:hover {
+                                            transform: translateY(-2px);
+                                            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+                                        }
+
+                                        #subjectiveQuestionModal .form-control {
+                                            border-radius: 8px;
+                                            border: 2px solid #e9ecef;
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        #subjectiveQuestionModal .form-control:focus {
+                                            border-color: #28a745;
+                                            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+                                        }
+
+                                        #subjectiveImagePreview {
+                                            border-radius: 8px;
+                                            overflow: hidden;
+                                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                        }
+
+                                        #subjectiveImagePreview img {
+                                            transition: transform 0.3s ease;
+                                        }
+
+                                        #subjectiveImagePreview:hover img {
+                                            transform: scale(1.05);
+                                        }
+
+                                        #subjectivePreviewTextarea {
+                                            background-color: #f8f9fa;
+                                            border: 2px dashed #28a745;
+                                            color: #6c757d;
                                         }
                                     </style>
 
@@ -1180,34 +1362,71 @@
                                             <i class="fa fa-plus"></i> <b>Subjective Question</b></a>
                                     </div>
 
-                                    <!-- Answer Options Modal -->
+                                    <!-- Enhanced Answer Options Modal -->
                                     <div class="modal fade" id="answerOptionsModal" tabindex="-1" role="dialog" aria-labelledby="answerOptionsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-dialog modal-xl" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="answerOptionsModalLabel">Set Answer Options</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <h5 class="modal-title" id="answerOptionsModalLabel">Create Question</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
+                                                    <!-- Question Details Section -->
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-12">
+                                                            <h6 class="text-primary"><i class="fa fa-edit me-2"></i>Question Details</h6>
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <div class="form-group">
+                                                                        <label for="questionParagraph" class="form-label"><strong>Question Paragraph</strong></label>
+                                                                        <textarea id="questionParagraph" class="form-control" rows="4" placeholder="Enter your question here..."></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label for="questionMark" class="form-label"><strong>Mark</strong></label>
+                                                                        <input type="number" id="questionMark" class="form-control" min="1" value="1" placeholder="Enter mark">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Image Upload Section -->
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-12">
+                                                            <h6 class="text-primary"><i class="fa fa-image me-2"></i>Question Image (Optional)</h6>
+                                                            <div class="form-group">
+                                                                <input type="file" class="form-control" id="questionImage" accept="image/*">
+                                                                <small class="text-muted">Upload an image to accompany your question (optional)</small>
+                                                                <div id="imagePreview" class="mt-2" style="display: none;">
+                                                                    <img id="previewImg" class="img-fluid border rounded" style="max-height: 200px;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Answer Options Section -->
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <h6>Paste Your Options (one per line):</h6>
-                                                            <textarea id="pastedOptions" class="form-control" rows="8" placeholder="Option 1
+                                                            <h6 class="text-primary"><i class="fa fa-list me-2"></i>Answer Options</h6>
+                                                            <div class="form-group">
+                                                                <label for="pastedOptions" class="form-label"><strong>Paste Your Options (one per line):</strong></label>
+                                                                <textarea id="pastedOptions" class="form-control" rows="8" placeholder="Option 1
 Option 2
 Option 3
 Option 4
 
 Tip: Copy from Google Docs, Word, or any text source - each line becomes an option!
 You can paste from clipboard or type directly here."></textarea>
-                                                            <div class="mt-2">
-                                                                <button type="button" class="btn btn-sm btn-secondary" id="clearOptions">Clear</button>
-                                                                <button type="button" class="btn btn-sm btn-info" id="addDefaultOptions">Add Default A-D</button>
+                                                                <div class="mt-2">
+                                                                    <button type="button" class="btn btn-sm btn-secondary" id="clearOptions">Clear</button>
+                                                                    <button type="button" class="btn btn-sm btn-info" id="addDefaultOptions">Add Default A-D</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <h6>Preview:</h6>
+                                                            <h6 class="text-primary"><i class="fa fa-eye me-2"></i>Options Preview</h6>
                                                             <div id="optionsPreview" class="border p-3" style="min-height: 200px; background-color: #f8f9fa;">
                                                                 <p class="text-muted">Options will appear here as you type...</p>
                                                             </div>
@@ -1217,10 +1436,10 @@ You can paste from clipboard or type directly here."></textarea>
                                                         </div>
                                                     </div>
                                                     
-                                                    <!-- Correct Answer Selection for Multiple Choice -->
+                                                    <!-- Correct Answer Selection Section -->
                                                     <div class="row mt-3" id="correctAnswerSection" style="display: none;">
                                                         <div class="col-md-12">
-                                                            <h6>Select Correct Answer(s):</h6>
+                                                            <h6 class="text-primary"><i class="fa fa-check-circle me-2"></i>Select Correct Answer(s)</h6>
                                                             <div class="alert alert-info">
                                                                 <small><i class="fa fa-info-circle"></i> For <strong>Radio Questions</strong>: Select ONE correct answer</small><br>
                                                                 <small><i class="fa fa-info-circle"></i> For <strong>Checkbox Questions</strong>: Select MULTIPLE correct answers</small>
@@ -1235,12 +1454,86 @@ You can paste from clipboard or type directly here."></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary" id="applyOptions">Apply Options</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-primary" id="applyOptions">Create Question</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Subjective Question Modal -->
+                                    <div class="modal fade" id="subjectiveQuestionModal" tabindex="-1" role="dialog" aria-labelledby="subjectiveQuestionModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="subjectiveQuestionModalLabel">Create Subjective Question</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Question Details Section -->
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-12">
+                                                            <h6 class="text-success"><i class="fa fa-edit me-2"></i>Question Details</h6>
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <div class="form-group">
+                                                                        <label for="subjectiveQuestionParagraph" class="form-label"><strong>Question Paragraph</strong></label>
+                                                                        <textarea id="subjectiveQuestionParagraph" class="form-control" rows="4" placeholder="Enter your subjective question here..."></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label for="subjectiveQuestionMark" class="form-label"><strong>Mark</strong></label>
+                                                                        <input type="number" id="subjectiveQuestionMark" class="form-control" min="1" value="5" placeholder="Enter mark">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Image Upload Section -->
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-12">
+                                                            <h6 class="text-success"><i class="fa fa-image me-2"></i>Question Image (Optional)</h6>
+                                                            <div class="form-group">
+                                                                <input type="file" class="form-control" id="subjectiveQuestionImage" accept="image/*">
+                                                                <small class="text-muted">Upload an image to accompany your question (optional)</small>
+                                                                <div id="subjectiveImagePreview" class="mt-2" style="display: none;">
+                                                                    <img id="subjectivePreviewImg" class="img-fluid border rounded" style="max-height: 200px;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <!-- Answer Area Settings -->
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-success"><i class="fa fa-cog me-2"></i>Answer Area Settings</h6>
+                                                            <div class="form-group">
+                                                                <label for="subjectiveAnswerRows" class="form-label"><strong>Answer Area Size (Rows)</strong></label>
+                                                                <input type="number" id="subjectiveAnswerRows" class="form-control" min="3" max="20" value="5" placeholder="Number of rows">
+                                                                <small class="text-muted">Number of visible rows in the answer textarea</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-success"><i class="fa fa-eye me-2"></i>Answer Area Preview</h6>
+                                                            <div class="border p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                                                <label class="form-label"><strong>Your Answer</strong></label>
+                                                                <textarea id="subjectivePreviewTextarea" class="form-control" rows="5" placeholder="This is how the answer area will appear to students..." disabled></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-success" id="createSubjectiveQuestion">Create Subjective Question</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="pull-right  badge badge-xl badge-success" style="font-size:1.2em">
                                         <label id="participant-mark"></label> 
                                         <input type="text" id="collectmark" name="collectmark" hidden>
@@ -1286,13 +1579,48 @@ You can paste from clipboard or type directly here."></textarea>
 
 
 
-
 <!-- jQuery UI required for form-builder's sortable functionality -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-builder.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-render.min.js"></script>
 
 <script>
+// Bootstrap 5 Modal Helper Functions
+function showModal(modalId) {
+    try {
+        const modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    } catch (error) {
+        console.error('Bootstrap 5 not loaded or modal error:', error);
+        // Fallback to jQuery if Bootstrap 5 is not available
+        if (typeof $ !== 'undefined') {
+            $('#' + modalId).modal('show');
+        }
+    }
+}
+
+function hideModal(modalId) {
+    try {
+        const modalElement = document.getElementById(modalId);
+        if (modalElement) {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            } else {
+                // Fallback if modal instance doesn't exist
+                const newModal = new bootstrap.Modal(modalElement);
+                newModal.hide();
+            }
+        }
+    } catch (error) {
+        console.error('Bootstrap 5 not loaded or modal error:', error);
+        // Fallback to jQuery if Bootstrap 5 is not available
+        if (typeof $ !== 'undefined') {
+            $('#' + modalId).modal('hide');
+        }
+    }
+}
+
 var selected_from = '';
 var selected_to = '';
 var total_correct_mark = 0;
@@ -1573,14 +1901,12 @@ for (let j = 0; j < buttons.length; j++) {
         window.currentQuestionNum = questionnum;
         window.currentButtonIndex = this.dataset.index ? Number(this.dataset.index) : undefined;
         
-        // Clear previous modal data
-        $('#pastedOptions').val('');
-        $('#optionsPreview').html('<p class="text-muted">Options will appear here as you type...</p>');
-        $('#optionCount').text('0');
-        $('#correctAnswerSection').hide();
-        $('#selectedCorrectAnswers').text('None');
+        // Force clear modal data immediately - multiple times for safety
+        clearModalData();
+        setTimeout(clearModalData, 50);
+        setTimeout(clearModalData, 100);
         
-        // Show modal
+        // Show modal using Bootstrap 5 syntax
         showModal('answerOptionsModal');
     };
 }
@@ -1593,14 +1919,12 @@ for (let j = 0; j < buttons2.length; j++) {
         window.currentQuestionNum = questionnum;
         window.currentButtonIndex = this.dataset.index ? Number(this.dataset.index) : undefined;
         
-        // Clear previous modal data
-        $('#pastedOptions').val('');
-        $('#optionsPreview').html('<p class="text-muted">Options will appear here as you type...</p>');
-        $('#optionCount').text('0');
-        $('#correctAnswerSection').hide();
-        $('#selectedCorrectAnswers').text('None');
+        // Force clear modal data immediately - multiple times for safety
+        clearModalData();
+        setTimeout(clearModalData, 50);
+        setTimeout(clearModalData, 100);
         
-        // Show modal
+        // Show modal using Bootstrap 5 syntax
         showModal('answerOptionsModal');
     };
 }
@@ -1623,85 +1947,16 @@ for (let j = 0; j < buttons2.length; j++) {
     var buttons4 = document.getElementsByClassName('appendfield4');
 for (let j = 0; j < buttons4.length; j++) {
     buttons4[j].onclick = function() {
-        var field = {
-            type: 'header',
-            className: 'mt-4',
-            label: this.dataset.label + ' ' + questionnum
-        };
-        var index = this.dataset.index ? Number(this.dataset.index) : undefined;
-
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'file',
-            className: 'form-control',
-            label: 'Upload Image',
-            name: 'uploaded_image[]',
-            description: 'Drag and drop or click to select an image file.',
-            attrs: {
-                'data-subtype': 'file-' + questionnum
-            }
-        };
-
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'paragraph',
-            className: '',
-            label: 'Sample of the question paragraph...'
-        };
+        // Store current question type and number for modal use
+        window.currentQuestionType = 'subjective';
+        window.currentQuestionNum = questionnum;
+        window.currentButtonIndex = this.dataset.index ? Number(this.dataset.index) : undefined;
         
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'textarea',
-            rows: 10,
-            className: 'form-control',
-            placeholder: 'Your Answer',
-            label: '',
-            name: 'subjective-text' + questionnum,
-        };
+        // Clear previous modal data completely
+        clearSubjectiveModalData();
         
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'checkbox-group',
-            className: 'collected-marks pull-right chk-col-danger',
-            label: '',  
-            values: [
-                {
-                    "label": "1 mark",
-                    "value": "1",
-                    "selected": false
-                }
-            ]
-        };
-
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'number',
-            className: 'inputmark form-control',
-            placeholder: 'Mark',
-            value: '0',
-            min: '0',
-            label: '',
-        };
-        
-        formBuilder.actions.addField(field, index);
-
-        field = {
-            type: 'text',
-            className: 'feedback-text form-control',
-            placeholder: 'Comment',
-            label: '',
-        };
-        
-        formBuilder.actions.addField(field, index);
-        
-        // Increment after adding
-        questionnum++;
-        $('#question-index').val(questionnum);
+        // Show subjective modal using Bootstrap 5 syntax
+        showModal('subjectiveQuestionModal');
     };
 }
 
@@ -1717,49 +1972,199 @@ $(document).ready(function() {
     
     // Initialize answer options modal functionality
     initializeAnswerOptionsModal();
+    
+    // Initialize subjective question modal functionality
+    initializeSubjectiveQuestionModal();
 });
 
 /**
- * Modal utility functions for compatibility
+ * Nuclear clear - completely reset modal to pristine state
  */
-function showModal(modalId) {
-    // Try jQuery modal first (most likely to work with existing layout)
-    if (typeof $ !== 'undefined' && $.fn.modal) {
-        try {
-            $('#' + modalId).modal('show');
-            return;
-        } catch (e) {
-            console.log('jQuery modal failed, trying fallback');
-        }
+function nuclearClearModal() {
+    // Completely reset the file input section by rebuilding it
+    const fileInputSection = $('#questionImage').closest('.form-group');
+    if (fileInputSection.length > 0) {
+        const newFileInputHTML = `
+            <input type="file" class="form-control" id="questionImage" accept="image/*">
+            <small class="text-muted">Upload an image to accompany your question (optional)</small>
+            <div id="imagePreview" class="mt-2" style="display: none;">
+                <img id="previewImg" class="img-fluid border rounded" style="max-height: 200px;">
+            </div>
+        `;
+        fileInputSection.html(newFileInputHTML);
+        
+        // Re-attach the image preview functionality
+        $('#questionImage').on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#previewImg').attr('src', e.target.result);
+                    $('#imagePreview').show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('#imagePreview').hide();
+            }
+        });
     }
     
-    // Fallback: simple show with proper modal classes
-    var modalElement = $('#' + modalId);
-    modalElement.addClass('show').css('display', 'block');
-    $('body').addClass('modal-open');
-    
-    // Add backdrop
-    if (!$('.modal-backdrop').length) {
-        $('body').append('<div class="modal-backdrop fade show"></div>');
-    }
+    // Clear all other fields
+    $('#questionParagraph').val('');
+    $('#questionMark').val('1');
+    $('#pastedOptions').val('');
+    $('#optionsPreview').html('<p class="text-muted">Options will appear here as you type...</p>');
+    $('#optionCount').text('0');
+    $('#correctAnswerSection').hide();
+    $('#selectedCorrectAnswers').text('None');
+    $('#correctAnswerOptions').html('<p class="text-muted text-center">Add options above to select correct answers...</p>');
 }
 
-function hideModal(modalId) {
-    // Try jQuery modal first
-    if (typeof $ !== 'undefined' && $.fn.modal) {
-        try {
-            $('#' + modalId).modal('hide');
-            return;
-        } catch (e) {
-            console.log('jQuery modal hide failed, trying fallback');
-        }
+/**
+ * Clear all modal data when opening for a new question
+ */
+function clearModalData() {
+    // Use nuclear clear for complete reset
+    nuclearClearModal();
+}
+
+/**
+ * Nuclear clear for subjective modal
+ */
+function nuclearClearSubjectiveModal() {
+    // Completely reset the file input section by rebuilding it
+    const fileInputSection = $('#subjectiveQuestionImage').closest('.form-group');
+    if (fileInputSection.length > 0) {
+        const newFileInputHTML = `
+            <input type="file" class="form-control" id="subjectiveQuestionImage" accept="image/*">
+            <small class="text-muted">Upload an image to accompany your question (optional)</small>
+            <div id="subjectiveImagePreview" class="mt-2" style="display: none;">
+                <img id="subjectivePreviewImg" class="img-fluid border rounded" style="max-height: 200px;">
+            </div>
+        `;
+        fileInputSection.html(newFileInputHTML);
+        
+        // Re-attach the image preview functionality
+        $('#subjectiveQuestionImage').on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#subjectivePreviewImg').attr('src', e.target.result);
+                    $('#subjectiveImagePreview').show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('#subjectiveImagePreview').hide();
+            }
+        });
     }
     
-    // Fallback: simple hide
-    var modalElement = $('#' + modalId);
-    modalElement.removeClass('show').css('display', 'none');
-    $('body').removeClass('modal-open');
-    $('.modal-backdrop').remove();
+    // Clear all other fields
+    $('#subjectiveQuestionParagraph').val('');
+    $('#subjectiveQuestionMark').val('5');
+    $('#subjectiveAnswerRows').val('5');
+    
+    // Update preview textarea rows
+    updateSubjectivePreview();
+}
+
+/**
+ * Clear all subjective modal data
+ */
+function clearSubjectiveModalData() {
+    nuclearClearSubjectiveModal();
+}
+
+/**
+ * Update the subjective answer area preview
+ */
+function updateSubjectivePreview() {
+    const rows = parseInt($('#subjectiveAnswerRows').val()) || 5;
+    $('#subjectivePreviewTextarea').attr('rows', rows);
+}
+
+/**
+ * Initialize the Subjective Question Modal functionality
+ */
+function initializeSubjectiveQuestionModal() {
+    // Answer rows input change handler
+    $('#subjectiveAnswerRows').on('input change', function() {
+        updateSubjectivePreview();
+    });
+    
+    // Image preview functionality
+    $('#subjectiveQuestionImage').on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#subjectivePreviewImg').attr('src', e.target.result);
+                $('#subjectiveImagePreview').show();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $('#subjectiveImagePreview').hide();
+        }
+    });
+    
+    // Create subjective question button
+    $('#createSubjectiveQuestion').on('click', function() {
+        // Validate question paragraph
+        var questionParagraph = $('#subjectiveQuestionParagraph').val().trim();
+        if (!questionParagraph) {
+            alert('Please enter a question paragraph.');
+            return;
+        }
+        
+        // Validate mark
+        var questionMark = parseInt($('#subjectiveQuestionMark').val()) || 0;
+        if (questionMark <= 0) {
+            alert('Please enter a valid mark (greater than 0).');
+            return;
+        }
+        
+        // Get other form values
+        var answerRows = parseInt($('#subjectiveAnswerRows').val()) || 5;
+        var imageFile = $('#subjectiveQuestionImage')[0].files[0];
+        
+        // Create the subjective question
+        createSubjectiveQuestion(questionParagraph, questionMark, answerRows, imageFile);
+        
+        // Close modal
+        hideModal('subjectiveQuestionModal');
+        
+        // Increment question number
+        questionnum++;
+        $('#question-index').val(questionnum);
+    });
+    
+    // Close button handlers
+    $(document).on('click', '#subjectiveQuestionModal .btn-close', function(e) {
+        e.preventDefault();
+        hideModal('subjectiveQuestionModal');
+    });
+    
+    $(document).on('click', '#subjectiveQuestionModal [data-bs-dismiss="modal"], #subjectiveQuestionModal [data-dismiss="modal"]', function(e) {
+        e.preventDefault();
+        hideModal('subjectiveQuestionModal');
+    });
+    
+    // ESC key handler
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#subjectiveQuestionModal').hasClass('show')) {
+            hideModal('subjectiveQuestionModal');
+        }
+    });
+    
+    // Modal event handlers
+    $('#subjectiveQuestionModal').on('show.bs.modal', function() {
+        clearSubjectiveModalData();
+    });
+    
+    $('#subjectiveQuestionModal').on('shown.bs.modal', function() {
+        setTimeout(clearSubjectiveModalData, 100);
+    });
 }
 
 /**
@@ -1769,6 +2174,21 @@ function initializeAnswerOptionsModal() {
     // Live preview as user types
     $('#pastedOptions').on('input', function() {
         updateOptionsPreview();
+    });
+    
+    // Image preview functionality
+    $('#questionImage').on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#previewImg').attr('src', e.target.result);
+                $('#imagePreview').show();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $('#imagePreview').hide();
+        }
     });
     
     // Clear options button
@@ -1787,6 +2207,20 @@ function initializeAnswerOptionsModal() {
     
     // Apply options button
     $('#applyOptions').on('click', function() {
+        // Validate question paragraph
+        var questionParagraph = $('#questionParagraph').val().trim();
+        if (!questionParagraph) {
+            alert('Please enter a question paragraph.');
+            return;
+        }
+        
+        // Validate mark
+        var questionMark = parseInt($('#questionMark').val()) || 0;
+        if (questionMark <= 0) {
+            alert('Please enter a valid mark (greater than 0).');
+            return;
+        }
+        
         var options = parseOptionsFromText($('#pastedOptions').val());
         if (options.length === 0) {
             alert('Please enter at least one option.');
@@ -1800,8 +2234,11 @@ function initializeAnswerOptionsModal() {
             return;
         }
         
-        // Create the question with custom options and correct answers
-        createQuestionWithOptions(window.currentQuestionType, options, selectedCorrectAnswers);
+        // Get image file if selected
+        var imageFile = $('#questionImage')[0].files[0];
+        
+        // Create the question with all the new fields
+        createQuestionWithOptions(window.currentQuestionType, options, selectedCorrectAnswers, questionParagraph, questionMark, imageFile);
         
         // Close modal
         hideModal('answerOptionsModal');
@@ -1813,13 +2250,13 @@ function initializeAnswerOptionsModal() {
     
     // Close button handlers - Enhanced for better compatibility
     // Handle the X close button
-    $(document).on('click', '#answerOptionsModal .close', function(e) {
+    $(document).on('click', '#answerOptionsModal .btn-close', function(e) {
         e.preventDefault();
         hideModal('answerOptionsModal');
     });
     
-    // Handle data-dismiss attributes
-    $(document).on('click', '#answerOptionsModal [data-dismiss="modal"]', function(e) {
+    // Handle data-bs-dismiss and data-dismiss attributes
+    $(document).on('click', '#answerOptionsModal [data-bs-dismiss="modal"], #answerOptionsModal [data-dismiss="modal"]', function(e) {
         e.preventDefault();
         hideModal('answerOptionsModal');
     });
@@ -1835,6 +2272,18 @@ function initializeAnswerOptionsModal() {
         if (e.key === 'Escape' && $('#answerOptionsModal').hasClass('show')) {
             hideModal('answerOptionsModal');
         }
+    });
+    
+    // Additional modal event handlers - clear data when modal starts to show
+    $('#answerOptionsModal').on('show.bs.modal', function() {
+        // Clear immediately when modal starts to show
+        clearModalData();
+    });
+    
+    // Also clear when modal is fully shown as backup
+    $('#answerOptionsModal').on('shown.bs.modal', function() {
+        // Force clear modal data every time it's opened to ensure clean state
+        setTimeout(clearModalData, 100);
     });
 }
 
@@ -1966,9 +2415,9 @@ function getSelectedCorrectAnswers() {
 }
 
 /**
- * Create a question with the specified options
+ * Create a subjective question with specified parameters
  */
-function createQuestionWithOptions(questionType, customOptions, correctAnswers) {
+function createSubjectiveQuestion(questionParagraph, questionMark, answerRows, imageFile) {
     var questionNum = window.currentQuestionNum;
     var index = window.currentButtonIndex;
     
@@ -1980,24 +2429,188 @@ function createQuestionWithOptions(questionType, customOptions, correctAnswers) 
     };
     formBuilder.actions.addField(field, index);
     
-    // Create file upload
-    field = {
-        type: 'file',
-        className: 'form-control',
-        label: 'Upload Image',
-        name: 'uploaded_image[]',
-        description: 'Drag and drop or click to select an image file.',
-        attrs: {
-            'data-subtype': 'file-' + questionNum
-        }
-    };
-    formBuilder.actions.addField(field, index);
+    // Create file upload (only if image was selected)
+    if (imageFile) {
+        field = {
+            type: 'file',
+            className: 'form-control',
+            label: 'Upload Image',
+            name: 'uploaded_image[]',
+            description: 'Drag and drop or click to select an image file.',
+            attrs: {
+                'data-subtype': 'file-' + questionNum
+            }
+        };
+        formBuilder.actions.addField(field, index);
+        
+        // Store the image data URL and create preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            setTimeout(function() {
+                const fileInputs = $('#fb-editor input[type="file"]');
+                const newFileInput = fileInputs.last()[0];
+                
+                if (newFileInput) {
+                    const fileIndex = fileInputs.length - 1;
+                    imageDataUrls[fileIndex] = e.target.result;
+                    
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(imageFile);
+                        newFileInput.files = dt.files;
+                    } catch (error) {
+                        console.log('DataTransfer not supported, using alternative method');
+                    }
+                    
+                    const previewImage = $('<img>').attr('src', e.target.result).addClass('uploaded-image-preview');
+                    $(newFileInput).siblings('.uploaded-image-preview').remove();
+                    $(newFileInput).after(previewImage);
+                    
+                    $(newFileInput).data('modalFile', imageFile);
+                    $(newFileInput).data('modalImageDataUrl', e.target.result);
+                    
+                    const fileNameDisplay = $('<div class="selected-file-name mt-1"><small class="text-success"><i class="fa fa-check-circle"></i> ' + imageFile.name + '</small></div>');
+                    $(newFileInput).siblings('.selected-file-name').remove();
+                    $(newFileInput).after(fileNameDisplay);
+                }
+            }, 100);
+        };
+        reader.readAsDataURL(imageFile);
+    }
     
-    // Create question paragraph
+    // Create question paragraph with actual content
     field = {
         type: 'paragraph',
         className: '',
-        label: 'Sample of the question paragraph...'
+        label: questionParagraph
+    };
+    formBuilder.actions.addField(field, index);
+    
+    // Create answer textarea with custom rows
+    field = {
+        type: 'textarea',
+        rows: answerRows,
+        className: 'form-control',
+        placeholder: 'Your Answer',
+        label: '<label class="mt-2 text-primary"><strong>Your Answer</strong></label>',
+        name: 'subjective-text' + questionNum,
+    };
+    formBuilder.actions.addField(field, index);
+    
+    // Create marks checkbox for full marks
+    field = {
+        type: 'checkbox-group',
+        className: 'collected-marks pull-right chk-col-danger',
+        label: '',  
+        values: [
+            {
+                "label": questionMark + " mark",
+                "value": questionMark.toString(),
+                "selected": false
+            }
+        ]
+    };
+    formBuilder.actions.addField(field, index);
+
+    // Create number input for partial marks
+    field = {
+        type: 'number',
+        className: 'inputmark form-control',
+        placeholder: 'Mark',
+        value: '0',
+        min: '0',
+        max: questionMark.toString(),
+        label: '',
+    };
+    formBuilder.actions.addField(field, index);
+    
+    // Create comment field
+    field = {
+        type: 'text',
+        className: 'feedback-text form-control',
+        placeholder: 'Comment',
+        label: '',
+    };
+    formBuilder.actions.addField(field, index);
+}
+
+/**
+ * Create a question with the specified options and additional fields
+ */
+function createQuestionWithOptions(questionType, customOptions, correctAnswers, questionParagraph, questionMark, imageFile) {
+    var questionNum = window.currentQuestionNum;
+    var index = window.currentButtonIndex;
+    
+    // Create header
+    var field = {
+        type: 'header',
+        className: 'mt-4',
+        label: 'Question ' + questionNum
+    };
+    formBuilder.actions.addField(field, index);
+    
+    // Create file upload (only if image was selected)
+    if (imageFile) {
+        field = {
+            type: 'file',
+            className: 'form-control',
+            label: 'Upload Image',
+            name: 'uploaded_image[]',
+            description: 'Drag and drop or click to select an image file.',
+            attrs: {
+                'data-subtype': 'file-' + questionNum
+            }
+        };
+        formBuilder.actions.addField(field, index);
+        
+        // Store the image data URL and create preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Wait a bit for the DOM to update, then find the newly created file input
+            setTimeout(function() {
+                const fileInputs = $('#fb-editor input[type="file"]');
+                const newFileInput = fileInputs.last()[0];
+                
+                if (newFileInput) {
+                    // Get the current index for this file input
+                    const fileIndex = fileInputs.length - 1;
+                    
+                    // Store the image data URL
+                    imageDataUrls[fileIndex] = e.target.result;
+                    
+                    // Try to set the file (browser compatibility may vary)
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(imageFile);
+                        newFileInput.files = dt.files;
+                    } catch (error) {
+                        console.log('DataTransfer not supported, using alternative method');
+                    }
+                    
+                    // Create and show image preview immediately
+                    const previewImage = $('<img>').attr('src', e.target.result).addClass('uploaded-image-preview');
+                    $(newFileInput).siblings('.uploaded-image-preview').remove();
+                    $(newFileInput).after(previewImage);
+                    
+                    // Store a reference to the original file for later use
+                    $(newFileInput).data('modalFile', imageFile);
+                    $(newFileInput).data('modalImageDataUrl', e.target.result);
+                    
+                    // Update the file input appearance to show file is selected
+                    const fileNameDisplay = $('<div class="selected-file-name mt-1"><small class="text-success"><i class="fa fa-check-circle"></i> ' + imageFile.name + '</small></div>');
+                    $(newFileInput).siblings('.selected-file-name').remove();
+                    $(newFileInput).after(fileNameDisplay);
+                }
+            }, 100);
+        };
+        reader.readAsDataURL(imageFile);
+    }
+    
+    // Create question paragraph with actual content
+    field = {
+        type: 'paragraph',
+        className: '',
+        label: questionParagraph
     };
     formBuilder.actions.addField(field, index);
     
@@ -2048,15 +2661,15 @@ function createQuestionWithOptions(questionType, customOptions, correctAnswers) 
     };
     formBuilder.actions.addField(field, index);
     
-    // Create marks checkbox
+    // Create marks checkbox with custom mark value
     field = {
         type: 'checkbox-group',
         className: 'collected-marks pull-right chk-col-danger',
         label: '',  
         values: [
             {
-                "label": "1 mark",
-                "value": "1",
+                "label": questionMark + " mark",
+                "value": questionMark.toString(),
                 "selected": false
             }
         ]
@@ -2150,9 +2763,15 @@ function createQuestionWithOptions(questionType, customOptions, correctAnswers) 
                 $('#fb-editor').find('input[type="file"]').each(function(index, input) {
                     if (imageDataUrls[index]) {
                         if (input && input.files && input.files[0]) {
-                        formData.append('uploaded_image[' + fileIndex + ']', input.files[0]);
-                        console.log('index:', index, 'input:', input.files[0]);
-                        fileIndex++;
+                            // Use the actual file from the input
+                            formData.append('uploaded_image[' + fileIndex + ']', input.files[0]);
+                            console.log('index:', index, 'input:', input.files[0]);
+                            fileIndex++;
+                        } else if ($(input).data('modalFile')) {
+                            // Use the stored file from modal if input doesn't have files
+                            formData.append('uploaded_image[' + fileIndex + ']', $(input).data('modalFile'));
+                            console.log('index:', index, 'modalFile:', $(input).data('modalFile'));
+                            fileIndex++;
                         }
                     }
                 });
@@ -2215,7 +2834,7 @@ var imageDataUrls = [];
 $(document).ready(function() {
   $('body').on('change', 'input[type="file"]', function() {
     var input = this;
-    var index = $('.form-builder input[type="file"]').index(input);
+    var index = $('#fb-editor input[type="file"]').index(input);
 
     if (input.files && input.files[0]) {
       var reader = new FileReader();
@@ -2223,10 +2842,28 @@ $(document).ready(function() {
         imageDataUrls[index] = e.target.result;
 
         $(input).parent().find('.uploaded-image-preview').remove();
+        $(input).siblings('.uploaded-image-preview').remove();
+        $(input).siblings('.selected-file-name').remove();
         var previewImage = $('<img>').attr('src', e.target.result).addClass('uploaded-image-preview');
         $(input).after(previewImage);
+        
+        // Show filename
+        const fileNameDisplay = $('<div class="selected-file-name mt-1"><small class="text-success"><i class="fa fa-check-circle"></i> ' + input.files[0].name + '</small></div>');
+        $(input).after(fileNameDisplay);
+        
+        // Clear any stored modal file data since user selected new file
+        $(input).removeData('modalFile');
+        $(input).removeData('modalImageDataUrl');
       };
       reader.readAsDataURL(input.files[0]);
+    } else {
+      // If no file selected, remove preview and filename display
+      $(input).parent().find('.uploaded-image-preview').remove();
+      $(input).siblings('.uploaded-image-preview').remove();
+      $(input).siblings('.selected-file-name').remove();
+      if (index >= 0) {
+        delete imageDataUrls[index];
+      }
     }
   });
 });

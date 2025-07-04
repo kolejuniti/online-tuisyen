@@ -1585,6 +1585,42 @@ You can paste from clipboard or type directly here."></textarea>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-render.min.js"></script>
 
 <script>
+// Bootstrap 5 Modal Helper Functions
+function showModal(modalId) {
+    try {
+        const modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    } catch (error) {
+        console.error('Bootstrap 5 not loaded or modal error:', error);
+        // Fallback to jQuery if Bootstrap 5 is not available
+        if (typeof $ !== 'undefined') {
+            $('#' + modalId).modal('show');
+        }
+    }
+}
+
+function hideModal(modalId) {
+    try {
+        const modalElement = document.getElementById(modalId);
+        if (modalElement) {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            } else {
+                // Fallback if modal instance doesn't exist
+                const newModal = new bootstrap.Modal(modalElement);
+                newModal.hide();
+            }
+        }
+    } catch (error) {
+        console.error('Bootstrap 5 not loaded or modal error:', error);
+        // Fallback to jQuery if Bootstrap 5 is not available
+        if (typeof $ !== 'undefined') {
+            $('#' + modalId).modal('hide');
+        }
+    }
+}
+
 var selected_from = '';
 var selected_to = '';
 var total_correct_mark = 0;
@@ -1870,8 +1906,8 @@ for (let j = 0; j < buttons.length; j++) {
         setTimeout(clearModalData, 50);
         setTimeout(clearModalData, 100);
         
-        // Show modal
-        $('#answerOptionsModal').modal('show');
+        // Show modal using Bootstrap 5 syntax
+        showModal('answerOptionsModal');
     };
 }
 
@@ -1888,8 +1924,8 @@ for (let j = 0; j < buttons2.length; j++) {
         setTimeout(clearModalData, 50);
         setTimeout(clearModalData, 100);
         
-        // Show modal
-        $('#answerOptionsModal').modal('show');
+        // Show modal using Bootstrap 5 syntax
+        showModal('answerOptionsModal');
     };
 }
 
@@ -1919,8 +1955,8 @@ for (let j = 0; j < buttons4.length; j++) {
         // Clear previous modal data completely
         clearSubjectiveModalData();
         
-        // Show subjective modal
-        $('#subjectiveQuestionModal').modal('show');
+        // Show subjective modal using Bootstrap 5 syntax
+        showModal('subjectiveQuestionModal');
     };
 }
 
@@ -2096,7 +2132,7 @@ function initializeSubjectiveQuestionModal() {
         createSubjectiveQuestion(questionParagraph, questionMark, answerRows, imageFile);
         
         // Close modal
-        $('#subjectiveQuestionModal').modal('hide');
+        hideModal('subjectiveQuestionModal');
         
         // Increment question number
         questionnum++;
@@ -2106,18 +2142,18 @@ function initializeSubjectiveQuestionModal() {
     // Close button handlers
     $(document).on('click', '#subjectiveQuestionModal .btn-close', function(e) {
         e.preventDefault();
-        $('#subjectiveQuestionModal').modal('hide');
+        hideModal('subjectiveQuestionModal');
     });
     
     $(document).on('click', '#subjectiveQuestionModal [data-bs-dismiss="modal"], #subjectiveQuestionModal [data-dismiss="modal"]', function(e) {
         e.preventDefault();
-        $('#subjectiveQuestionModal').modal('hide');
+        hideModal('subjectiveQuestionModal');
     });
     
     // ESC key handler
     $(document).on('keydown', function(e) {
         if (e.key === 'Escape' && $('#subjectiveQuestionModal').hasClass('show')) {
-            $('#subjectiveQuestionModal').modal('hide');
+            hideModal('subjectiveQuestionModal');
         }
     });
     
@@ -2205,7 +2241,7 @@ function initializeAnswerOptionsModal() {
         createQuestionWithOptions(window.currentQuestionType, options, selectedCorrectAnswers, questionParagraph, questionMark, imageFile);
         
         // Close modal
-        $('#answerOptionsModal').modal('hide');
+        hideModal('answerOptionsModal');
         
         // Increment question number
         questionnum++;
@@ -2216,25 +2252,25 @@ function initializeAnswerOptionsModal() {
     // Handle the X close button
     $(document).on('click', '#answerOptionsModal .btn-close', function(e) {
         e.preventDefault();
-        $('#answerOptionsModal').modal('hide');
+        hideModal('answerOptionsModal');
     });
     
     // Handle data-bs-dismiss and data-dismiss attributes
     $(document).on('click', '#answerOptionsModal [data-bs-dismiss="modal"], #answerOptionsModal [data-dismiss="modal"]', function(e) {
         e.preventDefault();
-        $('#answerOptionsModal').modal('hide');
+        hideModal('answerOptionsModal');
     });
     
     // Cancel button handler - more specific selector
     $(document).on('click', '#answerOptionsModal .modal-footer .btn-secondary', function(e) {
         e.preventDefault();
-        $('#answerOptionsModal').modal('hide');
+        hideModal('answerOptionsModal');
     });
     
     // ESC key handler
     $(document).on('keydown', function(e) {
         if (e.key === 'Escape' && $('#answerOptionsModal').hasClass('show')) {
-            $('#answerOptionsModal').modal('hide');
+            hideModal('answerOptionsModal');
         }
     });
     

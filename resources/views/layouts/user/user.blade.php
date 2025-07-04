@@ -350,6 +350,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-render.min.js"></script>
   <script src="{{ asset('assets/src/js/pages/component-animations-css3.js')}}"></script>
   
+  <!-- Bootstrap 5 JavaScript Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
   @yield('content')
 </body>
 </html>
