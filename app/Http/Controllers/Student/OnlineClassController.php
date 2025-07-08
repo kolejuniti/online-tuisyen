@@ -36,8 +36,11 @@ class OnlineClassController extends Controller
         }
 
         // Get all active online classes where student's school is included
+        // Convert school_id to string since JSON stores school IDs as strings
+        $studentSchoolId = (string) $student->school_id;
+        
         $onlineClasses = OnlineClass::where('status', 'active')
-            ->whereJsonContains('school', $student->school_id)
+            ->whereJsonContains('school', $studentSchoolId)
             ->orderBy('datetime', 'desc')
             ->get();
 
@@ -88,7 +91,8 @@ class OnlineClassController extends Controller
 
         // Check if student's school is authorized for this class
         $selectedSchoolIds = $onlineClass->school ?? [];
-        if (!in_array($student->school_id, $selectedSchoolIds)) {
+        $studentSchoolId = (string) $student->school_id;
+        if (!in_array($studentSchoolId, $selectedSchoolIds)) {
             return redirect()->route('student.online-class.index', $id)
                 ->with('error', 'You are not authorized to view this online class.');
         }
@@ -129,7 +133,8 @@ class OnlineClassController extends Controller
 
         // Check if student's school is authorized
         $selectedSchoolIds = $onlineClass->school ?? [];
-        if (!in_array($student->school_id, $selectedSchoolIds)) {
+        $studentSchoolId = (string) $student->school_id;
+        if (!in_array($studentSchoolId, $selectedSchoolIds)) {
             return redirect()->route('student.online-class.index', $id)
                 ->with('error', 'You are not authorized to join this online class.');
         }
