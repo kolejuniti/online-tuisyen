@@ -259,9 +259,14 @@ Route::middleware(['auth:student'])->group(function () {
     Route::post('/student/forum/{id}/insert', [App\Http\Controllers\Student\ForumController::class, 'studinsertTopic']);
     Route::post('/student/forum/{id}/topic/insert', [App\Http\Controllers\Student\ForumController::class, 'studinsertForum']);
 
-    // Student Online Class Gateway Routes
+    // Student Online Class Routes
+    Route::get('/student/online-class/{id}', [App\Http\Controllers\Student\OnlineClassController::class, 'index'])->name('student.online-class.index');
+    Route::get('/student/online-class/{id}/{classId}', [App\Http\Controllers\Student\OnlineClassController::class, 'show'])->name('student.online-class.show');
+    Route::get('/student/online-class/{id}/{classId}/join', [App\Http\Controllers\Student\OnlineClassController::class, 'join'])->name('student.online-class.join');
+
+    // Student Online Class Gateway Routes (legacy - keeping for backward compatibility)
     Route::get('/student/online-class/{classId}/join-page', [App\Http\Controllers\User\OnlineClassController::class, 'showJoinPage'])->name('student.online-class.join-page');
-    Route::get('/student/online-class/{classId}/join', [App\Http\Controllers\User\OnlineClassController::class, 'joinClass'])->name('student.online-class.join');
+    Route::get('/student/online-class/{classId}/join', [App\Http\Controllers\User\OnlineClassController::class, 'joinClass'])->name('student.online-class.legacy-join');
 
 });
 

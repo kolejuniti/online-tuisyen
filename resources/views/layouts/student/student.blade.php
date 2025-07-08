@@ -195,6 +195,9 @@
               <li>
                 <a href="{{ route('student.forum', Session::get('subjects')->id) }}" class="{{ Request::is('student/forum/*') ? 'active' : '' }}"><i data-feather="message-square"></i><span>Forum</span></a>
               </li>
+              <li>
+                <a href="{{ route('student.online-class.index', Session::get('subjects')->id) }}" class="{{ Request::is('student/online-class/*') ? 'active' : '' }}"><i data-feather="video"></i><span>Online Classes</span></a>
+              </li>
             </ul>
             
             <!-- Sidebar Widget -->
