@@ -1433,7 +1433,7 @@
                         <h6 class="mb-2" data-key="success.contact.title">Butuh Bantuan?</h6>
                         <p class="mb-2 small">
                             <i class="fas fa-envelope me-2"></i>
-                            <span data-key="success.contact.email">E-mel: support@onlinetuition.com</span>
+                            <span data-key="success.contact.email">E-mel: etuition@uniti.edu.my</span>
                         </p>
                         <p class="mb-0 small">
                             <i class="fas fa-phone me-2"></i>
@@ -1964,7 +1964,7 @@
                 'success.next.step3': 'Mula gunakan platform setelah kelulusan',
                 'success.next.step4': 'Hubungi sokongan jika ada pertanyaan',
                 'success.contact.title': 'Butuh Bantuan?',
-                'success.contact.email': 'E-mel: support@onlinetuition.com',
+                'success.contact.email': 'E-mel: etuition@uniti.edu.my',
                 'success.contact.phone': 'Telefon: +60 12-345 6789',
                 'success.btn.home': 'Kembali ke Laman Utama',
                 'success.btn.print': 'Cetak Maklumat'
@@ -2093,7 +2093,7 @@
                 'success.next.step3': 'Start using the platform after approval',
                 'success.next.step4': 'Contact support if you have questions',
                 'success.contact.title': 'Need Help?',
-                'success.contact.email': 'Email: support@onlinetuition.com',
+                'success.contact.email': 'Email: etuition@uniti.edu.my',
                 'success.contact.phone': 'Phone: +60 12-345 6789',
                 'success.btn.home': 'Back to Home',
                 'success.btn.print': 'Print Information'

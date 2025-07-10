@@ -643,7 +643,7 @@
                 <div class="contact-info">
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span data-key="contact.email">support@onlinetuition.com</span>
+                        <span data-key="contact.email">etuition@uniti.edu.my</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
@@ -700,7 +700,7 @@
                 'help.description': 'Jika anda tidak pasti jenis pendaftaran mana yang sesuai dengan keperluan anda, jangan ragu untuk menghubungi pasukan sokongan kami. Kami di sini untuk membantu anda memulakan dengan jenis akaun yang betul untuk perjalanan pembelajaran anda.',
                 
                 // Contact info
-                'contact.email': 'support@onlinetuition.com',
+                'contact.email': 'etuition@uniti.edu.my',
                 'contact.phone': '+60 12-345 6789',
                 'contact.support': 'Sokongan 24/7 Tersedia'
             },
@@ -737,7 +737,7 @@
                 'help.description': 'If you\'re unsure which registration type suits your needs, feel free to contact our support team. We\'re here to help you get started with the right account type for your learning journey.',
                 
                 // Contact info
-                'contact.email': 'support@onlinetuition.com',
+                'contact.email': 'etuition@uniti.edu.my',
                 'contact.phone': '+60 12-345 6789',
                 'contact.support': '24/7 Support Available'
             }
