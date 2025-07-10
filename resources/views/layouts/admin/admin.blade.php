@@ -198,6 +198,17 @@
               </li>
               <li class="treeview">
                 <a href="#">
+                  <i data-feather="file-text"></i><span>Student Applications</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="{{ route('admin.student-applications.index') }}">Pending Applications</a></li>
+                </ul>
+              </li>
+              <li class="treeview">
+                <a href="#">
                   <i data-feather="book"></i><span>Subjects</span>
                   <span class="pull-right-container">
                     <i class="fa fa-angle-right pull-right"></i>

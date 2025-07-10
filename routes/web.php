@@ -332,4 +332,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('teacher-subjects/{id}', [App\Http\Controllers\Admin\TeacherSubjectController::class, 'show'])->name('teacher-subjects.show');
     Route::post('teacher-subjects', [App\Http\Controllers\Admin\TeacherSubjectController::class, 'store'])->name('teacher-subjects.store');
     Route::delete('teacher-subjects', [App\Http\Controllers\Admin\TeacherSubjectController::class, 'destroy'])->name('teacher-subjects.destroy');
+    
+    // Student Application routes
+    Route::get('student-applications', [App\Http\Controllers\Admin\StudentApplicationController::class, 'index'])->name('student-applications.index');
+    Route::get('student-applications/{application}', [App\Http\Controllers\Admin\StudentApplicationController::class, 'show'])->name('student-applications.show');
+    Route::patch('student-applications/{application}/approve', [App\Http\Controllers\Admin\StudentApplicationController::class, 'approve'])->name('student-applications.approve');
+    Route::delete('student-applications/{application}/reject', [App\Http\Controllers\Admin\StudentApplicationController::class, 'reject'])->name('student-applications.reject');
+    Route::post('student-applications/bulk-approve', [App\Http\Controllers\Admin\StudentApplicationController::class, 'bulkApprove'])->name('student-applications.bulk-approve');
+    Route::post('student-applications/bulk-reject', [App\Http\Controllers\Admin\StudentApplicationController::class, 'bulkReject'])->name('student-applications.bulk-reject');
+    Route::get('student-applications/stats/data', [App\Http\Controllers\Admin\StudentApplicationController::class, 'getStats'])->name('student-applications.stats');
 });
