@@ -651,7 +651,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock"></i>
-                        <span data-key="contact.support">Sokongan 24/7 Tersedia</span>
+                        <span data-key="contact.support">Sokongan Waktu Bekerja (9-5)</span>
                     </div>
                 </div>
             </div>
@@ -702,7 +702,7 @@
                 // Contact info
                 'contact.email': 'etuition@uniti.edu.my',
                 'contact.phone': '+60 12-345 6789',
-                'contact.support': 'Sokongan 24/7 Tersedia'
+                'contact.support': 'Sokongan Waktu Bekerja (9-5)'
             },
             en: {
                 // Hero section
@@ -739,7 +739,7 @@
                 // Contact info
                 'contact.email': 'etuition@uniti.edu.my',
                 'contact.phone': '+60 12-345 6789',
-                'contact.support': '24/7 Support Available'
+                'contact.support': 'Business Hours Support (9-5)'
             }
         };
 
