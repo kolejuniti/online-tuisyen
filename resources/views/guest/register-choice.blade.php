@@ -366,6 +366,48 @@
             font-size: 1.1rem;
         }
 
+        /* Language Switcher Styles */
+        .language-switcher {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .language-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-option {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-option:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
         /* Floating animation for hero features */
         .hero-feature:nth-child(1) { animation: float 6s ease-in-out infinite; }
         .hero-feature:nth-child(2) { animation: float 6s ease-in-out infinite 1.5s; }
@@ -382,6 +424,20 @@
 
         /* Mobile responsiveness */
         @media (max-width: 768px) {
+            .language-switcher {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .language-selector {
+                padding: 0.25rem;
+            }
+
+            .language-option {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
             .hero-title {
                 font-size: 2.5rem;
             }
@@ -452,24 +508,38 @@
 <body>
     <!-- Hero Section -->
     <section class="hero-section">
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <div class="language-selector">
+                <div class="language-option active" data-lang="ms">
+                    <i class="fas fa-globe"></i>
+                    <span>Bahasa Malaysia</span>
+                </div>
+                <div class="language-option" data-lang="en">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title animate__animated animate__fadeInDown">Join Our Learning Platform</h1>
-                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
-                    Choose your registration type and unlock access to comprehensive online learning resources, expert guidance, and academic excellence.
+                <h1 class="hero-title animate__animated animate__fadeInDown" data-key="hero.title">Sertai Platform Pembelajaran Kami</h1>
+                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s" data-key="hero.subtitle">
+                    Pilih jenis pendaftaran anda dan buka akses kepada sumber pembelajaran dalam talian yang komprehensif, bimbingan pakar, dan kecemerlangan akademik.
                 </p>
                 <div class="hero-features animate__animated animate__fadeInUp animate__delay-2s">
                     <div class="hero-feature">
                         <i class="fas fa-graduation-cap"></i>
-                        <span>Expert Teachers</span>
+                        <span data-key="hero.features.teachers">Guru Pakar</span>
                     </div>
                     <div class="hero-feature">
                         <i class="fas fa-book"></i>
-                        <span>Comprehensive Materials</span>
+                        <span data-key="hero.features.materials">Bahan Komprehensif</span>
                     </div>
                     <div class="hero-feature">
                         <i class="fas fa-chart-line"></i>
-                        <span>Progress Tracking</span>
+                        <span data-key="hero.features.tracking">Penjejakan Kemajuan</span>
                     </div>
                 </div>
             </div>
@@ -486,37 +556,37 @@
                         <div class="card-icon">
                             <i class="fas fa-user-graduate"></i>
                         </div>
-                        <h3 class="card-title">Individual Student</h3>
-                        <p class="card-subtitle">Perfect for individual learners seeking personalized education</p>
+                        <h3 class="card-title" data-key="individual.title">Pelajar Individu</h3>
+                        <p class="card-subtitle" data-key="individual.subtitle">Sesuai untuk pelajar individu yang mencari pendidikan peribadi</p>
                     </div>
                     <div class="card-body">
                         <ul class="features-list">
                             <li>
                                 <i class="fas fa-user"></i>
-                                <span>Personal account creation</span>
+                                <span data-key="individual.feature1">Pembuatan akaun peribadi</span>
                             </li>
                             <li>
                                 <i class="fas fa-school"></i>
-                                <span>Select from registered schools</span>
+                                <span data-key="individual.feature2">Pilih dari sekolah berdaftar</span>
                             </li>
                             <li>
                                 <i class="fas fa-clock"></i>
-                                <span>Flexible learning schedule</span>
+                                <span data-key="individual.feature3">Jadual pembelajaran fleksibel</span>
                             </li>
                             <li>
                                 <i class="fas fa-certificate"></i>
-                                <span>Individual progress tracking</span>
+                                <span data-key="individual.feature4">Penjejakan kemajuan individu</span>
                             </li>
                             <li>
                                 <i class="fas fa-headset"></i>
-                                <span>Direct student support</span>
+                                <span data-key="individual.feature5">Sokongan pelajar langsung</span>
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer">
                         <div class="btn-card btn-individual">
                             <i class="fas fa-arrow-right"></i>
-                            <span>Register as Student</span>
+                            <span data-key="individual.button">Daftar sebagai Pelajar</span>
                         </div>
                     </div>
                 </a>
@@ -527,37 +597,37 @@
                         <div class="card-icon">
                             <i class="fas fa-school"></i>
                         </div>
-                        <h3 class="card-title">School Institution</h3>
-                        <p class="card-subtitle">Ideal for schools wanting to register multiple students</p>
+                        <h3 class="card-title" data-key="school.title">Institusi Sekolah</h3>
+                        <p class="card-subtitle" data-key="school.subtitle">Ideal untuk sekolah yang ingin mendaftarkan pelbagai pelajar</p>
                     </div>
                     <div class="card-body">
                         <ul class="features-list">
                             <li>
                                 <i class="fas fa-users"></i>
-                                <span>Bulk student registration</span>
+                                <span data-key="school.feature1">Pendaftaran pelajar berkelompok</span>
                             </li>
                             <li>
                                 <i class="fas fa-file-excel"></i>
-                                <span>Excel import functionality</span>
+                                <span data-key="school.feature2">Fungsi import Excel</span>
                             </li>
                             <li>
                                 <i class="fas fa-user-tie"></i>
-                                <span>Teacher coordinator account</span>
+                                <span data-key="school.feature3">Akaun koordinator guru</span>
                             </li>
                             <li>
                                 <i class="fas fa-chart-bar"></i>
-                                <span>Institution-wide analytics</span>
+                                <span data-key="school.feature4">Analisis seluruh institusi</span>
                             </li>
                             <li>
                                 <i class="fas fa-cogs"></i>
-                                <span>Advanced management tools</span>
+                                <span data-key="school.feature5">Alat pengurusan canggih</span>
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer">
                         <div class="btn-card btn-school">
                             <i class="fas fa-arrow-right"></i>
-                            <span>Register as School</span>
+                            <span data-key="school.button">Daftar sebagai Sekolah</span>
                         </div>
                     </div>
                 </a>
@@ -565,23 +635,23 @@
 
             <!-- Additional Information -->
             <div class="additional-info animate__animated animate__fadeInUp animate__delay-4s">
-                <h4>Need Help Choosing?</h4>
-                <p>
-                    If you're unsure which registration type suits your needs, feel free to contact our support team. 
-                    We're here to help you get started with the right account type for your learning journey.
+                <h4 data-key="help.title">Perlu Bantuan Memilih?</h4>
+                <p data-key="help.description">
+                    Jika anda tidak pasti jenis pendaftaran mana yang sesuai dengan keperluan anda, jangan ragu untuk menghubungi pasukan sokongan kami. 
+                    Kami di sini untuk membantu anda memulakan dengan jenis akaun yang betul untuk perjalanan pembelajaran anda.
                 </p>
                 <div class="contact-info">
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span>support@onlinetuition.com</span>
+                        <span data-key="contact.email">support@onlinetuition.com</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+60 12-345 6789</span>
+                        <span data-key="contact.phone">+60 12-345 6789</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock"></i>
-                        <span>24/7 Support Available</span>
+                        <span data-key="contact.support">Sokongan 24/7 Tersedia</span>
                     </div>
                 </div>
             </div>
@@ -590,5 +660,121 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Language Management Script -->
+    <script>
+        // Language management
+        let currentLanguage = 'ms'; // Default to Malay
+        
+        const translations = {
+            ms: {
+                // Hero section
+                'hero.title': 'Sertai Platform Pembelajaran Kami',
+                'hero.subtitle': 'Pilih jenis pendaftaran anda dan buka akses kepada sumber pembelajaran dalam talian yang komprehensif, bimbingan pakar, dan kecemerlangan akademik.',
+                'hero.features.teachers': 'Guru Pakar',
+                'hero.features.materials': 'Bahan Komprehensif',
+                'hero.features.tracking': 'Penjejakan Kemajuan',
+                
+                // Individual student card
+                'individual.title': 'Pelajar Individu',
+                'individual.subtitle': 'Sesuai untuk pelajar individu yang mencari pendidikan peribadi',
+                'individual.feature1': 'Pembuatan akaun peribadi',
+                'individual.feature2': 'Pilih dari sekolah berdaftar',
+                'individual.feature3': 'Jadual pembelajaran fleksibel',
+                'individual.feature4': 'Penjejakan kemajuan individu',
+                'individual.feature5': 'Sokongan pelajar langsung',
+                'individual.button': 'Daftar sebagai Pelajar',
+                
+                // School card
+                'school.title': 'Institusi Sekolah',
+                'school.subtitle': 'Ideal untuk sekolah yang ingin mendaftarkan pelbagai pelajar',
+                'school.feature1': 'Pendaftaran pelajar berkelompok',
+                'school.feature2': 'Fungsi import Excel',
+                'school.feature3': 'Akaun koordinator guru',
+                'school.feature4': 'Analisis seluruh institusi',
+                'school.feature5': 'Alat pengurusan canggih',
+                'school.button': 'Daftar sebagai Sekolah',
+                
+                // Help section
+                'help.title': 'Perlu Bantuan Memilih?',
+                'help.description': 'Jika anda tidak pasti jenis pendaftaran mana yang sesuai dengan keperluan anda, jangan ragu untuk menghubungi pasukan sokongan kami. Kami di sini untuk membantu anda memulakan dengan jenis akaun yang betul untuk perjalanan pembelajaran anda.',
+                
+                // Contact info
+                'contact.email': 'support@onlinetuition.com',
+                'contact.phone': '+60 12-345 6789',
+                'contact.support': 'Sokongan 24/7 Tersedia'
+            },
+            en: {
+                // Hero section
+                'hero.title': 'Join Our Learning Platform',
+                'hero.subtitle': 'Choose your registration type and unlock access to comprehensive online learning resources, expert guidance, and academic excellence.',
+                'hero.features.teachers': 'Expert Teachers',
+                'hero.features.materials': 'Comprehensive Materials',
+                'hero.features.tracking': 'Progress Tracking',
+                
+                // Individual student card
+                'individual.title': 'Individual Student',
+                'individual.subtitle': 'Perfect for individual learners seeking personalized education',
+                'individual.feature1': 'Personal account creation',
+                'individual.feature2': 'Select from registered schools',
+                'individual.feature3': 'Flexible learning schedule',
+                'individual.feature4': 'Individual progress tracking',
+                'individual.feature5': 'Direct student support',
+                'individual.button': 'Register as Student',
+                
+                // School card
+                'school.title': 'School Institution',
+                'school.subtitle': 'Ideal for schools wanting to register multiple students',
+                'school.feature1': 'Bulk student registration',
+                'school.feature2': 'Excel import functionality',
+                'school.feature3': 'Teacher coordinator account',
+                'school.feature4': 'Institution-wide analytics',
+                'school.feature5': 'Advanced management tools',
+                'school.button': 'Register as School',
+                
+                // Help section
+                'help.title': 'Need Help Choosing?',
+                'help.description': 'If you\'re unsure which registration type suits your needs, feel free to contact our support team. We\'re here to help you get started with the right account type for your learning journey.',
+                
+                // Contact info
+                'contact.email': 'support@onlinetuition.com',
+                'contact.phone': '+60 12-345 6789',
+                'contact.support': '24/7 Support Available'
+            }
+        };
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active language option
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.lang === lang) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update all text content
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.dataset.key;
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up language switcher
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    switchLanguage(option.dataset.lang);
+                });
+            });
+            
+            // Initialize with Malay as default
+            switchLanguage('ms');
+        });
+    </script>
 </body>
 </html> 
