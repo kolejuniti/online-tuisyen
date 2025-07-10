@@ -25,4 +25,12 @@ class School extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    /**
+     * Get the teacher coordinator for the school.
+     */
+    public function teacherCoordinator()
+    {
+        return $this->hasOne(TeacherCoordinator::class);
+    }
 }

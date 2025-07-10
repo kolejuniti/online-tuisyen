@@ -141,6 +141,14 @@
             position: relative;
         }
 
+        .notification-container {
+            max-width: 1200px;
+            margin: -1rem auto 0;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
         .main-container::before {
             content: '';
             position: absolute;
@@ -658,6 +666,11 @@
                 margin: -2rem 1rem 2rem;
             }
             
+            .notification-container {
+                margin: -0.5rem auto 0;
+                padding: 0 1rem;
+            }
+            
             .form-section {
                 padding: 2rem 1.5rem;
             }
@@ -683,6 +696,11 @@
             .hero-feature {
                 justify-content: center;
                 padding: 1rem 1.5rem;
+            }
+            
+            .notification-container {
+                margin: 0 auto 0;
+                padding: 0 0.5rem;
             }
             
             .progress-steps {
@@ -1455,26 +1473,37 @@
             </div>
         @else
             <!-- Error Messages -->
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+        <!-- Notification Messages -->
+        <div class="notification-container" style="margin-bottom: 2rem;">
+            @if(session('auth_success'))
+                <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('auth_success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Please fix the following errors:</strong>
-                <ul class="mb-0 mt-2">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Please fix the following errors:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
 
             <!-- Registration Form -->
         <div class="main-container animate__animated animate__fadeInUp animate__delay-2s">
@@ -1517,19 +1546,40 @@
                         <h4><i class="fas fa-building text-primary"></i> <span data-key="form.school.info_title">Maklumat Sekolah</span></h4>
                         
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
-                                    </label>
-                                    <select name="school_id" id="schoolSelect" class="form-control" data-placeholder-key="form.school.name_placeholder" required>
-                                        <option value="" data-key="form.school.name_placeholder">Pilih sekolah anda</option>
-                                        @foreach($schools as $school)
-                                            <option value="{{ $school->id }}">{{ $school->name }}</option>
-                                        @endforeach
-                                    </select>
+                            @if(!isset($authenticatedCoordinator))
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
+                                        </label>
+                                        <select name="school_id" id="schoolSelect" class="form-control" data-placeholder-key="form.school.name_placeholder" required>
+                                            <option value="" data-key="form.school.name_placeholder">Pilih sekolah anda</option>
+                                            @foreach($schools as $school)
+                                                <option value="{{ $school->id }}">{{ $school->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                                <!-- Hidden input for authenticated coordinator's school -->
+                                <input type="hidden" name="school_id" value="{{ $authenticatedCoordinator['school_id'] }}">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <span data-key="form.school.name">Nama Sekolah</span>
+                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Pre-selected</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control border-success" 
+                                               value="{{ $authenticatedCoordinator['school_name'] }}"
+                                               readonly 
+                                               style="background-color: #f0f9ff; color: #1e40af; font-weight: 600;">
+                                        <small class="text-success mt-1 d-block">
+                                            <i class="fas fa-info-circle"></i> School automatically selected based on your coordinator assignment.
+                                        </small>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
@@ -1588,26 +1638,88 @@
                     <!-- Guru Pembimbing Section -->
                     <div class="feature-highlight">
                         <h4><i class="fas fa-user-tie text-success"></i> <span data-key="form.teacher.title">Guru Pembimbing</span></h4>
-                        <p class="text-muted mb-3" data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</p>
+                        @if(isset($authenticatedCoordinator))
+                            <div class="alert alert-success border-0 mb-3" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Authenticated Coordinator:</strong> The coordinator information below has been verified and pre-filled based on your authentication.
+                            </div>
+                            <p class="text-muted mb-3">
+                                <span data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</span>
+                                <br><small class="text-success"><i class="fas fa-lock"></i> These fields are automatically filled and protected based on your authentication.</small>
+                            </p>
+                        @else
+                            <p class="text-muted mb-3" data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</p>
+                        @endif
                         
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
                                         <span data-key="form.teacher.name">Nama Guru Pembimbing</span> <span class="required">*</span>
+                                        @if(isset($authenticatedCoordinator))
+                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Verified</span>
+                                        @endif
                                     </label>
-                                    <input type="text" name="teacher_name" class="form-control" data-placeholder-key="form.teacher.name_placeholder" placeholder="Nama penuh guru pembimbing" required>
+                                    <input type="text" 
+                                           name="teacher_name" 
+                                           class="form-control @if(isset($authenticatedCoordinator)) border-success @endif" 
+                                           data-placeholder-key="form.teacher.name_placeholder" 
+                                           placeholder="Nama penuh guru pembimbing" 
+                                           value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['name'] : old('teacher_name') }}"
+                                           @if(isset($authenticatedCoordinator)) readonly style="background-color: #f8f9fa; color: #495057;" @endif
+                                           required>
+                                    @if(isset($authenticatedCoordinator))
+                                        <small class="text-success mt-1 d-block">
+                                            <i class="fas fa-info-circle"></i> This information is automatically filled from your verified coordinator account.
+                                        </small>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
                                         <span data-key="form.teacher.email">E-mel Guru Pembimbing</span> <span class="required">*</span>
+                                        @if(isset($authenticatedCoordinator))
+                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Verified</span>
+                                        @endif
                                     </label>
-                                    <input type="email" name="teacher_email" class="form-control" data-placeholder-key="form.teacher.email_placeholder" placeholder="guru@contoh.com" required>
+                                    <input type="email" 
+                                           name="teacher_email" 
+                                           class="form-control @if(isset($authenticatedCoordinator)) border-success @endif" 
+                                           data-placeholder-key="form.teacher.email_placeholder" 
+                                           placeholder="guru@contoh.com" 
+                                           value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['email'] : old('teacher_email') }}"
+                                           @if(isset($authenticatedCoordinator)) readonly style="background-color: #f8f9fa; color: #495057;" @endif
+                                           required>
+                                    @if(isset($authenticatedCoordinator))
+                                        <small class="text-success mt-1 d-block">
+                                            <i class="fas fa-info-circle"></i> This information is automatically filled from your verified coordinator account.
+                                        </small>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+                        
+                        @if(isset($authenticatedCoordinator))
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <span>Assigned School</span>
+                                            <span class="badge bg-primary ms-2"><i class="fas fa-school"></i> Pre-selected</span>
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control border-primary" 
+                                               value="{{ $authenticatedCoordinator['school_name'] }}"
+                                               readonly 
+                                               style="background-color: #e3f2fd; color: #1976d2; font-weight: 600;">
+                                        <small class="text-primary mt-1 d-block">
+                                            <i class="fas fa-info-circle"></i> This is the school you are assigned to coordinate. School selection is automatically handled.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

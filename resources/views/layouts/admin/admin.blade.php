@@ -20,7 +20,54 @@
   <link rel="stylesheet" href="{{ asset('assets/src/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/src/css/skin_color.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/css-skeletons@1.0.3/css/css-skeletons.min.css" />
+  
+  <!-- Custom Select2 Styling -->
+  <style>
+    .select2-container--bootstrap4 .select2-selection--single {
+      height: calc(2.25rem + 2px) !important;
+      padding: 0.375rem 0.75rem !important;
+      font-size: 1rem !important;
+      line-height: 1.5 !important;
+      border: 1px solid #ced4da !important;
+      border-radius: 0.25rem !important;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+    }
+    
+    .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      height: auto !important;
+      margin-top: -2px !important;
+    }
+    
+    .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+      height: calc(2.25rem + 2px) !important;
+      right: 3px !important;
+    }
+    
+    .select2-container--bootstrap4.select2-container--focus .select2-selection--single {
+      border-color: #80bdff !important;
+      outline: 0 !important;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
+    
+    .select2-dropdown {
+      border: 1px solid #ced4da !important;
+      border-radius: 0.25rem !important;
+    }
+    
+    .select2-container--bootstrap4 .select2-results__option--highlighted {
+      background-color: #007bff !important;
+      color: #fff !important;
+    }
+    
+    .select2-container--bootstrap4 .select2-results__option[aria-selected=true] {
+      background-color: #e9ecef !important;
+      color: #495057 !important;
+    }
+  </style>
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ asset('css/customCSS.css') }}">
@@ -230,6 +277,18 @@
                   <li><a href="{{ route('admin.teacher-subjects.index') }}">Manage Teacher Subjects</a></li>
                 </ul>
               </li>
+              <li class="treeview">
+                <a href="#">
+                  <i data-feather="user-check"></i><span>Teacher Coordinators</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="{{ route('admin.teacher-coordinators.index') }}">All Coordinators</a></li>
+                  <li><a href="{{ route('admin.teacher-coordinators.create') }}">Add New</a></li>
+                </ul>
+              </li>
               <li>
                 <a href="#">
                   <i data-feather="settings"></i><span>Settings</span>
@@ -345,7 +404,7 @@
   <script src="{{ asset('assets/assets/vendor_components/nestable/jquery.nestable.js') }}"></script>
   <script src="{{ asset('assets/assets/vendor_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js') }}"></script>
   <script src="{{ asset('assets/assets/vendor_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js') }}"></script>
-  <script src="{{ asset('assets/assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="{{ asset('assets/assets/vendor_plugins/input-mask/jquery.inputmask.js') }}"></script>
   <script src="{{ asset('assets/assets/vendor_plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
   <script src="{{ asset('assets/assets/vendor_plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>

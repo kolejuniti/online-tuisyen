@@ -592,7 +592,7 @@
                 </a>
 
                 <!-- School Registration Card -->
-                <a href="{{ route('school.register') }}" class="registration-card school-card animate__animated animate__fadeInRight animate__delay-3s">
+                <a href="{{ route('school.auth') }}" class="registration-card school-card animate__animated animate__fadeInRight animate__delay-3s">
                     <div class="card-header">
                         <div class="card-icon">
                             <i class="fas fa-school"></i>

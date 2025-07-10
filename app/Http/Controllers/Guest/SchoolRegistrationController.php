@@ -5,26 +5,99 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\School;
 use App\Models\Student;
+use App\Models\TeacherCoordinator;
 use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SchoolRegistrationController extends Controller
 {
     /**
+     * Display the coordinator authentication form
+     */
+    public function showAuth()
+    {
+        return view('guest.school.auth');
+    }
+
+    /**
+     * Handle coordinator authentication
+     */
+    public function authenticate(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'secret_code' => 'required|string|max:20',
+        ]);
+
+        // Find coordinator by name, email, and secret code
+        $coordinator = TeacherCoordinator::with('school')
+            ->where('name', $request->name)
+            ->where('email', $request->email)
+            ->where('secret_code', $request->secret_code)
+            ->first();
+
+        if (!$coordinator) {
+            return redirect()->back()
+                   ->withErrors(['error' => 'Invalid coordinator credentials. Please check your name, email, and secret code.'])
+                   ->withInput();
+        }
+
+        // Check if the coordinator's school is already registered (active)
+        if ($coordinator->school && $coordinator->school->status === 'active') {
+            return redirect()->back()
+                   ->withErrors(['error' => 'This school has already been registered and activated.'])
+                   ->withInput();
+        }
+
+        // Store coordinator info in session for the registration form
+        Session::put('authenticated_coordinator', [
+            'id' => $coordinator->id,
+            'name' => $coordinator->name,
+            'email' => $coordinator->email,
+            'school_id' => $coordinator->school_id,
+            'school_name' => $coordinator->school ? $coordinator->school->name : 'Unknown School'
+        ]);
+
+        // Clear any previous success messages from registration
+        Session::forget('success');
+        
+        // Log the authentication for debugging
+        Log::info("Coordinator {$coordinator->id} authenticated successfully, redirecting to registration form");
+        
+        return redirect()->route('school.register')
+               ->with('auth_success', 'Authentication successful! You can now proceed with school registration.');
+    }
+
+    /**
      * Display the school registration form
      */
     public function show()
     {
+        // Check if coordinator is authenticated
+        $authenticatedCoordinator = Session::get('authenticated_coordinator');
+        
+        // Log for debugging
+        Log::info("Registration form accessed. Authenticated coordinator: " . ($authenticatedCoordinator ? 'Yes (ID: ' . $authenticatedCoordinator['id'] . ')' : 'No'));
+        
+        if (!$authenticatedCoordinator) {
+            Log::warning("Registration form accessed without authentication, redirecting to auth");
+            return redirect()->route('school.auth')
+                   ->withErrors(['error' => 'Please authenticate first before accessing the registration form.']);
+        }
+
         // Get all inactive schools for the dropdown
         $schools = School::where('status', 'inactive')
                         ->orderBy('name')
                         ->get(['id', 'name']);
         
-        return view('guest.school.register', compact('schools'));
+        Log::info("Displaying registration form for coordinator {$authenticatedCoordinator['id']}");
+        return view('guest.school.register', compact('schools', 'authenticatedCoordinator'));
     }
 
     /**
@@ -32,16 +105,21 @@ class SchoolRegistrationController extends Controller
      */
     public function submit(Request $request)
     {
+        // Check if coordinator is authenticated
+        $authenticatedCoordinator = Session::get('authenticated_coordinator');
+        
+        if (!$authenticatedCoordinator) {
+            return redirect()->route('school.auth')
+                   ->withErrors(['error' => 'Authentication expired. Please authenticate again.']);
+        }
+
         // Validate the form data
         $validatedData = $request->validate([
-            'school_id' => 'required|exists:schools,id',
             'school_email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'school_type' => 'required|in:public,private,charter,international',
             'address' => 'required|string',
             'total_students' => 'nullable|integer|min:1',
-            'teacher_name' => 'required|string|max:255',
-            'teacher_email' => 'required|email|max:255',
             'students_excel' => 'nullable|file|mimes:xlsx,xls|max:10240', // 10MB max
             'students' => 'nullable|array',
             'students.*.name' => 'required_with:students|string|max:255',
@@ -50,6 +128,11 @@ class SchoolRegistrationController extends Controller
             'students.*.phone' => 'nullable|string|max:20',
             'students.*.grade' => 'required_with:students|string|in:form5',
         ]);
+
+        // Use the authenticated coordinator's school and info
+        $validatedData['school_id'] = $authenticatedCoordinator['school_id'];
+        $validatedData['teacher_name'] = $authenticatedCoordinator['name'];
+        $validatedData['teacher_email'] = $authenticatedCoordinator['email'];
 
         // Additional validation: Ensure at least one method of adding students is provided
         if (empty($validatedData['students']) && !$request->hasFile('students_excel')) {
@@ -109,6 +192,9 @@ class SchoolRegistrationController extends Controller
             }
 
             DB::commit();
+
+            // Clear the authentication session after successful registration
+            Session::forget('authenticated_coordinator');
 
             $message = "Registration submitted successfully! School has been activated";
             if ($studentsCreated > 0) {

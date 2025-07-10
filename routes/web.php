@@ -21,7 +21,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Public School Registration Routes (no authentication required)
 Route::prefix('school')->name('school.')->group(function () {
-    // School registration landing page
+    // Coordinator authentication before registration
+    Route::get('/auth', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'showAuth'])->name('auth');
+    Route::post('/auth', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'authenticate'])->name('auth.submit');
+    
+    // School registration landing page (requires coordinator authentication)
     Route::get('/register', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'show'])->name('register');
     
     // Handle school registration form submission
@@ -343,6 +347,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('student-applications/bulk-approve', [App\Http\Controllers\Admin\StudentApplicationController::class, 'bulkApprove'])->name('student-applications.bulk-approve');
     Route::post('student-applications/bulk-reject', [App\Http\Controllers\Admin\StudentApplicationController::class, 'bulkReject'])->name('student-applications.bulk-reject');
     Route::get('student-applications/stats/data', [App\Http\Controllers\Admin\StudentApplicationController::class, 'getStats'])->name('student-applications.stats');
+    
+    // Teacher Coordinator routes
+    Route::resource('teacher-coordinators', App\Http\Controllers\Admin\TeacherCoordinatorController::class);
+    Route::post('teacher-coordinators/{teacherCoordinator}/generate-code', [App\Http\Controllers\Admin\TeacherCoordinatorController::class, 'generateNewCode'])->name('teacher-coordinators.generate-code');
 });
 
 // Temporary route for testing SMTP2GO email (remove after testing)
