@@ -64,7 +64,12 @@
                                             <i class="fa fa-calendar text-danger fs-24"></i>
                                         </div>
                                         <div>
-                                            <h5 class="mb-0">{{ $applications->where('created_at', '<=', now()->subDays(7))->count() }}</h5>
+                                            @php
+                                                $olderThan7Days = $applications->filter(function($app) {
+                                                    return \Carbon\Carbon::parse($app->created_at)->diffInDays(now()) > 7;
+                                                })->count();
+                                            @endphp
+                                            <h5 class="mb-0">{{ $olderThan7Days }}</h5>
                                             <p class="text-fade mb-0">Older than 7 days</p>
                                         </div>
                                     </div>
@@ -76,20 +81,24 @@
                     <!-- Applications Table -->
                     <div class="box">
                         <div class="box-header with-border">
-                            <h4 class="box-title">Student Applications</h4>
-                            @if($applications->count() > 0)
-                            <div class="box-controls pull-right">
-                                <button type="button" id="bulk-approve-btn" class="btn btn-success btn-rounded me-5" disabled>
-                                    <i class="fa fa-check"></i> Bulk Approve
-                                </button>
-                                <button type="button" id="bulk-reject-btn" class="btn btn-danger btn-rounded" disabled>
-                                    <i class="fa fa-times"></i> Bulk Reject
-                                </button>
-                                <small class="text-muted ms-3" id="checkbox-debug" style="font-size: 10px;">
-                                    Select applications to enable bulk actions
-                                </small>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <h4 class="box-title mb-0">Student Applications</h4>
+                                @if($applications->count() > 0)
+                                <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
+                                    <small class="text-muted" id="checkbox-debug" style="font-size: 12px;">
+                                        Select applications to enable bulk actions
+                                    </small>
+                                    <div class="btn-group">
+                                        <button type="button" id="bulk-approve-btn" class="btn btn-success btn-sm" disabled>
+                                            <i class="fa fa-check"></i> Bulk Approve
+                                        </button>
+                                        <button type="button" id="bulk-reject-btn" class="btn btn-danger btn-sm" disabled>
+                                            <i class="fa fa-times"></i> Bulk Reject
+                                        </button>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
-                            @endif
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -113,7 +122,10 @@
                                     <thead>
                                         <tr>
                                             <th width="5%" class="text-center">
-                                                <input type="checkbox" id="select-all" style="transform: scale(1.2);">
+                                                <div class="form-group mb-0">
+                                                    <input type="checkbox" id="select-all" class="filled-in">
+                                                    <label for="select-all"></label>
+                                                </div>
                                             </th>
                                             <th width="5%">#</th>
                                             <th>Name</th>
@@ -130,7 +142,10 @@
                                         @foreach($applications as $application)
                                         <tr>
                                             <td class="text-center">
-                                                <input type="checkbox" class="application-checkbox" value="{{ $application->id }}" style="transform: scale(1.2);">
+                                                <div class="form-group mb-0">
+                                                    <input type="checkbox" id="app-{{ $application->id }}" class="application-checkbox filled-in" value="{{ $application->id }}">
+                                                    <label for="app-{{ $application->id }}"></label>
+                                                </div>
                                             </td>
                                             <td></td>
                                             <td>
@@ -148,7 +163,8 @@
                                             <td>{{ $application->created_at->format('M d, Y') }}</td>
                                             <td>
                                                 @php
-                                                    $daysPending = $application->created_at->diffInDays(now());
+                                                    $daysPending = \Carbon\Carbon::parse($application->created_at)->diffInDays(now());
+                                                    $daysPending = (int) $daysPending; // Ensure integer value
                                                 @endphp
                                                 <span class="badge badge-{{ $daysPending > 7 ? 'danger' : ($daysPending > 3 ? 'warning' : 'secondary') }}">
                                                     {{ $daysPending }} {{ $daysPending == 1 ? 'day' : 'days' }}
@@ -282,74 +298,94 @@
             background: var(--dark-primary);
         }
 
-        /* DataTable Checkbox Fixes - Override conflicting CSS */
-        #applicationsTable input[type="checkbox"] {
-            opacity: 1 !important;
-            width: auto !important;
-            height: auto !important;
-            transform: scale(1.2) !important;
-            margin: 0 !important;
-            position: relative !important;
-            z-index: 999 !important;
-            display: inline-block !important;
-            visibility: visible !important;
-        }
-
-        /* Ensure the checkbox column is visible */
-        #applicationsTable th:first-child,
-        #applicationsTable td:first-child {
-            width: 50px !important;
-            min-width: 50px !important;
-            max-width: 50px !important;
+        /* Ensure checkbox column is properly sized and centered */
+        #applications-table th:first-child,
+        #applications-table td:first-child {
+            width: 60px !important;
+            min-width: 60px !important;
+            max-width: 60px !important;
             text-align: center !important;
             vertical-align: middle !important;
             padding: 10px !important;
         }
 
-        /* Make sure checkbox container is visible */
-        .checkbox-container {
+        /* Style the form-group container for checkboxes */
+        #applications-table .form-group {
+            margin-bottom: 0 !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            width: 100% !important;
-            height: 100% !important;
         }
 
-        /* Override any form-check styles that might interfere */
-        #applicationsTable .form-check {
-            display: block !important;
-            padding-left: 0 !important;
-            margin-bottom: 0 !important;
-        }
-
-        #applicationsTable .form-check-input {
-            margin-left: 0 !important;
-            position: relative !important;
-            float: none !important;
-        }
-
-        /* Force visibility on select-all checkbox */
-        #select-all {
+        /* Ensure filled-in checkboxes are visible and functional */
+        #applications-table input.filled-in[type="checkbox"] {
             opacity: 1 !important;
-            width: 16px !important;
-            height: 16px !important;
-            transform: scale(1.3) !important;
-            display: inline-block !important;
-            visibility: visible !important;
             position: relative !important;
-            z-index: 1000 !important;
+            visibility: visible !important;
+            z-index: 1 !important;
         }
 
-        /* Application checkboxes */
-        .application-checkbox {
-            opacity: 1 !important;
-            width: 16px !important;
-            height: 16px !important;
-            transform: scale(1.2) !important;
-            display: inline-block !important;
-            visibility: visible !important;
-            position: relative !important;
-            z-index: 1000 !important;
+        /* Style the labels for filled-in checkboxes */
+        #applications-table .filled-in + label {
+            cursor: pointer !important;
+            user-select: none !important;
+        }
+
+        /* Improved bulk action buttons layout */
+        .box-header {
+            padding: 20px !important;
+        }
+
+        .btn-group .btn {
+            margin: 0 !important;
+            border-radius: 4px !important;
+        }
+
+        .btn-group .btn:first-child {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        .btn-group .btn:last-child {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+
+        /* Gap utility for older browsers */
+        .gap-3 > * + * {
+            margin-left: 1rem !important;
+        }
+
+        /* Spacing adjustments */
+        .box-header .text-muted {
+            margin-right: 15px !important;
+            white-space: nowrap !important;
+        }
+
+        .box-header .btn-group {
+            white-space: nowrap !important;
+        }
+
+        /* Responsive bulk actions */
+        @media (max-width: 768px) {
+            .box-header .d-flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            .box-header .btn-group {
+                margin-top: 10px !important;
+                width: 100% !important;
+            }
+
+            .box-header .btn-group .btn {
+                flex: 1 !important;
+            }
+
+            .gap-3 > * + * {
+                margin-left: 0 !important;
+                margin-top: 10px !important;
+            }
         }
 </style>
 <script>
@@ -448,11 +484,11 @@
             
             if (checkedCount === 0) {
                 $('#bulk-approve-btn, #bulk-reject-btn').prop('disabled', true).addClass('disabled');
-                $('#checkbox-debug').text('Select applications to enable bulk actions');
+                $('#checkbox-debug').text('Select applications to enable bulk actions').removeClass('text-success').addClass('text-muted');
                 console.log('Bulk buttons disabled');
             } else {
                 $('#bulk-approve-btn, #bulk-reject-btn').prop('disabled', false).removeClass('disabled');
-                $('#checkbox-debug').text(checkedCount + ' application(s) selected');
+                $('#checkbox-debug').text(checkedCount + ' application(s) selected').removeClass('text-muted').addClass('text-success');
                 console.log('Bulk buttons enabled');
             }
         }

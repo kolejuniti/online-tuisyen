@@ -441,7 +441,9 @@ body {
   vertical-align: middle;
 }
 
-.switch input {
+/* Make this rule more specific to only target theme toggle switch */
+.skin-toggle .switch input,
+.switch input[type="checkbox"]:not(.application-checkbox):not(#select-all) {
   opacity: 0;
   width: 0;
   height: 0;
