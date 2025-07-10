@@ -43,7 +43,6 @@ class StudentRegistrationController extends Controller
             'parent_guardian_name' => 'nullable|string|max:255',
             'parent_guardian_phone' => 'nullable|string|max:20',
             'school_id' => 'required|exists:schools,id',
-            'password' => 'required|string|min:8|confirmed',
             'status' => 'required|in:inactive', // Force status to be inactive
         ]);
 
@@ -63,7 +62,7 @@ class StudentRegistrationController extends Controller
                 'parent_guardian_name' => $validatedData['parent_guardian_name'],
                 'parent_guardian_phone' => $validatedData['parent_guardian_phone'],
                 'school_id' => $validatedData['school_id'],
-                'password' => Hash::make($validatedData['password']),
+                'password' => Hash::make('12345678'), // Set default password
                 'status' => 'inactive', // Set to inactive for approval
             ]);
 

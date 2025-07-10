@@ -744,7 +744,7 @@
                             <span data-key="form.school.title">Maklumat Sekolah & Akaun</span>
                         </h2>
                         <p class="section-description" data-key="form.school.description">
-                            Pilih sekolah anda dan cipta kata laluan yang selamat untuk akaun anda. Akaun anda akan diaktifkan selepas kelulusan.
+                            Pilih sekolah anda untuk menyambung ke platform pembelajaran kami. Akaun anda akan diaktifkan selepas kelulusan.
                         </p>
 
                         <div class="row">
@@ -763,25 +763,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Password <span class="required">*</span>
-                                    </label>
-                                    <input type="password" name="password" class="form-control" placeholder="Create a password" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Confirm Password <span class="required">*</span>
-                                    </label>
-                                    <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm your password" required>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Hidden status field set to inactive -->
@@ -791,7 +772,7 @@
                     <!-- Information Notice -->
                     <div class="feature-highlight">
                         <h5><i class="fas fa-info-circle text-primary"></i> Registration Notice</h5>
-                        <p class="mb-0">Your account will be set to <strong>inactive</strong> status and requires approval from our team before you can access the platform. You'll receive an email notification once your account is approved.</p>
+                        <p class="mb-0">Your account will be set to <strong>inactive</strong> status and requires approval from our team before you can access the platform. You'll receive an email notification with your login credentials (default password: <strong>12345678</strong>) once your account is approved.</p>
                     </div>
 
                     <!-- Submit Button -->
@@ -826,7 +807,7 @@
                 'form.parent.title': 'Maklumat Ibu Bapa/Penjaga',
                 'form.parent.description': 'Sila berikan maklumat hubungan ibu bapa atau penjaga anda untuk komunikasi kecemasan dan pengesahan akaun.',
                 'form.school.title': 'Maklumat Sekolah & Akaun',
-                'form.school.description': 'Pilih sekolah anda dan cipta kata laluan yang selamat untuk akaun anda. Akaun anda akan diaktifkan selepas kelulusan.',
+                'form.school.description': 'Pilih sekolah anda untuk menyambung ke platform pembelajaran kami. Akaun anda akan diaktifkan selepas kelulusan.',
                 'form.submit': 'Hantar Pendaftaran',
                 'success.back_home': 'Kembali ke Laman Utama',
             },
@@ -841,7 +822,7 @@
                 'form.parent.title': 'Parent/Guardian Information',
                 'form.parent.description': 'Please provide your parent or guardian\'s contact information for emergency communication and account verification.',
                 'form.school.title': 'School & Account Information',
-                'form.school.description': 'Select your school and create a secure password for your account. Your account will be activated after approval.',
+                'form.school.description': 'Select your school to connect to our learning platform. Your account will be activated after approval.',
                 'form.submit': 'Submit Registration',
                 'success.back_home': 'Back to Home',
             }
