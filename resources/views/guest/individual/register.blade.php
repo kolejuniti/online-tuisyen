@@ -566,9 +566,9 @@
 
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title animate__animated animate__fadeInDown" data-key="hero.title">Student Registration</h1>
+                <h1 class="hero-title animate__animated animate__fadeInDown" data-key="hero.title">Pendaftaran Pelajar</h1>
                 <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s" data-key="hero.subtitle">
-                    Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.
+                    Sertai platform pembelajaran dalam talian kami dan buka potensi anda dengan bimbingan pakar dan sumber komprehensif.
                 </p>
             </div>
         </div>
@@ -621,7 +621,7 @@
                         </ul>
                     </div>
                     <a href="{{ url('/') }}" class="btn btn-custom btn-primary-custom">
-                        <i class="fas fa-home"></i> <span data-key="success.back_home">Back to Home</span>
+                        <i class="fas fa-home"></i> <span data-key="success.back_home">Kembali ke Laman Utama</span>
                     </a>
                 </div>
             </div>
@@ -635,10 +635,10 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-user text-primary"></i>
-                            <span data-key="form.personal.title">Personal Information</span>
+                            <span data-key="form.personal.title">Maklumat Peribadi</span>
                         </h2>
                         <p class="section-description" data-key="form.personal.description">
-                            Please provide your personal details to create your student account and join our online learning platform.
+                            Sila berikan butiran peribadi anda untuk mencipta akaun pelajar dan menyertai platform pembelajaran dalam talian kami.
                         </p>
                         
                         <div class="row">
@@ -715,10 +715,10 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-users text-success"></i>
-                            <span data-key="form.parent.title">Parent/Guardian Information</span>
+                            <span data-key="form.parent.title">Maklumat Ibu Bapa/Penjaga</span>
                         </h2>
                         <p class="section-description" data-key="form.parent.description">
-                            Please provide your parent or guardian's contact information for emergency communication and account verification.
+                            Sila berikan maklumat hubungan ibu bapa atau penjaga anda untuk komunikasi kecemasan dan pengesahan akaun.
                         </p>
 
                         <div class="row">
@@ -741,10 +741,10 @@
                     <div class="form-section">
                         <h2 class="section-title">
                             <i class="fas fa-school text-warning"></i>
-                            <span data-key="form.school.title">School & Account Information</span>
+                            <span data-key="form.school.title">Maklumat Sekolah & Akaun</span>
                         </h2>
                         <p class="section-description" data-key="form.school.description">
-                            Select your school and create a secure password for your account. Your account will be activated after approval.
+                            Pilih sekolah anda dan cipta kata laluan yang selamat untuk akaun anda. Akaun anda akan diaktifkan selepas kelulusan.
                         </p>
 
                         <div class="row">
@@ -797,7 +797,7 @@
                     <!-- Submit Button -->
                     <div class="text-center submit-button-container mb-4">
                         <button type="submit" class="btn btn-custom btn-primary-custom">
-                            <i class="fas fa-paper-plane"></i> <span data-key="form.submit">Submit Registration</span>
+                            <i class="fas fa-paper-plane"></i> <span data-key="form.submit">Hantar Pendaftaran</span>
                         </button>
                     </div>
                 </form>
@@ -812,24 +812,9 @@
     
     <script>
         // Language management
-        let currentLanguage = 'en';
+        let currentLanguage = 'ms'; // Default to Malay
         
         const translations = {
-            en: {
-                // Hero section
-                'hero.title': 'Student Registration',
-                'hero.subtitle': 'Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.',
-                
-                // Form sections
-                'form.personal.title': 'Personal Information',
-                'form.personal.description': 'Please provide your personal details to create your student account and join our online learning platform.',
-                'form.parent.title': 'Parent/Guardian Information',
-                'form.parent.description': 'Please provide your parent or guardian\'s contact information for emergency communication and account verification.',
-                'form.school.title': 'School & Account Information',
-                'form.school.description': 'Select your school and create a secure password for your account. Your account will be activated after approval.',
-                'form.submit': 'Submit Registration',
-                'success.back_home': 'Back to Home',
-            },
             ms: {
                 // Hero section
                 'hero.title': 'Pendaftaran Pelajar',
@@ -844,6 +829,21 @@
                 'form.school.description': 'Pilih sekolah anda dan cipta kata laluan yang selamat untuk akaun anda. Akaun anda akan diaktifkan selepas kelulusan.',
                 'form.submit': 'Hantar Pendaftaran',
                 'success.back_home': 'Kembali ke Laman Utama',
+            },
+            en: {
+                // Hero section
+                'hero.title': 'Student Registration',
+                'hero.subtitle': 'Join our online learning platform and unlock your potential with expert guidance and comprehensive resources.',
+                
+                // Form sections
+                'form.personal.title': 'Personal Information',
+                'form.personal.description': 'Please provide your personal details to create your student account and join our online learning platform.',
+                'form.parent.title': 'Parent/Guardian Information',
+                'form.parent.description': 'Please provide your parent or guardian\'s contact information for emergency communication and account verification.',
+                'form.school.title': 'School & Account Information',
+                'form.school.description': 'Select your school and create a secure password for your account. Your account will be activated after approval.',
+                'form.submit': 'Submit Registration',
+                'success.back_home': 'Back to Home',
             }
         };
 
@@ -920,8 +920,8 @@
                 });
             });
             
-            // Initialize with English as default
-            switchLanguage('en');
+            // Initialize with Malay as default
+            switchLanguage('ms');
         });
     </script>
 </body>
