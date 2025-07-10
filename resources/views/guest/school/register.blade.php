@@ -1425,7 +1425,7 @@
                             <li class="mb-2" data-key="success.next.step1"><i class="fas fa-clock text-primary me-2"></i>Tunggu e-mel pengesahan dalam masa 24-48 jam</li>
                             <li class="mb-2" data-key="success.next.step2"><i class="fas fa-key text-success me-2"></i>Kongsikan maklumat login dengan pelajar</li>
                             <li class="mb-2" data-key="success.next.step3"><i class="fas fa-rocket text-warning me-2"></i>Mula gunakan platform setelah kelulusan</li>
-                            <li class="mb-2" data-key="success.next.step4"><i class="fas fa-headset text-info me-2"></i>Hubungi sokongan jika ada pertanyaan</li>
+                            
                         </ul>
                     </div>
 
