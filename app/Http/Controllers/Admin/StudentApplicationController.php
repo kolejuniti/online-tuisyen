@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentApprovalMail;
 
 class StudentApplicationController extends Controller
 {
@@ -55,15 +56,15 @@ class StudentApplicationController extends Controller
 
             $application->update(['status' => 'active']);
 
-            // TODO: Send approval email to student
-            // $this->sendApprovalEmail($application);
+            // Send approval email to student
+            $this->sendApprovalEmail($application);
 
             DB::commit();
 
             Log::info("Student application approved: {$application->id}");
 
             return redirect()->route('admin.student-applications.index')
-                           ->with('success', "Application for {$application->name} has been approved successfully!");
+                           ->with('success', "Application for {$application->name} has been approved successfully! Approval email sent to {$application->email}.");
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -134,8 +135,8 @@ class StudentApplicationController extends Controller
             foreach ($applications as $application) {
                 $application->update(['status' => 'active']);
                 
-                // TODO: Send approval email
-                // $this->sendApprovalEmail($application);
+                // Send approval email
+                $this->sendApprovalEmail($application);
                 
                 $approvedCount++;
             }
@@ -145,7 +146,7 @@ class StudentApplicationController extends Controller
             Log::info("Bulk approved {$approvedCount} student applications");
 
             return redirect()->route('admin.student-applications.index')
-                           ->with('success', "Successfully approved {$approvedCount} student applications!");
+                           ->with('success', "Successfully approved {$approvedCount} student applications! Approval emails have been sent to all approved students.");
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -225,13 +226,18 @@ class StudentApplicationController extends Controller
     }
 
     /**
-     * Send approval email to student (placeholder for future implementation).
+     * Send approval email to student with login credentials.
      */
     private function sendApprovalEmail(Student $student)
     {
-        // TODO: Implement email sending
-        // Example:
-        // Mail::to($student->email)->send(new StudentApprovalMail($student));
+        try {
+            Mail::to($student->email)->send(new StudentApprovalMail($student));
+            Log::info("Approval email sent successfully to {$student->email} for student ID: {$student->id}");
+        } catch (\Exception $e) {
+            Log::error("Failed to send approval email to {$student->email} for student ID: {$student->id}. Error: " . $e->getMessage());
+            // Don't throw exception here to avoid breaking the approval process
+            // The approval should still succeed even if email fails
+        }
     }
 
     /**

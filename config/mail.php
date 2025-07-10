@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => env('MAIL_MAILER', 'smtp2go'),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,6 +45,17 @@ return [
             'port' => env('MAIL_PORT', 2525),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+        ],
+
+        'smtp2go' => [
+            'transport' => 'smtp',
+            'host' => env('SMTP2GO_HOST', 'mail.smtp2go.com'),
+            'port' => env('SMTP2GO_PORT', 2525),
+            'encryption' => env('SMTP2GO_ENCRYPTION', 'tls'),
+            'username' => env('SMTP2GO_USERNAME'),
+            'password' => env('SMTP2GO_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
@@ -111,8 +122,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@yourdomain.com'),
+        'name' => env('MAIL_FROM_NAME', 'Online Tuition Platform'),
     ],
 
 ];

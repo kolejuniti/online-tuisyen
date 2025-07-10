@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail; // Added for testing email
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -342,3 +344,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('student-applications/bulk-reject', [App\Http\Controllers\Admin\StudentApplicationController::class, 'bulkReject'])->name('student-applications.bulk-reject');
     Route::get('student-applications/stats/data', [App\Http\Controllers\Admin\StudentApplicationController::class, 'getStats'])->name('student-applications.stats');
 });
+
+// Temporary route for testing SMTP2GO email (remove after testing)
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('Test email from Online Tuition Platform via SMTP2GO!', function ($message) {
+            $message->to('your-email@example.com') // Replace with your email
+                    ->subject('SMTP2GO Test - ' . now());
+        });
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Test email sent successfully! Check your inbox.',
+            'timestamp' => now()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to send email: ' . $e->getMessage()
+        ]);
+    }
+})->name('test.email');
