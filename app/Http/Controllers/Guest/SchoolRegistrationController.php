@@ -134,7 +134,7 @@ class SchoolRegistrationController extends Controller
     private function createStudent(array $studentData, int $schoolId)
     {
         // Generate a default password (you can customize this)
-        $defaultPassword = 'student123'; // You might want to generate a random password
+        $defaultPassword = '12345678'; // You might want to generate a random password
 
         $student = Student::create([
             'name' => $studentData['name'],
