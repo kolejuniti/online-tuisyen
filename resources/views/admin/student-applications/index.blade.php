@@ -609,13 +609,13 @@
             });
         });
 
-        // Auto-refresh every 30 seconds for new applications
-        setInterval(function() {
-            // Only refresh if no checkboxes are selected to avoid disrupting user
-            if ($('.application-checkbox:checked').length === 0) {
-                location.reload();
-            }
-        }, 30000);
+        // Auto-refresh disabled - was causing disruption
+        // setInterval(function() {
+        //     // Only refresh if no checkboxes are selected to avoid disrupting user
+        //     if ($('.application-checkbox:checked').length === 0) {
+        //         location.reload();
+        //     }
+        // }, 30000);
     });
 </script>
 @endsection 
