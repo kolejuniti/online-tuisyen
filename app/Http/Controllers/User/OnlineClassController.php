@@ -13,9 +13,41 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Notifications\AssignmentNotification;
 
 class OnlineClassController extends Controller
 {
+    /**
+     * Send notification to students affected by an online class action
+     */
+    private function sendOnlineClassNotificationToStudents($onlineClass, $message, $actionType)
+    {
+        $schoolIds = $onlineClass->school ?? [];
+        
+        if (!empty($schoolIds)) {
+            // Get all students from the selected schools
+            $students = Student::whereIn('school_id', $schoolIds)
+                ->where('status', 'active')
+                ->get();
+
+            if ($students->count() > 0) {
+                $notificationData = [
+                    'type' => 'online_class',
+                    'online_class_id' => $onlineClass->id,
+                    'subject_id' => Session::get('subjects')->id,
+                    'title' => $onlineClass->name,
+                    'action_type' => $actionType,
+                    'datetime' => $onlineClass->datetime,
+                    'url' => route('student.subjects.index') // Students can access from their subjects page
+                ];
+
+                foreach($students as $student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
+        }
+    }
+
     /**
      * Display a listing of online classes for the current subject
      */
@@ -24,6 +56,7 @@ class OnlineClassController extends Controller
         $course = DB::table('subjects')->where('id', Session::get('subjects')->id)->first();
         
         $onlineClasses = OnlineClass::active()
+            ->where('subject_id', Session::get('subjects')->id)
             ->orderBy('datetime', 'desc')
             ->get();
 
@@ -61,13 +94,20 @@ class OnlineClassController extends Controller
         }
 
         try {
-            OnlineClass::create([
+            $onlineClass = OnlineClass::create([
                 'name' => $request->name,
                 'url' => $request->url,
                 'datetime' => $request->datetime,
                 'school' => $request->schools,
                 'status' => 'active',
+                'addby' => Auth::user()->ic,
+                'subject_id' => Session::get('subjects')->id,
             ]);
+
+            // Send notification to students
+            $formattedDate = Carbon::parse($request->datetime)->format('M j, Y g:i A');
+            $message = "A new online class '{$request->name}' has been scheduled for {$formattedDate}.";
+            $this->sendOnlineClassNotificationToStudents($onlineClass, $message, 'created');
 
             return redirect()->route('user.online-class.index', Session::get('subjects')->id)
                 ->with('success', 'Online class created successfully.');
@@ -132,7 +172,13 @@ class OnlineClassController extends Controller
                 'datetime' => $request->datetime,
                 'school' => $request->schools,
                 'status' => $request->status,
+                'subject_id' => Session::get('subjects')->id,
             ]);
+
+            // Send notification to students
+            $formattedDate = Carbon::parse($request->datetime)->format('M j, Y g:i A');
+            $message = "Online class '{$request->name}' has been updated. New schedule: {$formattedDate}.";
+            $this->sendOnlineClassNotificationToStudents($onlineClass, $message, 'updated');
 
             return redirect()->route('user.online-class.index', $id)
                 ->with('success', 'Online class updated successfully.');
@@ -156,6 +202,11 @@ class OnlineClassController extends Controller
                 return redirect()->route('user.online-class.index', $id)
                     ->with('error', 'Online class not found.');
             }
+
+            // Send notification to students before deletion
+            $formattedDate = Carbon::parse($onlineClass->datetime)->format('M j, Y g:i A');
+            $message = "Online class '{$onlineClass->name}' scheduled for {$formattedDate} has been cancelled.";
+            $this->sendOnlineClassNotificationToStudents($onlineClass, $message, 'deleted');
 
             $onlineClass->delete();
             

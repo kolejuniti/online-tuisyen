@@ -20,12 +20,50 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MyCustomNotification;
+use App\Notifications\AssignmentNotification;
 use App\Models\UserStudent;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\School;
 
 class QuizController extends Controller
 {
+    /**
+     * Send notification to students affected by a quiz action
+     */
+    private function sendQuizNotificationToStudents($quizId, $subjectId, $title, $message, $actionType)
+    {
+        // Get all students who are affected by this quiz
+        $students = DB::table('students')
+            ->join('schools', 'students.school_id', 'schools.id')
+            ->join('tblclassquiz_group', 'schools.id', 'tblclassquiz_group.groupname')
+            ->where('tblclassquiz_group.quizid', $quizId)
+            ->where('students.status', 'active')
+            ->select('students.*')
+            ->distinct('students.ic')
+            ->get();
+
+        if ($students->count() > 0) {
+            // Determine the appropriate URL based on quiz type
+            $quiz = DB::table('tblclassquiz')->where('id', $quizId)->first();
+            $quizUrl = empty($quiz->date_from) ? route('student.quiz2', $subjectId) : route('student.quiz', $subjectId);
+            
+            $notificationData = [
+                'type' => 'quiz',
+                'quiz_id' => $quizId,
+                'subject_id' => $subjectId,
+                'title' => $title,
+                'action_type' => $actionType,
+                'url' => $quizUrl
+            ];
+
+            foreach($students as $studentData) {
+                $student = student::where('ic', $studentData->ic)->first();
+                if ($student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
+        }
+    }
     
     public function quizlist()
     {
@@ -70,12 +108,22 @@ class QuizController extends Controller
 
     public function updateExtendQuiz(Request $request)
     {
-
-        DB::table('tblclassquiz')->where('id', $request->id)->update([
+        $quizId = $request->id;
+        
+        // Get quiz details before updating
+        $quiz = DB::table('tblclassquiz')->where('id', $quizId)->first();
+        
+        DB::table('tblclassquiz')->where('id', $quizId)->update([
             'date_from' => $request->from,
             'date_to' => $request->to,
             'duration' => $request->duration
         ]);
+
+        // Send notification to students about the extension
+        $this->sendQuizNotificationToStudents($quizId, $quiz->classid, $quiz->title, 
+            "Quiz '{$quiz->title}' deadline has been extended to " . date('M j, Y g:i A', strtotime($request->to)) . ".",
+            'quiz_extended'
+        );
 
         return back()->with('message', 'Success!');
 
@@ -83,29 +131,30 @@ class QuizController extends Controller
 
     public function deletequiz(Request $request)
     {
-
         try {
-
-            $quiz = DB::table('tblclassquiz')->where('id', $request->id)->first();
+            $quizId = $request->id;
+            $quiz = DB::table('tblclassquiz')->where('id', $quizId)->first();
 
             if($quiz->status != 3)
             {
-            DB::table('tblclassquiz')->where('id', $request->id)->update([
-                'status' => 3
-            ]);
+                DB::table('tblclassquiz')->where('id', $quizId)->update([
+                    'status' => 3
+                ]);
 
-            return true;
+                // Send notification to students about the deletion
+                $this->sendQuizNotificationToStudents($quizId, $quiz->classid, $quiz->title, 
+                    "Quiz '{$quiz->title}' has been cancelled by your teacher.",
+                    'quiz_deleted'
+                );
 
+                return true;
             }else{
-
                 die;
-
             }
           
-          } catch (\Exception $e) {
-          
-              return $e->getMessage();
-          }
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function quizcreate()
@@ -458,26 +507,47 @@ class QuizController extends Controller
             "content" => $updated_content
         ]);
 
-        // $allUsers = collect();
+        // Send notifications to students
+        if (!empty($group)) {
+            $allStudents = collect();
 
-        //     foreach($group as $grp) {
-        //         $gp = explode('|', $grp);
+            foreach($group as $grp) {
+                $gp = explode('|', $grp);
+                $schoolId = $gp[1]; // groupname contains school ID
+                
+                // Get all students from this school
+                $students = student::where('school_id', $schoolId)
+                    ->where('status', 'active')
+                    ->get();
 
-        //         $users = UserStudent::join('student_subjek', 'students.ic', '=', 'student_subjek.ic')
-        //             ->where([
-        //                 ['student_subjek.group_id', $gp[0]],
-        //                 ['student_subjek.group_name', $gp[1]]
-        //             ])
-        //             ->select('students.*')
-        //             ->get();
+                $allStudents = $allStudents->merge($students);
+            }
 
-        //         $allUsers = $allUsers->merge($users);
-        //     }
+            // Remove duplicates
+            $allStudents = $allStudents->unique('id');
 
-        // $message = "A new online quiz titled " . $title . " has been created.";
-        // $url = url('/student/quiz/' . $classid . '?session=' . $sessionid);
-        // $icon = "fa-puzzle-piece fa-lg";
-        // $iconColor = "#8803a0"; // Example: set to a bright orange
+            if ($allStudents->count() > 0) {
+                $quizType = empty($from) ? 'offline quiz' : 'online quiz';
+                $message = "A new {$quizType} titled '{$title}' has been created.";
+                
+                $quizUrl = empty($from) ? route('student.quiz2', $classid) : route('student.quiz', $classid);
+                
+                $notificationData = [
+                    'type' => 'quiz',
+                    'quiz_id' => $q,
+                    'subject_id' => $classid,
+                    'title' => $title,
+                    'quiz_type' => $quizType,
+                    'date_from' => $from,
+                    'date_to' => $to,
+                    'url' => $quizUrl
+                ];
+
+                foreach($allStudents as $student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
+        }
         
         return true;
 
@@ -810,31 +880,44 @@ class QuizController extends Controller
     }
 
     public function updatequizresult(Request $request){
-        $quiz = $request->quiz;
-        $participant = $request->participant;
+        $quizId = $request->quiz;
+        $participantIc = $request->participant;
         $final_mark = (int) str_replace(' Mark', '', $request->final_mark);
         $comments = $request->comments;
-        //$total_mark = $request->total_mark;
         $data = $request->data;
       
         DB::table('tblclassstudentquiz')
-            ->where('quizid', $quiz)
-            ->where("userid", $participant)
+            ->where('quizid', $quizId)
+            ->where("userid", $participantIc)
             ->update([
                 "content" => $data,
                 "final_mark" => $final_mark,
-                //"total_mark" => $total_mark,
                 "comments" => $comments,
                 "status" => 3
             ]);
 
-        $message = "Lecturer has marked your quiz.";
-        $url = url('/student/quiz/' . $quiz . '/' . $participant . '/result');
-        $icon = "fa-check fa-lg";
-        $iconColor = "#2b74f3"; // Example: set to a bright orange
+        // Get quiz details and send notification to the specific student
+        $quiz = DB::table('tblclassquiz')->where('id', $quizId)->first();
+        $student = student::where('ic', $participantIc)->first();
+        
+        if ($student && $quiz) {
+            $quizUrl = empty($quiz->date_from) ? route('student.quiz2', $quiz->classid) : route('student.quiz', $quiz->classid);
+            
+            $message = "Your quiz '{$quiz->title}' has been graded. Score: {$final_mark}/{$quiz->total_mark}";
+            
+            $notificationData = [
+                'type' => 'quiz',
+                'quiz_id' => $quizId,
+                'subject_id' => $quiz->classid,
+                'title' => $quiz->title,
+                'action_type' => 'quiz_graded',
+                'score' => $final_mark,
+                'total_marks' => $quiz->total_mark,
+                'url' => $quizUrl
+            ];
 
-        $participant = UserStudent::where('ic', $participant)->first();
-
+            $student->notify(new AssignmentNotification($message, $notificationData));
+        }
         
         return true;
     }
@@ -1342,30 +1425,40 @@ class QuizController extends Controller
 
             }
 
-            // $allUsers = collect();
+            // Send notifications to students
+            $allStudents = collect();
 
-            // foreach($request->group as $grp) {
-            //     $gp = explode('|', $grp);
+            foreach($request->group as $grp) {
+                $gp = explode('|', $grp);
+                $schoolId = $gp[1]; // groupname contains school ID
+                
+                // Get all students from this school
+                $students = student::where('school_id', $schoolId)
+                    ->where('status', 'active')
+                    ->get();
 
-            //     $users = UserStudent::join('student_subjek', 'students.ic', '=', 'student_subjek.ic')
-            //         ->where([
-            //             ['student_subjek.group_id', $gp[0]],
-            //             ['student_subjek.group_name', $gp[1]]
-            //         ])
-            //         ->select('students.*')
-            //         ->get();
+                $allStudents = $allStudents->merge($students);
+            }
 
-            //     $allUsers = $allUsers->merge($users);
-            // }
+            // Remove duplicates
+            $allStudents = $allStudents->unique('id');
 
-            // //dd($allUsers);
+            if ($allStudents->count() > 0) {
+                $message = "A new offline quiz titled '{$title}' has been created.";
+                
+                $notificationData = [
+                    'type' => 'quiz',
+                    'quiz_id' => $q,
+                    'subject_id' => $classid,
+                    'title' => $title,
+                    'quiz_type' => 'offline quiz',
+                    'url' => route('student.quiz2', $classid)
+                ];
 
-            // $message = "A new offline quiz titled " . $title . " has been created.";
-            // $url = url('/student/quiz2/' . $classid . '?session=' . $sessionid);
-            // $icon = "fa-puzzle-piece fa-lg";
-            // $iconColor = "#8803a0"; // Example: set to a bright orange
-
-            // Notification::send($allUsers, new MyCustomNotification($message, $url, $icon, $iconColor));
+                foreach($allStudents as $student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
 
         }else{
 
@@ -1565,16 +1658,27 @@ class QuizController extends Controller
             'status' => 1
             ]);
 
-            // if ($mrk != 0 && $mrk != $existingMark) {
-            // $message = "Lecturer has marked your offline quiz.";
-            // $url = url('/student/quiz2/' . $limitpercen->classid . '?session=' . $limitpercen->sessionid);
-            // $icon = "fa-check fa-lg";
-            // $iconColor = "#2b74f3"; // Example: set to a bright orange
+            // Send notification if mark has changed
+            if ($mrk != 0 && $mrk != $existingMark) {
+                $student = student::where('ic', $ics[$key])->first();
+                
+                if ($student) {
+                    $message = "Your offline quiz '{$limitpercen->title}' has been graded. Score: {$mrk}/{$limitpercen->total_mark}";
+                    
+                    $notificationData = [
+                        'type' => 'quiz',
+                        'quiz_id' => $quizid,
+                        'subject_id' => $limitpercen->classid,
+                        'title' => $limitpercen->title,
+                        'action_type' => 'quiz_graded',
+                        'score' => $mrk,
+                        'total_marks' => $limitpercen->total_mark,
+                        'url' => route('student.quiz2', $limitpercen->classid)
+                    ];
 
-            // $participant = UserStudent::where('ic', $ics[$key])->first();
-
-            // Notification::send($participant, new MyCustomNotification($message, $url, $icon, $iconColor));
-            // }
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
         }
 
         DB::table('tblclassstudentquiz')->upsert($upsert, ['userid', 'quizid']);

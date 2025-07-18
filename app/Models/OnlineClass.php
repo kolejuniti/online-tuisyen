@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Subject;
+use App\Models\School;
+use App\Models\Student;
 
 class OnlineClass extends Model
 {
@@ -18,6 +22,8 @@ class OnlineClass extends Model
         'datetime',
         'school',
         'status',
+        'addby',
+        'subject_id',
     ];
 
     protected $casts = [
@@ -158,5 +164,13 @@ class OnlineClass extends Model
     public function getDirectJoinUrlAttribute()
     {
         return route('online-class.join', $this->id);
+    }
+
+    /**
+     * Get the subject this online class belongs to
+     */
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
 } 

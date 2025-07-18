@@ -274,6 +274,15 @@ Route::middleware(['auth:student'])->group(function () {
     Route::get('/student/online-class/{classId}/join-page', [App\Http\Controllers\User\OnlineClassController::class, 'showJoinPage'])->name('student.online-class.join-page');
     Route::get('/student/online-class/{classId}/join', [App\Http\Controllers\User\OnlineClassController::class, 'joinClass'])->name('student.online-class.legacy-join');
 
+    // Student Notification Routes
+    Route::prefix('student/notifications')->name('student.notifications.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Student\NotificationController::class, 'index'])->name('index');
+        Route::get('/unread-count', [App\Http\Controllers\Student\NotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::post('/{id}/mark-as-read', [App\Http\Controllers\Student\NotificationController::class, 'markAsRead'])->name('mark-as-read');
+        Route::post('/mark-all-as-read', [App\Http\Controllers\Student\NotificationController::class, 'markAllAsRead'])->name('mark-all-as-read');
+        Route::get('/for-layout', [App\Http\Controllers\Student\NotificationController::class, 'getForLayout'])->name('for-layout');
+    });
+
 });
 
 // Public Online Class Gateway Routes (no authentication required for join page)

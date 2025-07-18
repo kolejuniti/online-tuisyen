@@ -27,22 +27,49 @@ use Illuminate\Database\QueryException;
 
 class TestController extends Controller
 {
-    public function studenttestlist()
+    /**
+     * Ensure session variables are set up for the subject
+     */
+    private function ensureSessionSetup($subjectId)
     {
+        // Check if session already has the subject data
+        if (!Session::has('subjects') || Session::get('subjects')->id != $subjectId) {
+            // Find the teacher subject record for this subject
+            $teacherSubject = \App\Models\TeacherSubject::with('teacher')
+                ->where('subject_id', $subjectId)
+                ->first();
+            
+            if ($teacherSubject) {
+                Session::put('teachers', $teacherSubject);
+                
+                $teacher = DB::table('users')->where('id', $teacherSubject->user_id)->first();
+                Session::put('teach', $teacher);
+                
+                $subject = \App\Models\Subject::findOrFail($subjectId);
+                Session::put('subjects', $subject);
+            }
+        }
+    }
 
+    public function studenttestlist($subjectId)
+    {
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
+        
         $group = array();
-
         $chapter = array();
 
         $data = DB::table('tblclasstest')->join('tblclassteststatus', 'tblclasstest.status', 'tblclassteststatus.id')
                 ->join('tblclasstest_group', 'tblclasstest.id', 'tblclasstest_group.testid')
                 ->join('schools', 'tblclasstest_group.groupname', 'schools.id')
                 ->where([
-                    ['tblclasstest.classid', Session::get('subjects')->id],
+                    ['tblclasstest.classid', $subjectId],
                     ['tblclasstest.status', '!=', 3],
                     ['tblclasstest.date_from','!=', null],
-                    ['schools.id', $user->school_id]
+                    ['schools.id', $user->school_id],
+                    ['tblclasstest.Addby', Session::get('teach')->ic]
                 ])->select('tblclasstest.*', 'tblclassteststatus.statusname', 'tblclasstest_group.groupname', 'schools.name as schoolname')->get();
 
       
@@ -61,16 +88,18 @@ class TestController extends Controller
 
     }
 
-    public function studentteststatus()
+    public function studentteststatus($subjectId, $testId)
     {
-
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
 
         $group = School::all();
                 
         $tsubject = DB::table('teacher_subjects')
                 ->where('user_id', $user->id)
-                ->where('subject_id', Session::get('subjects')->id)
+                ->where('subject_id', $subjectId)
                 ->first();
 
         $test = DB::table('students')
@@ -81,8 +110,8 @@ class TestController extends Controller
                 ->join('tblclasstest', 'tblclasstest_group.testid', 'tblclasstest.id')
                 ->select( 'students.*', 'tblclasstest.id AS clssid', 'tblclasstest.total_mark', 'tblclasstest.date_from', 'tblclasstest.date_to', 'students.name', 'tblclasstest.status')
                 ->where([
-                    ['tblclasstest.classid', Session::get('subjects')->id],
-                    ['tblclasstest.id', request()->test],
+                    ['tblclasstest.classid', $subjectId],
+                    ['tblclasstest.id', $testId],
                     ['students.ic', $user->ic]
                 ])->get();
 
@@ -470,12 +499,14 @@ class TestController extends Controller
         return view('student.subject_assessment.testresult', compact('data'));
     }
 
-    public function studenttest2list()
+    public function studenttest2list($subjectId)
     {
-
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
+        
         $group = array();
-
         $chapter = array();
 
         $data = DB::table('tblclasstest')
@@ -483,10 +514,11 @@ class TestController extends Controller
                 ->join('tblclassteststatus', 'tblclasstest.status', 'tblclassteststatus.id')
                 ->join('schools', 'tblclasstest_group.groupname', 'schools.id')
                 ->where([
-                    ['tblclasstest.classid', Session::get('subjects')->id],
+                    ['tblclasstest.classid', $subjectId],
                     ['tblclasstest.date_from', null],
                     ['tblclasstest.status', '!=', 3],
-                    ['schools.id', $user->school_id]
+                    ['schools.id', $user->school_id],
+                    ['tblclasstest.Addby', Session::get('teach')->ic]
                 ])
                 ->select('tblclasstest.*', 'tblclassteststatus.statusname', 'tblclasstest_group.groupname', 'schools.name as schoolname')->get();
 

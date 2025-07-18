@@ -17,7 +17,7 @@ class ContentController extends Controller
 
         $folder = DB::table('lecturer_dir')
                   ->where([
-                    ['Addby', Session::get('teachers')->teacher->ic], 
+                    ['Addby', Session::get('teach')->ic], 
                     ['CourseID', Session::get('teachers')->subject_id]
                     ])->get();
         

@@ -27,22 +27,49 @@ use Illuminate\Database\QueryException;
 
 class QuizController extends Controller
 {
-    public function studentquizlist()
+    /**
+     * Ensure session variables are set up for the subject
+     */
+    private function ensureSessionSetup($subjectId)
     {
+        // Check if session already has the subject data
+        if (!Session::has('subjects') || Session::get('subjects')->id != $subjectId) {
+            // Find the teacher subject record for this subject
+            $teacherSubject = \App\Models\TeacherSubject::with('teacher')
+                ->where('subject_id', $subjectId)
+                ->first();
+            
+            if ($teacherSubject) {
+                Session::put('teachers', $teacherSubject);
+                
+                $teacher = DB::table('users')->where('id', $teacherSubject->user_id)->first();
+                Session::put('teach', $teacher);
+                
+                $subject = \App\Models\Subject::findOrFail($subjectId);
+                Session::put('subjects', $subject);
+            }
+        }
+    }
 
+    public function studentquizlist($subjectId)
+    {
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
+        
         $group = array();
-
         $chapter = array();
 
         $data = DB::table('tblclassquiz')->join('tblclassquizstatus', 'tblclassquiz.status', 'tblclassquizstatus.id')
                 ->join('tblclassquiz_group', 'tblclassquiz.id', 'tblclassquiz_group.quizid')
                 ->join('schools', 'tblclassquiz_group.groupname', 'schools.id')
                 ->where([
-                    ['tblclassquiz.classid', Session::get('subjects')->id],
+                    ['tblclassquiz.classid', $subjectId],
                     ['tblclassquiz.status', '!=', 3],
                     ['tblclassquiz.date_from','!=', null],
-                    ['schools.id', $user->school_id]
+                    ['schools.id', $user->school_id],
+                    ['tblclassquiz.Addby', Session::get('teach')->ic]
                 ])->select('tblclassquiz.*', 'tblclassquizstatus.statusname', 'tblclassquiz_group.groupname', 'schools.name as schoolname')->get();
 
       
@@ -61,16 +88,18 @@ class QuizController extends Controller
 
     }
 
-    public function studentquizstatus()
+    public function studentquizstatus($subjectId, $quizId)
     {
-
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
 
         $group = School::all();
                 
         $tsubject = DB::table('teacher_subjects')
                 ->where('user_id', $user->id)
-                ->where('subject_id', Session::get('subjects')->id)
+                ->where('subject_id', $subjectId)
                 ->first();
 
         $quiz = DB::table('students')
@@ -81,8 +110,8 @@ class QuizController extends Controller
                 ->join('tblclassquiz', 'tblclassquiz_group.quizid', 'tblclassquiz.id')
                 ->select( 'students.*', 'tblclassquiz.id AS clssid', 'tblclassquiz.total_mark', 'tblclassquiz.date_from', 'tblclassquiz.date_to', 'students.name', 'tblclassquiz.status')
                 ->where([
-                    ['tblclassquiz.classid', Session::get('subjects')->id],
-                    ['tblclassquiz.id', request()->quiz],
+                    ['tblclassquiz.classid', $subjectId],
+                    ['tblclassquiz.id', $quizId],
                     ['students.ic', $user->ic]
                 ])->get();
 
@@ -470,12 +499,14 @@ class QuizController extends Controller
         return view('student.subject_assessment.quizresult', compact('data'));
     }
 
-    public function studentquiz2list()
+    public function studentquiz2list($subjectId)
     {
-
         $user = Auth::guard('student')->user();
+        
+        // Ensure session is set up for the subject
+        $this->ensureSessionSetup($subjectId);
+        
         $group = array();
-
         $chapter = array();
 
         $data = DB::table('tblclassquiz')
@@ -483,10 +514,11 @@ class QuizController extends Controller
                 ->join('tblclassquizstatus', 'tblclassquiz.status', 'tblclassquizstatus.id')
                 ->join('schools', 'tblclassquiz_group.groupname', 'schools.id')
                 ->where([
-                    ['tblclassquiz.classid', Session::get('subjects')->id],
+                    ['tblclassquiz.classid', $subjectId],
                     ['tblclassquiz.date_from', null],
                     ['tblclassquiz.status', '!=', 3],
-                    ['schools.id', $user->school_id]
+                    ['schools.id', $user->school_id],
+                    ['tblclassquiz.Addby', Session::get('teach')->ic]
                 ])
                 ->select('tblclassquiz.*', 'tblclassquizstatus.statusname', 'tblclassquiz_group.groupname', 'schools.name as schoolname')->get();
 

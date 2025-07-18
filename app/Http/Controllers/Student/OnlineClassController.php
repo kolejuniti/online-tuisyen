@@ -35,11 +35,12 @@ class OnlineClassController extends Controller
                 ->with('error', 'Subject not found.');
         }
 
-        // Get all active online classes where student's school is included
+        // Get all active online classes where student's school is included and matches the subject
         // Convert school_id to string since JSON stores school IDs as strings
         $studentSchoolId = (string) $student->school_id;
         
         $onlineClasses = OnlineClass::where('status', 'active')
+            ->where('subject_id', $id)
             ->whereJsonContains('school', $studentSchoolId)
             ->orderBy('datetime', 'desc')
             ->get();

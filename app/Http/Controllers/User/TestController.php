@@ -20,12 +20,50 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MyCustomNotification;
+use App\Notifications\AssignmentNotification;
 use App\Models\UserStudent;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\School;
 
 class TestController extends Controller
 {
+    /**
+     * Send notification to students affected by a test action
+     */
+    private function sendTestNotificationToStudents($testId, $subjectId, $title, $message, $actionType)
+    {
+        // Get all students who are affected by this test
+        $students = DB::table('students')
+            ->join('schools', 'students.school_id', 'schools.id')
+            ->join('tblclasstest_group', 'schools.id', 'tblclasstest_group.groupname')
+            ->where('tblclasstest_group.testid', $testId)
+            ->where('students.status', 'active')
+            ->select('students.*')
+            ->distinct('students.ic')
+            ->get();
+
+        if ($students->count() > 0) {
+            // Determine the appropriate URL based on test type
+            $test = DB::table('tblclasstest')->where('id', $testId)->first();
+            $testUrl = empty($test->date_from) ? route('student.test2', $subjectId) : route('student.test', $subjectId);
+            
+            $notificationData = [
+                'type' => 'test',
+                'test_id' => $testId,
+                'subject_id' => $subjectId,
+                'title' => $title,
+                'action_type' => $actionType,
+                'url' => $testUrl
+            ];
+
+            foreach($students as $studentData) {
+                $student = student::where('ic', $studentData->ic)->first();
+                if ($student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
+        }
+    }
     
     public function testlist()
     {
@@ -70,12 +108,22 @@ class TestController extends Controller
 
     public function updateExtendTest(Request $request)
     {
-
-        DB::table('tblclasstest')->where('id', $request->id)->update([
+        $testId = $request->id;
+        
+        // Get test details before updating
+        $test = DB::table('tblclasstest')->where('id', $testId)->first();
+        
+        DB::table('tblclasstest')->where('id', $testId)->update([
             'date_from' => $request->from,
             'date_to' => $request->to,
             'duration' => $request->duration
         ]);
+
+        // Send notification to students about the extension
+        $this->sendTestNotificationToStudents($testId, $test->classid, $test->title, 
+            "Test '{$test->title}' deadline has been extended to " . date('M j, Y g:i A', strtotime($request->to)) . ".",
+            'test_extended'
+        );
 
         return back()->with('message', 'Success!');
 
@@ -83,29 +131,30 @@ class TestController extends Controller
 
     public function deletetest(Request $request)
     {
-
         try {
-
-            $test = DB::table('tblclasstest')->where('id', $request->id)->first();
+            $testId = $request->id;
+            $test = DB::table('tblclasstest')->where('id', $testId)->first();
 
             if($test->status != 3)
             {
-            DB::table('tblclasstest')->where('id', $request->id)->update([
-                'status' => 3
-            ]);
+                DB::table('tblclasstest')->where('id', $testId)->update([
+                    'status' => 3
+                ]);
 
-            return true;
+                // Send notification to students about the deletion
+                $this->sendTestNotificationToStudents($testId, $test->classid, $test->title, 
+                    "Test '{$test->title}' has been cancelled by your teacher.",
+                    'test_deleted'
+                );
 
+                return true;
             }else{
-
                 die;
-
             }
           
-          } catch (\Exception $e) {
-          
-              return $e->getMessage();
-          }
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function testcreate()
@@ -458,26 +507,47 @@ class TestController extends Controller
             "content" => $updated_content
         ]);
 
-        // $allUsers = collect();
+        // Send notifications to students
+        if (!empty($group)) {
+            $allStudents = collect();
 
-        //     foreach($group as $grp) {
-        //         $gp = explode('|', $grp);
+            foreach($group as $grp) {
+                $gp = explode('|', $grp);
+                $schoolId = $gp[1]; // groupname contains school ID
+                
+                // Get all students from this school
+                $students = student::where('school_id', $schoolId)
+                    ->where('status', 'active')
+                    ->get();
 
-        //         $users = UserStudent::join('student_subjek', 'students.ic', '=', 'student_subjek.ic')
-        //             ->where([
-        //                 ['student_subjek.group_id', $gp[0]],
-        //                 ['student_subjek.group_name', $gp[1]]
-        //             ])
-        //             ->select('students.*')
-        //             ->get();
+                $allStudents = $allStudents->merge($students);
+            }
 
-        //         $allUsers = $allUsers->merge($users);
-        //     }
+            // Remove duplicates
+            $allStudents = $allStudents->unique('id');
 
-        // $message = "A new online test titled " . $title . " has been created.";
-        // $url = url('/student/test/' . $classid . '?session=' . $sessionid);
-        // $icon = "fa-puzzle-piece fa-lg";
-        // $iconColor = "#8803a0"; // Example: set to a bright orange
+            if ($allStudents->count() > 0) {
+                $testType = empty($from) ? 'offline test' : 'online test';
+                $message = "A new {$testType} titled '{$title}' has been created.";
+                
+                $testUrl = empty($from) ? route('student.test2', $classid) : route('student.test', $classid);
+                
+                $notificationData = [
+                    'type' => 'test',
+                    'test_id' => $q,
+                    'subject_id' => $classid,
+                    'title' => $title,
+                    'test_type' => $testType,
+                    'date_from' => $from,
+                    'date_to' => $to,
+                    'url' => $testUrl
+                ];
+
+                foreach($allStudents as $student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
+        }
         
         return true;
 
@@ -810,31 +880,44 @@ class TestController extends Controller
     }
 
     public function updatetestresult(Request $request){
-        $test = $request->test;
-        $participant = $request->participant;
+        $testId = $request->test;
+        $participantIc = $request->participant;
         $final_mark = (int) str_replace(' Mark', '', $request->final_mark);
         $comments = $request->comments;
-        //$total_mark = $request->total_mark;
         $data = $request->data;
       
         DB::table('tblclassstudenttest')
-            ->where('testid', $test)
-            ->where("userid", $participant)
+            ->where('testid', $testId)
+            ->where("userid", $participantIc)
             ->update([
                 "content" => $data,
                 "final_mark" => $final_mark,
-                //"total_mark" => $total_mark,
                 "comments" => $comments,
                 "status" => 3
             ]);
 
-        $message = "Lecturer has marked your test.";
-        $url = url('/student/test/' . $test . '/' . $participant . '/result');
-        $icon = "fa-check fa-lg";
-        $iconColor = "#2b74f3"; // Example: set to a bright orange
+        // Get test details and send notification to the specific student
+        $test = DB::table('tblclasstest')->where('id', $testId)->first();
+        $student = student::where('ic', $participantIc)->first();
+        
+        if ($student && $test) {
+            $testUrl = empty($test->date_from) ? route('student.test2', $test->classid) : route('student.test', $test->classid);
+            
+            $message = "Your test '{$test->title}' has been graded. Score: {$final_mark}/{$test->total_mark}";
+            
+            $notificationData = [
+                'type' => 'test',
+                'test_id' => $testId,
+                'subject_id' => $test->classid,
+                'title' => $test->title,
+                'action_type' => 'test_graded',
+                'score' => $final_mark,
+                'total_marks' => $test->total_mark,
+                'url' => $testUrl
+            ];
 
-        $participant = UserStudent::where('ic', $participant)->first();
-
+            $student->notify(new AssignmentNotification($message, $notificationData));
+        }
         
         return true;
     }
@@ -1342,30 +1425,40 @@ class TestController extends Controller
 
             }
 
-            // $allUsers = collect();
+            // Send notifications to students
+            $allStudents = collect();
 
-            // foreach($request->group as $grp) {
-            //     $gp = explode('|', $grp);
+            foreach($request->group as $grp) {
+                $gp = explode('|', $grp);
+                $schoolId = $gp[1]; // groupname contains school ID
+                
+                // Get all students from this school
+                $students = student::where('school_id', $schoolId)
+                    ->where('status', 'active')
+                    ->get();
 
-            //     $users = UserStudent::join('student_subjek', 'students.ic', '=', 'student_subjek.ic')
-            //         ->where([
-            //             ['student_subjek.group_id', $gp[0]],
-            //             ['student_subjek.group_name', $gp[1]]
-            //         ])
-            //         ->select('students.*')
-            //         ->get();
+                $allStudents = $allStudents->merge($students);
+            }
 
-            //     $allUsers = $allUsers->merge($users);
-            // }
+            // Remove duplicates
+            $allStudents = $allStudents->unique('id');
 
-            // //dd($allUsers);
+            if ($allStudents->count() > 0) {
+                $message = "A new offline test titled '{$title}' has been created.";
+                
+                $notificationData = [
+                    'type' => 'test',
+                    'test_id' => $q,
+                    'subject_id' => $classid,
+                    'title' => $title,
+                    'test_type' => 'offline test',
+                    'url' => route('student.test2', $classid)
+                ];
 
-            // $message = "A new offline test titled " . $title . " has been created.";
-            // $url = url('/student/test2/' . $classid . '?session=' . $sessionid);
-            // $icon = "fa-puzzle-piece fa-lg";
-            // $iconColor = "#8803a0"; // Example: set to a bright orange
-
-            // Notification::send($allUsers, new MyCustomNotification($message, $url, $icon, $iconColor));
+                foreach($allStudents as $student) {
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
 
         }else{
 
@@ -1565,16 +1658,27 @@ class TestController extends Controller
             'status' => 1
             ]);
 
-            // if ($mrk != 0 && $mrk != $existingMark) {
-            // $message = "Lecturer has marked your offline test.";
-            // $url = url('/student/test2/' . $limitpercen->classid . '?session=' . $limitpercen->sessionid);
-            // $icon = "fa-check fa-lg";
-            // $iconColor = "#2b74f3"; // Example: set to a bright orange
+            // Send notification if mark has changed
+            if ($mrk != 0 && $mrk != $existingMark) {
+                $student = student::where('ic', $ics[$key])->first();
+                
+                if ($student) {
+                    $message = "Your offline test '{$limitpercen->title}' has been graded. Score: {$mrk}/{$limitpercen->total_mark}";
+                    
+                    $notificationData = [
+                        'type' => 'test',
+                        'test_id' => $testid,
+                        'subject_id' => $limitpercen->classid,
+                        'title' => $limitpercen->title,
+                        'action_type' => 'test_graded',
+                        'score' => $mrk,
+                        'total_marks' => $limitpercen->total_mark,
+                        'url' => route('student.test2', $limitpercen->classid)
+                    ];
 
-            // $participant = UserStudent::where('ic', $ics[$key])->first();
-
-            // Notification::send($participant, new MyCustomNotification($message, $url, $icon, $iconColor));
-            // }
+                    $student->notify(new AssignmentNotification($message, $notificationData));
+                }
+            }
         }
 
         DB::table('tblclassstudenttest')->upsert($upsert, ['userid', 'testid']);
