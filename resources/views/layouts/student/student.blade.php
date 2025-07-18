@@ -99,10 +99,11 @@
             
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
-              <a href="#" class="waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" title="Notifications">
+              <a href="#" class="waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" id="notificationBell">
                 <i data-feather="bell"></i>
+                <span class="badge badge-danger badge-sm unread-count" id="unreadCount" style="display: none;"></span>
               </a>
-              <ul class="dropdown-menu animated bounceIn">
+              <ul class="dropdown-menu animated bounceIn" id="notificationDropdown">
                 <li class="header">
                   <div class="p-20">
                     <div class="flexbox">
@@ -110,22 +111,20 @@
                         <h4 class="mb-0 mt-0">Notifications</h4>
                       </div>
                       <div>
-                        <a href="#" class="text-danger">Clear All</a>
+                        <a href="#" class="text-danger" id="clearAllNotifications">Clear All</a>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li>
-                  <ul class="menu sm-scrol">
-                    <li>
-                      <a href="#">
-                        <i class="fa fa-user text-info"></i> Example notification
-                      </a>
+                  <ul class="menu sm-scrol" id="notificationList">
+                    <li class="text-center p-20">
+                      <i class="fa fa-spinner fa-spin"></i> Loading notifications...
                     </li>
                   </ul>
                 </li>
                 <li class="footer">
-                  <a href="#">View all</a>
+                  <a href="#" id="viewAllNotifications">View all</a>
                 </li>
               </ul>
             </li>
@@ -341,6 +340,199 @@
   <!-- Form Builder Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-builder.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-formBuilder/3.4.2/form-render.min.js"></script>
+  
+  <!-- Notification Styles -->
+  <style>
+  .unread-count {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background-color: #dc3545;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 9px;
+      font-weight: bold;
+      min-width: 15px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      z-index: 1000;
+  }
+  
+  .notification-item {
+      padding: 10px 15px !important;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s ease;
+  }
+  
+  .notification-item:hover {
+      background-color: #f8f9fa !important;
+  }
+  
+  .notification-message {
+      font-size: 13px;
+      line-height: 1.4;
+  }
+  
+  .bg-light {
+      background-color: #f8f9fa !important;
+  }
+  
+  #notificationDropdown {
+      min-width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+  }
+  
+  #notificationList {
+      max-height: 250px;
+      overflow-y: auto;
+  }
+  
+  .notifications-menu {
+      position: relative !important;
+  }
+  
+  .notifications-menu > a {
+      position: relative !important;
+      display: inline-block !important;
+  }
+  </style>
+  
+  <!-- Notification JavaScript -->
+  <script>
+  $(document).ready(function() {
+      // Load notifications when page loads
+      loadNotifications();
+      
+      // Refresh notifications every 30 seconds
+      setInterval(loadNotifications, 30000);
+      
+      // Clear all notifications
+      $('#clearAllNotifications').click(function(e) {
+          e.preventDefault();
+          markAllAsRead();
+      });
+  });
+
+  function loadNotifications() {
+      $.ajax({
+          url: '{{ route("student.notifications.for-layout") }}',
+          type: 'GET',
+          success: function(response) {
+              updateNotificationUI(response);
+          },
+          error: function(xhr, status, error) {
+              console.error('Error loading notifications:', error);
+              $('#notificationList').html('<li class="text-center p-20 text-danger">Error loading notifications</li>');
+          }
+      });
+  }
+
+  function updateNotificationUI(data) {
+      const notifications = data.notifications;
+      const unreadCount = data.unread_count;
+      
+      // Update unread count badge
+      if (unreadCount > 0) {
+          $('#unreadCount').text(unreadCount).show();
+      } else {
+          $('#unreadCount').hide();
+      }
+      
+      // Update notification list
+      let notificationHtml = '';
+      
+      if (notifications.length === 0) {
+          notificationHtml = '<li class="text-center p-20 text-muted">No notifications</li>';
+      } else {
+          notifications.forEach(function(notification) {
+              const isUnread = notification.is_unread;
+              const bgClass = isUnread ? 'bg-light' : '';
+              const notificationType = notification.data.type || 'default';
+              const iconClass = getNotificationIcon(notificationType);
+              
+              notificationHtml += `
+                  <li class="${bgClass}">
+                      <a href="#" data-notification-id="${notification.id}" class="notification-item" 
+                         data-url="${notification.data.url || '#'}" data-is-read="${!isUnread}">
+                          <i class="${iconClass}"></i> 
+                          <span class="notification-message">${notification.message}</span>
+                          <small class="text-muted d-block">${notification.created_at}</small>
+                      </a>
+                  </li>
+              `;
+          });
+      }
+      
+      $('#notificationList').html(notificationHtml);
+      
+      // Bind click events to notification items
+      $('.notification-item').click(function(e) {
+          e.preventDefault();
+          const notificationId = $(this).data('notification-id');
+          const url = $(this).data('url');
+          const isRead = $(this).data('is-read');
+          
+          if (!isRead) {
+              markAsRead(notificationId);
+          }
+          
+          if (url && url !== '#') {
+              window.location.href = url;
+          }
+      });
+  }
+
+  function getNotificationIcon(type) {
+      switch(type) {
+          case 'quiz':
+              return 'fa fa-question-circle text-info';
+          case 'test':
+              return 'fa fa-file-text text-warning';
+          case 'online_class':
+              return 'fa fa-video text-success';
+          default:
+              return 'fa fa-bell text-info';
+      }
+  }
+
+  function markAsRead(notificationId) {
+      $.ajax({
+          url: `{{ url('student/notifications') }}/${notificationId}/mark-as-read`,
+          type: 'POST',
+          data: {
+              _token: '{{ csrf_token() }}'
+          },
+          success: function(response) {
+              if (response.success) {
+                  loadNotifications(); // Refresh notifications
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error marking notification as read:', error);
+          }
+      });
+  }
+
+  function markAllAsRead() {
+      $.ajax({
+          url: '{{ route("student.notifications.mark-all-as-read") }}',
+          type: 'POST',
+          data: {
+              _token: '{{ csrf_token() }}'
+          },
+          success: function(response) {
+              if (response.success) {
+                  loadNotifications(); // Refresh notifications
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error marking all notifications as read:', error);
+          }
+      });
+  }
+  </script>
   
   @yield('content')
 </body>
