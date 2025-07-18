@@ -41,6 +41,7 @@ class OnlineClassController extends Controller
         
         $onlineClasses = OnlineClass::where('status', 'active')
             ->where('subject_id', $id)
+            ->where('addby', Session::get('teach')->ic)
             ->whereJsonContains('school', $studentSchoolId)
             ->orderBy('datetime', 'desc')
             ->get();
