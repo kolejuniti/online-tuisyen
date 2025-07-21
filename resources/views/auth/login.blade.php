@@ -469,6 +469,41 @@ body {
 
 .form-check-input:checked ~ .form-check-label {
   color: var(--primary-dark);
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+.form-check-input:checked {
+  animation: checkboxPulse 0.3s ease-out;
+}
+
+@keyframes checkboxPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+}
+
+/* Enhanced remember me styling */
+.form-check {
+  transition: all 0.3s ease;
+}
+
+.form-check:hover {
+  transform: translateX(2px);
+}
+
+.form-check-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
 }
 
 .forgot-link {
@@ -904,7 +939,23 @@ body {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="scripts.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to update checkbox styling
+function updateCheckboxStyle(checkbox, isChecked) {
+  const label = checkbox.nextElementSibling;
+  
+  if (isChecked) {
+    label.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
+    label.style.fontWeight = '600';
+    // Add a subtle glow effect
+    checkbox.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
+  } else {
+    label.style.color = '';
+    label.style.fontWeight = '';
+    checkbox.style.boxShadow = '';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
   // Initialize stars background
   initializeStars();
   
@@ -922,6 +973,11 @@ body {
   
   // Initialize any error messages present in the session
   renderErrorMessages();
+  
+  // Restore emails after all initialization is complete
+  setTimeout(() => {
+    restoreRememberedEmails();
+  }, 200);
 });
 
 // Create star particles in the background
@@ -1064,6 +1120,9 @@ function initializeTabSwitching() {
     
     // Update hidden input
     document.querySelector('input[name="login_type"]').value = 'user';
+    
+    // Load remembered email for user tab if remember is checked
+    loadRememberedEmailForTab('user');
   });
   
   studentTab.addEventListener('click', () => {
@@ -1080,7 +1139,95 @@ function initializeTabSwitching() {
     
     // Update hidden input
     document.querySelector('input[name="login_type"]').value = 'student';
+    
+    // Load remembered email for student tab if remember is checked
+    loadRememberedEmailForTab('student');
   });
+}
+
+// Load remembered email for the active tab
+function loadRememberedEmailForTab(userType) {
+  if (userType === 'user') {
+    const userEmailField = document.getElementById('userEmail');
+    const userRememberCheckbox = document.getElementById('userRemember');
+    const savedUserEmail = localStorage.getItem('remembered_user_email');
+    
+    if (savedUserEmail && userRememberCheckbox.checked && !userEmailField.value) {
+      userEmailField.value = savedUserEmail;
+    }
+  } else if (userType === 'student') {
+    const studentEmailField = document.getElementById('studentEmail');
+    const studentRememberCheckbox = document.getElementById('studentRemember');
+    const savedStudentEmail = localStorage.getItem('remembered_student_email');
+    
+    if (savedStudentEmail && studentRememberCheckbox.checked && !studentEmailField.value) {
+      studentEmailField.value = savedStudentEmail;
+    }
+  }
+}
+
+// Restore remembered emails on page load
+function restoreRememberedEmails() {
+  console.log('🔄 Starting email restoration process...');
+  
+  const userEmailField = document.getElementById('userEmail');
+  const studentEmailField = document.getElementById('studentEmail');
+  const userRememberCheckbox = document.getElementById('userRemember');
+  const studentRememberCheckbox = document.getElementById('studentRemember');
+  
+  // Get saved emails and remember states directly from localStorage
+  const savedUserEmail = localStorage.getItem('remembered_user_email');
+  const savedStudentEmail = localStorage.getItem('remembered_student_email');
+  const userRememberState = localStorage.getItem('remember_userRemember');
+  const studentRememberState = localStorage.getItem('remember_studentRemember');
+  
+  console.log('📧 Saved user email:', savedUserEmail);
+  console.log('📧 Saved student email:', savedStudentEmail);
+  console.log('☑️ User remember state:', userRememberState);
+  console.log('☑️ Student remember state:', studentRememberState);
+  
+  // Restore teacher email and checkbox state
+  if (userRememberState === 'true') {
+    console.log('✅ Restoring teacher email and checkbox...');
+    userRememberCheckbox.checked = true;
+    updateCheckboxStyle(userRememberCheckbox, true);
+    
+    if (savedUserEmail) {
+      userEmailField.value = savedUserEmail;
+      showRememberMessage('Teacher email restored', 'info');
+      console.log('✅ Teacher email restored:', savedUserEmail);
+    }
+  } else {
+    console.log('❌ User remember state is not true, skipping restoration');
+  }
+  
+  // Restore student email and checkbox state
+  if (studentRememberState === 'true') {
+    console.log('✅ Restoring student email and checkbox...');
+    studentRememberCheckbox.checked = true;
+    updateCheckboxStyle(studentRememberCheckbox, true);
+    
+    if (savedStudentEmail) {
+      studentEmailField.value = savedStudentEmail;
+      showRememberMessage('Student email restored', 'info');
+      console.log('✅ Student email restored:', savedStudentEmail);
+    }
+  } else {
+    console.log('❌ Student remember state is not true (' + studentRememberState + '), skipping restoration');
+    // If we have a saved email but no remember state, check if we should restore anyway
+    if (savedStudentEmail && !studentRememberState) {
+      console.log('🔧 Found saved student email but no remember state, checking localStorage keys...');
+      // Let's debug what keys exist in localStorage
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.includes('remember') || key.includes('student')) {
+          console.log('🔍 localStorage key found:', key, '=', localStorage.getItem(key));
+        }
+      }
+    }
+  }
+  
+  console.log('🔄 Email restoration process completed');
 }
 
 // Fade out animation with callback
@@ -1117,6 +1264,9 @@ function fadeIn(element) {
 
 // Initialize input field events and animations
 function initializeFormEvents() {
+  // Initialize email persistence
+  initializeEmailPersistence();
+  
   // Toggle password visibility
   document.querySelectorAll('.toggle-password').forEach(toggle => {
     toggle.addEventListener('click', function() {
@@ -1198,18 +1348,140 @@ function initializeFormEvents() {
     });
   });
   
-  // Checkbox animation
+  // Checkbox animation and remember me persistence
   document.querySelectorAll('.form-check-input').forEach(checkbox => {
+    console.log('🔗 Attaching event listener to checkbox:', checkbox.id);
+    
     checkbox.addEventListener('change', function() {
-      const label = this.nextElementSibling;
+      const isChecked = this.checked;
+      const rememberKey = `remember_${this.id}`;
       
-      if (this.checked) {
-        label.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
-      } else {
-        label.style.color = '';
-      }
+      console.log('☑️ Checkbox changed:', this.id, 'checked:', isChecked);
+      console.log('🔑 Using localStorage key:', rememberKey);
+      
+      // Save remember me state to localStorage
+      localStorage.setItem(rememberKey, isChecked.toString());
+      console.log('💾 Saved to localStorage:', rememberKey, '=', isChecked.toString());
+      
+      // Verify it was saved
+      const savedValue = localStorage.getItem(rememberKey);
+      console.log('✅ Verification - Retrieved value:', savedValue);
+      
+      // Update visual styling
+      updateCheckboxStyle(this, isChecked);
+      
+      // Add subtle animation feedback
+      this.parentElement.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.05)' },
+        { transform: 'scale(1)' }
+      ], {
+        duration: 200,
+        easing: 'ease-out'
+      });
     });
   });
+
+
+
+// Initialize email persistence functionality
+function initializeEmailPersistence() {
+  const userEmailField = document.getElementById('userEmail');
+  const studentEmailField = document.getElementById('studentEmail');
+  const userRememberCheckbox = document.getElementById('userRemember');
+  const studentRememberCheckbox = document.getElementById('studentRemember');
+
+
+
+  // Save/clear email when remember me checkbox changes
+  userRememberCheckbox.addEventListener('change', function() {
+    console.log('👤 User remember checkbox changed:', this.checked);
+    console.log('📧 Current user email field value:', userEmailField.value);
+    
+    if (this.checked) {
+      // Save current email if there is one, otherwise just save the state
+      if (userEmailField.value.trim()) {
+        localStorage.setItem('remembered_user_email', userEmailField.value.trim());
+        showRememberMessage('Teacher email will be remembered', 'success');
+        console.log('💾 Saved user email:', userEmailField.value.trim());
+      } else {
+        console.log('⚠️ No email to save yet, but remember state saved');
+      }
+    } else {
+      // Clear saved email when unchecked
+      localStorage.removeItem('remembered_user_email');
+      showRememberMessage('Teacher email will no longer be remembered', 'info');
+      console.log('🗑️ Cleared user email from storage');
+    }
+  });
+
+  studentRememberCheckbox.addEventListener('change', function() {
+    console.log('👤 Student remember checkbox changed:', this.checked);
+    console.log('📧 Current student email field value:', studentEmailField.value);
+    
+    if (this.checked) {
+      // Save current email if there is one, otherwise just save the state
+      if (studentEmailField.value.trim()) {
+        localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
+        showRememberMessage('Student email will be remembered', 'success');
+        console.log('💾 Saved student email:', studentEmailField.value.trim());
+      } else {
+        console.log('⚠️ No email to save yet, but remember state saved');
+      }
+    } else {
+      // Clear saved email when unchecked
+      localStorage.removeItem('remembered_student_email');
+      showRememberMessage('Student email will no longer be remembered', 'info');
+      console.log('🗑️ Cleared student email from storage');
+    }
+  });
+
+  // Save email when typing if remember me is checked
+  userEmailField.addEventListener('input', function() {
+    console.log('⌨️ User typing email:', this.value);
+    if (userRememberCheckbox.checked && this.value.trim()) {
+      localStorage.setItem('remembered_user_email', this.value.trim());
+      console.log('💾 Auto-saved user email while typing:', this.value.trim());
+    }
+  });
+
+  studentEmailField.addEventListener('input', function() {
+    console.log('⌨️ Student typing email:', this.value);
+    if (studentRememberCheckbox.checked && this.value.trim()) {
+      localStorage.setItem('remembered_student_email', this.value.trim());
+      console.log('💾 Auto-saved student email while typing:', this.value.trim());
+    }
+  });
+
+  // Handle form submission to save email
+  document.getElementById('userForm').addEventListener('submit', function(e) {
+    console.log('📝 User form submitted');
+    console.log('☑️ Remember checked:', userRememberCheckbox.checked);
+    console.log('📧 Email value:', userEmailField.value.trim());
+    
+    if (userRememberCheckbox.checked && userEmailField.value.trim()) {
+      localStorage.setItem('remembered_user_email', userEmailField.value.trim());
+      console.log('💾 Final save of user email on submit:', userEmailField.value.trim());
+    } else if (!userRememberCheckbox.checked) {
+      localStorage.removeItem('remembered_user_email');
+      console.log('🗑️ Removed user email on submit (remember unchecked)');
+    }
+  });
+
+  document.getElementById('studentForm').addEventListener('submit', function(e) {
+    console.log('📝 Student form submitted');
+    console.log('☑️ Remember checked:', studentRememberCheckbox.checked);
+    console.log('📧 Email value:', studentEmailField.value.trim());
+    
+    if (studentRememberCheckbox.checked && studentEmailField.value.trim()) {
+      localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
+      console.log('💾 Final save of student email on submit:', studentEmailField.value.trim());
+    } else if (!studentRememberCheckbox.checked) {
+      localStorage.removeItem('remembered_student_email');
+      console.log('🗑️ Removed student email on submit (remember unchecked)');
+    }
+  });
+}
   
   // Forgot password link animation
   document.querySelectorAll('.forgot-link').forEach(link => {
@@ -1346,6 +1618,52 @@ function showMessage(message) {
     messageElement.style.opacity = '0';
     messageElement.style.transform = 'translateX(-50%) translateY(20px)';
   }, 3000);
+}
+
+// Show remember me specific messages
+function showRememberMessage(message, type = 'info') {
+  // Create remember message element if it doesn't exist
+  let messageElement = document.getElementById('rememberMessage');
+  
+  if (!messageElement) {
+    messageElement = document.createElement('div');
+    messageElement.id = 'rememberMessage';
+    messageElement.style.position = 'fixed';
+    messageElement.style.top = '20px';
+    messageElement.style.right = '20px';
+    messageElement.style.padding = '8px 16px';
+    messageElement.style.borderRadius = '6px';
+    messageElement.style.fontSize = '0.85rem';
+    messageElement.style.fontWeight = '500';
+    messageElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    messageElement.style.zIndex = '1000';
+    messageElement.style.opacity = '0';
+    messageElement.style.transition = 'all 0.3s ease';
+    messageElement.style.transform = 'translateX(100%)';
+    messageElement.style.maxWidth = '300px';
+    document.body.appendChild(messageElement);
+  }
+  
+  // Set colors based on type
+  if (type === 'info') {
+    messageElement.style.backgroundColor = 'rgba(14, 165, 233, 0.95)';
+    messageElement.style.color = 'white';
+    messageElement.innerHTML = `<i class="fas fa-info-circle" style="margin-right: 6px;"></i>${message}`;
+  } else if (type === 'success') {
+    messageElement.style.backgroundColor = 'rgba(34, 197, 94, 0.95)';
+    messageElement.style.color = 'white';
+    messageElement.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 6px;"></i>${message}`;
+  }
+  
+  // Show message
+  messageElement.style.opacity = '1';
+  messageElement.style.transform = 'translateX(0)';
+  
+  // Hide after 4 seconds
+  setTimeout(() => {
+    messageElement.style.opacity = '0';
+    messageElement.style.transform = 'translateX(100%)';
+  }, 4000);
 }
 
 // Handle error messages from server

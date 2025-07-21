@@ -24,8 +24,9 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
         $guard = $request->input('login_type') === 'user' ? 'web' : 'student';
+        $remember = $request->boolean('remember'); // Get the remember checkbox value
 
-        if (Auth::guard($guard)->attempt($credentials)) {
+        if (Auth::guard($guard)->attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             if ($guard === 'web') {
