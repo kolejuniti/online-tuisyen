@@ -167,7 +167,7 @@ class QuizController extends Controller
 
         $courseid = Session::get('subjects')->id;
 
-        $group = School::all();
+        $group = School::where('status', 'active')->get();
 
         $tsubject = DB::table('teacher_subjects')
                 ->where('user_id', $user->id)
