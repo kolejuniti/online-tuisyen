@@ -7,6 +7,8 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="current-user" content="{{ Auth::user()->ic }}">
+  <meta name="user-type" content="{{ Auth::user()->user_type }}">
   <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}">
   <title>{{ Auth::user()->user_type }} Dashboard - @yield('title')</title>
   
@@ -165,6 +167,32 @@
                   <i data-feather="bookmark"></i><span>Subjects</span>
                 </a>
               </li>
+              
+              <!-- Student Messages for Users -->
+              <li class="treeview">
+                <a href="#">
+                  <i data-feather="message-square"></i>
+                  <span>Student Messages</span>
+                  <span id="user-messages-count" class="count-circle hidden">0</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu treeview-menu-visible">
+                  <li>
+                    <div class="sidebar-quick-search">
+                      <input type="text" id="user-student-search" placeholder="Search students..." class="form-control form-control-sm">
+                      <div id="user-search-results" class="sidebar-search-results"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div id="user-recent-conversations" class="sidebar-conversations">
+                      <!-- Recent conversations will be loaded here -->
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
               <li>
                 <a href="#">
                   <i data-feather="settings"></i><span>Settings</span>
@@ -308,6 +336,430 @@
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
   
+  <!-- TextBox Vue Component -->
+  <div id="textbox-app">
+    <text-box></text-box>
+  </div>
+
+  <!-- Vue.js and App Scripts -->
+  <script src="{{ mix('js/app.js') }}"></script>
+  
+  <!-- User Messaging Integration -->
+  <style>
+    /* Count Circle for Sidebar */
+    .count-circle {
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      font-size: 10px;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 5px;
+    }
+    
+    .count-circle.hidden {
+      display: none;
+    }
+
+    /* Sidebar Quick Messaging Styles */
+    .sidebar-quick-search {
+      padding: 10px 15px;
+    }
+    
+    .sidebar-quick-search .form-control-sm {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 15px;
+      border: 1px solid #ddd;
+    }
+    
+    .sidebar-search-results {
+      position: absolute;
+      top: 100%;
+      left: 15px;
+      right: 15px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      margin-top: 5px;
+    }
+    
+    .sidebar-search-results.active {
+      display: block;
+    }
+    
+    .sidebar-search-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .sidebar-search-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .sidebar-search-item:last-child {
+      border-bottom: none;
+    }
+    
+    .sidebar-search-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #4f81c7;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    
+    .sidebar-search-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .sidebar-search-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 1px;
+    }
+    
+    .sidebar-search-details {
+      font-size: 10px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .sidebar-conversations {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 0 15px;
+    }
+    
+    .sidebar-conversation-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+      gap: 8px;
+    }
+    
+    .sidebar-conversation-item:hover {
+      background-color: #f8f9fa;
+      margin: 0 -8px;
+      padding: 8px 8px;
+      border-radius: 6px;
+    }
+    
+    .sidebar-conversation-item:last-child {
+      border-bottom: none;
+    }
+    
+    .sidebar-conversation-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #4f81c7;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 12px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    
+    .sidebar-conversation-avatar.online::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      background: #2ed573;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+    
+    .sidebar-conversation-details {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .sidebar-conversation-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    
+    .sidebar-conversation-preview {
+      font-size: 11px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .sidebar-conversation-preview.unread {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .sidebar-conversation-unread {
+      background: #4f81c7;
+      color: white;
+      border-radius: 50%;
+      min-width: 16px;
+      height: 16px;
+      font-size: 9px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .sidebar-empty-conversations {
+      padding: 15px 0;
+      text-align: center;
+      color: #666;
+      font-size: 11px;
+    }
+  </style>
+
+  <script>
+    // Global variables for user messaging
+    let searchTimeout;
+    let currentStudentChat = null;
+
+    // Laravel and session variables
+    window.Laravel = {
+      sessionUserId: '{{ Auth::user()->user_type }}',
+      currentUserIc: '{{ Auth::user()->ic ?? "" }}'
+    };
+
+    // Initialize messaging functionality
+    function initializeUserMessaging() {
+      // Sidebar search functionality
+      const searchInput = document.getElementById('user-student-search');
+      const searchResults = document.getElementById('user-search-results');
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          const query = this.value.trim();
+          
+          if (query.length < 2) {
+            searchResults.classList.remove('active');
+            // Restore original conversations when search is cleared
+            loadUserConversations();
+            return;
+          }
+          
+          searchTimeout = setTimeout(() => {
+            searchStudentsForUser(query);
+          }, 300);
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+          if (searchInput && searchResults && 
+              !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.remove('active');
+          }
+        });
+      }
+      
+      // Load existing conversations
+      loadUserConversations();
+    
+      // Set up periodic refresh for conversations
+      setInterval(() => {
+        // Only refresh if not actively searching
+        const searchInput = document.getElementById('user-student-search');
+        const hasActiveSearch = searchInput && searchInput.value.trim().length >= 2;
+        
+        if (!hasActiveSearch) {
+          loadUserConversations();
+        }
+      }, 10000);
+    }
+
+    function searchStudentsForUser(query) {
+      fetch('/all/student/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ search: query })
+      })
+      .then(response => response.json())
+      .then(students => {
+        const conversationsContainer = document.getElementById('user-recent-conversations');
+        
+        if (students.length === 0) {
+          conversationsContainer.innerHTML = `
+            <div class="sidebar-empty-conversations">
+              No students found
+            </div>
+          `;
+        } else {
+          conversationsContainer.innerHTML = students.map(student => `
+            <div class="sidebar-conversation-item" onclick="startStudentMessageFromUser('${student.ic}', '${student.name}')">
+              <div class="sidebar-conversation-avatar">
+                ${student.name.charAt(0).toUpperCase()}
+              </div>
+              <div class="sidebar-conversation-details">
+                <div class="sidebar-conversation-name">${student.name}</div>
+                <div class="sidebar-conversation-preview">
+                  ${student.email}
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      })
+      .catch(error => {
+        console.error('Error searching students:', error);
+      });
+    }
+    
+    function startStudentMessageFromUser(studentIc, studentName) {
+      // Hide search results and clear search
+      const searchResults = document.getElementById('user-search-results');
+      const searchInput = document.getElementById('user-student-search');
+      if (searchResults) searchResults.classList.remove('active');
+      if (searchInput) searchInput.value = '';
+      
+      // Check if TextBox component is available
+      if (window.textBoxComponent) {
+        currentStudentChat = studentIc;
+        const event = new CustomEvent('message-requested', {
+          detail: {
+            ic: studentIc,
+            messageType: '{{ Auth::user()->user_type }}',
+            studentName: studentName
+          }
+        });
+        window.dispatchEvent(event);
+      }
+    }
+
+    function loadUserConversations() {
+      fetch('/all/user/conversations')
+        .then(response => response.json())
+        .then(conversations => {
+          const container = document.getElementById('user-recent-conversations');
+          
+          if (conversations.length === 0) {
+            container.innerHTML = `
+              <div class="sidebar-empty-conversations">
+                No recent conversations
+              </div>
+            `;
+          } else {
+            // Show only the first 5 conversations for the sidebar
+            const recentConversations = conversations.slice(0, 5);
+            
+            container.innerHTML = recentConversations.map(conv => {
+              const lastMessage = conv.last_message;
+              const student = conv.student;
+              const unreadCount = conv.unread_count;
+              
+              // Format message preview
+              let messagePreview = 'No messages yet';
+              if (lastMessage) {
+                if (lastMessage.message && lastMessage.message.trim()) {
+                  messagePreview = lastMessage.message;
+                } else if (lastMessage.image_url) {
+                  messagePreview = '📷 Photo';
+                }
+              }
+              
+              return `
+                <div class="sidebar-conversation-item" onclick="startStudentMessageFromUser('${student.ic}', '${student.name}')">
+                  <div class="sidebar-conversation-avatar online">
+                    ${student.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div class="sidebar-conversation-details">
+                    <div class="sidebar-conversation-name">${student.name}</div>
+                    <div class="sidebar-conversation-preview ${unreadCount > 0 ? 'unread' : ''}">
+                      ${messagePreview}
+                    </div>
+                  </div>
+                  ${unreadCount > 0 ? `<div class="sidebar-conversation-unread">${unreadCount}</div>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+          
+          // Update unread count
+          const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+          const countElement = document.getElementById('user-messages-count');
+          if (totalUnread > 0) {
+            countElement.textContent = totalUnread;
+            countElement.classList.remove('hidden');
+          } else {
+            countElement.classList.add('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading user conversations:', error);
+        });
+    }
+
+    // Function to open messages with specific students for users
+    function openStudentMessage(studentIc, studentName) {
+      const event = new CustomEvent('message-requested', {
+        detail: {
+          ic: studentIc,
+          messageType: '{{ Auth::user()->user_type }}',
+          studentName: studentName
+        }
+      });
+      window.dispatchEvent(event);
+    }
+
+    // Global function to trigger messaging (for backward compatibility)
+    function getMessage(ic, type = null) {
+      const event = new CustomEvent('message-requested', {
+        detail: {
+          ic: ic,
+          messageType: type || '{{ Auth::user()->user_type }}'
+        }
+      });
+      window.dispatchEvent(event);
+    }
+
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeUserMessaging();
+    });
+  </script>
+
   @yield('content')
 </body>
 </html>

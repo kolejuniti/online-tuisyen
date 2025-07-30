@@ -213,6 +213,8 @@ Route::middleware(['auth:web'])->group(function () {
         Route::delete('/online-class/{id}/{classId}', [App\Http\Controllers\User\OnlineClassController::class, 'destroy'])->name('online-class.destroy');
         Route::post('/online-class/get-students', [App\Http\Controllers\User\OnlineClassController::class, 'getStudents'])->name('online-class.get-students');
     });
+
+
     
     // Admin Only Routes
     Route::middleware(['admin'])->group(function () {
@@ -228,6 +230,8 @@ Route::middleware(['auth:student'])->group(function () {
 
     Route::get('/student/subjects', [App\Http\Controllers\Student\SubjectController::class, 'index'])->name('student.subjects.index');
     Route::post('/student/subjects/filter', [App\Http\Controllers\Student\SubjectController::class, 'getCourseList']);
+
+
 
     Route::get('/student/{id}', [App\Http\Controllers\Student\SummaryController::class, 'show'])->name('student.subjects.show');
 
@@ -283,6 +287,32 @@ Route::middleware(['auth:student'])->group(function () {
         Route::get('/for-layout', [App\Http\Controllers\Student\NotificationController::class, 'getForLayout'])->name('for-layout');
     });
 
+    
+
+});
+
+// General Messaging Routes (used by TextBox component)
+Route::prefix('all')->name('all.')->group(function () {
+    // Student messaging endpoints (require student authentication)
+    Route::middleware(['auth:student'])->group(function () {
+        Route::post('/student/sendMessage', [App\Http\Controllers\MessagingController::class, 'sendStudentMessage'])->name('student.send');
+        Route::post('/student/getMessages', [App\Http\Controllers\MessagingController::class, 'getStudentMessages'])->name('student.get');
+        Route::get('/student/conversations', [App\Http\Controllers\MessagingController::class, 'getStudentConversations'])->name('student.conversations');
+        Route::post('/student/countMessages', [App\Http\Controllers\MessagingController::class, 'countStudentMessages'])->name('student.count');
+        Route::get('/massage/student/countMessage', [App\Http\Controllers\MessagingController::class, 'countMessage'])->name('student.count.message');
+    });
+    
+    // General endpoints accessible by both student and user (no specific middleware - handled in controller)
+    Route::post('/massage/user/sendMassage', [App\Http\Controllers\MessagingController::class, 'sendMassage'])->name('user.send');
+    Route::post('/massage/user/getMassage', [App\Http\Controllers\MessagingController::class, 'getMassage'])->name('user.get');
+    Route::post('/massage/user/deleteMassage', [App\Http\Controllers\MessagingController::class, 'deleteMassage'])->name('message.delete');
+    Route::get('/massage/user/countMessage', [App\Http\Controllers\MessagingController::class, 'countMessage'])->name('user.count');
+    Route::get('/massage/student/countMassageAdmin', [App\Http\Controllers\MessagingController::class, 'countMassageAdmin'])->name('student.count.admin');
+    Route::get('/user/conversations', [App\Http\Controllers\MessagingController::class, 'getUserConversations'])->name('user.conversations');
+    Route::get('/getStaffList', [App\Http\Controllers\MessagingController::class, 'getStaffList'])->name('staff.list');
+    Route::get('/getTeachersList', [App\Http\Controllers\MessagingController::class, 'getTeachersList'])->name('teachers.list');
+    Route::post('/student/search', [App\Http\Controllers\MessagingController::class, 'searchStudents'])->name('student.search');
+    Route::get('/getStudentList', [App\Http\Controllers\MessagingController::class, 'getStudentList'])->name('student.list');
 });
 
 // Public Online Class Gateway Routes (no authentication required for join page)

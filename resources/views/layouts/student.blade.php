@@ -7,6 +7,8 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="current-student" content="{{ Auth::user()->ic }}">
+  <meta name="user-type" content="STUDENT">
   <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}">
   <title>{{ Auth::user()->user_type }} Dashboard - @yield('title')</title>
   
@@ -97,6 +99,15 @@
               </a>				
             </li>
             
+            <!-- Student Messages Button -->
+            <li class="messaging-dropdown d-flex align-items-center">
+              <button class="messaging-btn" onclick="toggleMessagingPanel()">
+                <i data-feather="message-circle" style="color: #4f81c7;"></i>
+                <div class="pulse-wave"></div>
+                <span id="total-student-messages-count" class="badge hidden">0</span>
+              </button>
+            </li>
+
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
               <a href="#" class="waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" id="notificationBell">
@@ -164,6 +175,57 @@
                   <i data-feather="bookmark"></i><span>Subjects</span>
                 </a>
               </li>
+              
+              <!-- Messages Dropdown -->
+              <li class="treeview">
+                <a href="#">
+                  <i data-feather="message-square"></i>
+                  <span>Messages</span>
+                  <span id="total-teacher-messages-count" class="count-circle hidden">0</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu treeview-menu-visible" id="teacher-messages-menu">
+                  <li class="teacher-menu-loading">
+                    <div style="padding: 10px 15px; text-align: center; color: #666;">
+                      <i class="fa fa-spinner fa-spin"></i> Loading teachers...
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              
+              <!-- Quick Student Messages (Sidebar) -->
+              <li class="treeview">
+                <a href="#">
+                  <i data-feather="users"></i>
+                  <span>Student Messages</span>
+                  <span id="sidebar-student-messages-count" class="count-circle hidden">0</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu treeview-menu-visible">
+                  <li>
+                    <div class="sidebar-quick-search">
+                      <input type="text" id="sidebar-student-search" placeholder="Quick search..." class="form-control form-control-sm">
+                      <div id="sidebar-search-results" class="sidebar-search-results"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div id="sidebar-recent-conversations" class="sidebar-conversations">
+                      <!-- Recent conversations will be loaded here -->
+                    </div>
+                  </li>
+                  <li>
+                    <a href="#" onclick="toggleMessagingPanel()" class="view-all-messages">
+                      <i data-feather="message-square"></i>
+                      <span>View All Messages</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
               <li>
                 <a href="#">
                   <i data-feather="settings"></i><span>Settings</span>
@@ -187,6 +249,42 @@
 
     <!-- Main Content -->
     @yield('main')
+    
+    <!-- Student Messaging Panel (Facebook-like) -->
+    <div id="messaging-panel" class="messaging-panel">
+      <div class="messaging-panel-header">
+        <div class="messaging-header-content">
+          <h3><i data-feather="message-circle"></i> Messages</h3>
+          <button class="close-messaging-btn" onclick="toggleMessagingPanel()">
+            <i data-feather="x"></i>
+          </button>
+        </div>
+        <div class="messaging-search-container">
+          <div class="messaging-search-box">
+            <i data-feather="search" class="search-icon"></i>
+            <input type="text" id="messaging-student-search" placeholder="Search students..." class="messaging-search-input">
+            <div id="messaging-search-results" class="messaging-search-results"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="messaging-panel-body">
+        <!-- Recent Conversations -->
+        <div class="messaging-section">
+          <h4 class="messaging-section-title">Recent Conversations</h4>
+          <div id="messaging-conversations" class="messaging-conversations">
+            <div class="messaging-empty-state">
+              <i data-feather="message-square"></i>
+              <p>No conversations yet</p>
+              <span>Search for students to start chatting!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messaging Panel Overlay -->
+    <div id="messaging-overlay" class="messaging-overlay" onclick="toggleMessagingPanel()"></div>
     
     <!-- Footer -->
     <footer class="main-footer">
@@ -307,8 +405,596 @@
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
   
-  <!-- Notification Styles -->
+  <!-- Messaging Styles -->
   <style>
+  /* Messaging Button Styles */
+  .messaging-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .messaging-btn:hover {
+    background-color: rgba(79, 129, 199, 0.1);
+  }
+  
+  .messaging-btn .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+  }
+  
+  .messaging-btn .badge.hidden {
+    display: none;
+  }
+
+  /* Count Circle for Sidebar */
+  .count-circle {
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+  }
+  
+  .count-circle.hidden {
+    display: none;
+  }
+
+  /* Messaging Panel Styles */
+  .messaging-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .messaging-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .messaging-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .messaging-panel.active {
+    right: 0;
+  }
+
+  .messaging-panel-header {
+    background: #4f81c7;
+    color: white;
+    padding: 20px;
+    border-bottom: 1px solid #e1e8ed;
+  }
+  
+  .messaging-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .messaging-header-content h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .close-messaging-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .close-messaging-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .messaging-search-container {
+    position: relative;
+  }
+  
+  .messaging-search-box {
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .search-icon {
+    width: 16px;
+    height: 16px;
+    color: #666;
+  }
+  
+  .messaging-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .messaging-search-input::placeholder {
+    color: #666;
+  }
+
+  .messaging-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1001;
+    display: none;
+    margin-top: 8px;
+  }
+  
+  .messaging-search-results.active {
+    display: block;
+  }
+
+  .messaging-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .messaging-section {
+    padding: 20px;
+  }
+  
+  .messaging-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 15px 0;
+  }
+
+  .messaging-conversations {
+    /* Remove max-height to allow full expansion */
+  }
+  
+  .messaging-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+  }
+  
+  .messaging-empty-state i {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
+    color: #ccc;
+  }
+  
+  .messaging-empty-state p {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 5px 0;
+  }
+  
+  .messaging-empty-state span {
+    font-size: 14px;
+    color: #999;
+  }
+
+  /* Search Result Items */
+  .messaging-search-result-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .messaging-search-result-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .messaging-search-result-item:last-child {
+    border-bottom: none;
+  }
+  
+  .messaging-search-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f81c7, #667eea);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  
+  .messaging-search-details {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .messaging-search-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 2px;
+  }
+  
+  .messaging-search-info {
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* Conversation Items */
+  .messaging-conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    gap: 12px;
+  }
+  
+  .messaging-conversation-item:hover {
+    background-color: #f8f9fa;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: -8px;
+    margin-right: -8px;
+    border-radius: 8px;
+  }
+  
+  .messaging-conversation-item:last-child {
+    border-bottom: none;
+  }
+  
+  .messaging-conversation-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f81c7, #667eea);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  
+  .messaging-conversation-avatar.online::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #2ed573;
+    border: 2px solid white;
+    border-radius: 50%;
+  }
+  
+  .messaging-conversation-details {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .messaging-conversation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  
+  .messaging-conversation-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+  }
+  
+  .messaging-conversation-time {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .messaging-conversation-preview {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .messaging-conversation-preview.unread {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .messaging-conversation-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .messaging-unread-badge {
+    background: #4f81c7;
+    color: white;
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sidebar Quick Messaging Styles */
+  .sidebar-quick-search {
+    padding: 10px 15px;
+  }
+  
+  .sidebar-quick-search .form-control-sm {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+  }
+  
+  .sidebar-search-results {
+    position: absolute;
+    top: 100%;
+    left: 15px;
+    right: 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    margin-top: 5px;
+  }
+  
+  .sidebar-search-results.active {
+    display: block;
+  }
+  
+  .sidebar-search-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sidebar-search-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .sidebar-search-item:last-child {
+    border-bottom: none;
+  }
+  
+  .sidebar-search-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #4f81c7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  
+  .sidebar-search-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .sidebar-search-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 1px;
+  }
+  
+  .sidebar-search-details {
+    font-size: 10px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .sidebar-conversations {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 0 15px;
+  }
+  
+  .sidebar-conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+    gap: 8px;
+  }
+  
+  .sidebar-conversation-item:hover {
+    background-color: #f8f9fa;
+    margin: 0 -8px;
+    padding: 8px 8px;
+    border-radius: 6px;
+  }
+  
+  .sidebar-conversation-item:last-child {
+    border-bottom: none;
+  }
+  
+  .sidebar-conversation-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #4f81c7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 12px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  
+  .sidebar-conversation-avatar.online::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 10px;
+    height: 10px;
+    background: #2ed573;
+    border: 2px solid white;
+    border-radius: 50%;
+  }
+  
+  .sidebar-conversation-details {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .sidebar-conversation-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 2px;
+  }
+  
+  .sidebar-conversation-preview {
+    font-size: 11px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .sidebar-conversation-preview.unread {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .sidebar-conversation-unread {
+    background: #4f81c7;
+    color: white;
+    border-radius: 50%;
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sidebar-empty-conversations {
+    padding: 15px 0;
+    text-align: center;
+    color: #666;
+    font-size: 11px;
+  }
+  
+  .view-all-messages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4f81c7 !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .view-all-messages:hover {
+    color: #3d6bb3 !important;
+    background-color: rgba(79, 129, 199, 0.1);
+  }
+  
+  .view-all-messages i {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Notification Styles */
   .unread-count {
       position: absolute;
       top: 3px;
@@ -362,6 +1048,14 @@
   .notifications-menu > a {
       position: relative !important;
       display: inline-block !important;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .messaging-panel {
+      width: 100%;
+      right: -100%;
+    }
   }
   </style>
   
@@ -498,6 +1192,520 @@
           }
       });
   }
+  </script>
+  
+  <!-- TextBox Vue Component -->
+  <div id="textbox-app">
+    <text-box></text-box>
+  </div>
+
+  <!-- Vue.js and App Scripts -->
+  <script src="{{ mix('js/app.js') }}"></script>
+  
+  <!-- Messaging Integration Scripts -->
+  <script>
+    // Message count updates
+    let searchTimeout;
+    let currentStudentChat = null;
+    let messagingPanelOpen = false;
+
+    // Laravel and session variables
+    window.Laravel = {
+      sessionUserId: 'STUDENT',
+      currentStudentIc: '{{ Auth::user()->ic ?? "" }}'
+    };
+
+    // Initialize messaging functionality
+    function initializeMessaging() {
+      // Main messaging panel search
+      const searchInput = document.getElementById('messaging-student-search');
+      const searchResults = document.getElementById('messaging-search-results');
+      
+      // Sidebar quick search
+      const sidebarSearchInput = document.getElementById('sidebar-student-search');
+      const sidebarSearchResults = document.getElementById('sidebar-search-results');
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          const query = this.value.trim();
+          
+          if (query.length < 2) {
+            searchResults.classList.remove('active');
+            // Restore original conversations when search is cleared
+            loadStudentConversations();
+            return;
+          }
+          
+          // Hide dropdown since we're showing results in main area
+          searchResults.classList.remove('active');
+          
+          searchTimeout = setTimeout(() => {
+            searchStudents(query);
+          }, 300);
+        });
+        
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.remove('active');
+          }
+          
+          // Also handle sidebar search results
+          if (sidebarSearchInput && sidebarSearchResults && 
+              !sidebarSearchInput.contains(e.target) && !sidebarSearchResults.contains(e.target)) {
+            sidebarSearchResults.classList.remove('active');
+          }
+        });
+      }
+      
+      // Sidebar search functionality
+      if (sidebarSearchInput) {
+        sidebarSearchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          const query = this.value.trim();
+          
+          if (query.length < 2) {
+            sidebarSearchResults.classList.remove('active');
+            return;
+          }
+          
+          searchTimeout = setTimeout(() => {
+            searchStudentsForSidebar(query);
+          }, 300);
+        });
+      }
+      
+      // Load existing conversations
+      loadStudentConversations();
+      loadSidebarConversations();
+    
+      // Set up periodic refresh for conversations
+      setInterval(() => {
+        // Only refresh if not actively searching
+        const searchInput = document.getElementById('messaging-student-search');
+        const hasActiveSearch = searchInput && searchInput.value.trim().length >= 2;
+        
+        if (messagingPanelOpen && !hasActiveSearch) {
+          loadStudentConversations();
+        }
+        loadSidebarConversations();
+      }, 5000);
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && messagingPanelOpen) {
+          toggleMessagingPanel();
+        }
+      });
+    }
+
+    // Toggle messaging panel
+    function toggleMessagingPanel() {
+      const panel = document.getElementById('messaging-panel');
+      const overlay = document.getElementById('messaging-overlay');
+      
+      messagingPanelOpen = !messagingPanelOpen;
+      
+      if (messagingPanelOpen) {
+        panel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loadStudentConversations();
+      } else {
+        panel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        const searchInput = document.getElementById('messaging-student-search');
+        const searchResults = document.getElementById('messaging-search-results');
+        if (searchInput) searchInput.value = '';
+        if (searchResults) searchResults.classList.remove('active');
+      }
+    }
+
+    function searchStudents(query) {
+      fetch('/all/student/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ search: query })
+      })
+      .then(response => response.json())
+      .then(students => {
+        const conversationsContainer = document.getElementById('messaging-conversations');
+        
+        if (!conversationsContainer) {
+          console.error('messaging-conversations container not found!');
+          return;
+        }
+        
+        if (students.length === 0) {
+          conversationsContainer.innerHTML = `
+            <div class="messaging-empty-state">
+              <i data-feather="search"></i>
+              <p>No students found</p>
+              <span>Try a different search term</span>
+            </div>
+          `;
+        } else {
+          conversationsContainer.innerHTML = students.map(student => `
+            <div class="messaging-conversation-item" onclick="startStudentChat('${student.ic}', '${student.name}')">
+              <div class="messaging-conversation-avatar">
+                ${student.name.charAt(0).toUpperCase()}
+              </div>
+              <div class="messaging-conversation-details">
+                <div class="messaging-conversation-header">
+                  <div class="messaging-conversation-name">${student.name}</div>
+                </div>
+                <div class="messaging-conversation-preview">
+                  ${student.email}
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+        
+        // Re-initialize feather icons
+        if (window.feather) {
+          feather.replace();
+        }
+      })
+      .catch(error => {
+        console.error('Error searching students:', error);
+      });
+    }
+    
+    function searchStudentsForSidebar(query) {
+      fetch('/all/student/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ search: query })
+      })
+      .then(response => response.json())
+      .then(students => {
+        const searchResults = document.getElementById('sidebar-search-results');
+        
+        if (students.length === 0) {
+          searchResults.innerHTML = '<div class="sidebar-search-item">No students found</div>';
+        } else {
+          searchResults.innerHTML = students.map(student => `
+            <div class="sidebar-search-item" onclick="startStudentChatFromSidebar('${student.ic}', '${student.name}')">
+              <div class="sidebar-search-avatar">
+                ${student.name.charAt(0).toUpperCase()}
+              </div>
+              <div class="sidebar-search-info">
+                <div class="sidebar-search-name">${student.name}</div>
+                <div class="sidebar-search-details">${student.email}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+        
+        searchResults.classList.add('active');
+      })
+      .catch(error => {
+        console.error('Error searching students:', error);
+      });
+    }
+    
+    function startStudentChat(studentIc, studentName) {
+      const searchResults = document.getElementById('messaging-search-results');
+      const searchInput = document.getElementById('messaging-student-search');
+      if (searchResults) searchResults.classList.remove('active');
+      if (searchInput) searchInput.value = '';
+      
+      toggleMessagingPanel();
+      
+      if (window.textBoxComponent) {
+        currentStudentChat = studentIc;
+        window.textBoxComponent.openStudentChat(studentIc, studentName);
+      }
+    }
+    
+    function startStudentChatFromSidebar(studentIc, studentName) {
+      const sidebarSearchResults = document.getElementById('sidebar-search-results');
+      const sidebarSearchInput = document.getElementById('sidebar-student-search');
+      if (sidebarSearchResults) sidebarSearchResults.classList.remove('active');
+      if (sidebarSearchInput) sidebarSearchInput.value = '';
+      
+      if (window.textBoxComponent) {
+        currentStudentChat = studentIc;
+        window.textBoxComponent.openStudentChat(studentIc, studentName);
+      }
+    }
+
+    function loadStudentConversations() {
+      fetch('/all/student/conversations')
+        .then(response => response.json())
+        .then(conversations => {
+          const container = document.getElementById('messaging-conversations');
+          
+          if (conversations.length === 0) {
+            container.innerHTML = `
+              <div class="messaging-empty-state">
+                <i data-feather="message-square"></i>
+                <p>No conversations yet</p>
+                <span>Search for students to start chatting!</span>
+              </div>
+            `;
+          } else {
+            container.innerHTML = conversations.map(conv => {
+              const lastMessage = conv.last_message;
+              const student = conv.student;
+              const unreadCount = conv.unread_count;
+              
+              const messageTime = lastMessage && lastMessage.datetime ? 
+                new Date(lastMessage.datetime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+              
+              let messagePreview = 'No messages yet';
+              if (lastMessage) {
+                if (lastMessage.message && lastMessage.message.trim()) {
+                  messagePreview = lastMessage.message;
+                } else if (lastMessage.image_url) {
+                  messagePreview = '📷 Photo';
+                }
+              }
+              
+              return `
+                <div class="messaging-conversation-item" onclick="startStudentChat('${student.ic}', '${student.name}')">
+                  <div class="messaging-conversation-avatar online">
+                    ${student.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div class="messaging-conversation-details">
+                    <div class="messaging-conversation-header">
+                      <div class="messaging-conversation-name">${student.name}</div>
+                      <div class="messaging-conversation-time">${messageTime}</div>
+                    </div>
+                    <div class="messaging-conversation-preview ${unreadCount > 0 ? 'unread' : ''}">
+                      ${messagePreview}
+                    </div>
+                  </div>
+                  <div class="messaging-conversation-meta">
+                    ${unreadCount > 0 ? `<div class="messaging-unread-badge">${unreadCount}</div>` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+          
+          if (window.feather) {
+            feather.replace();
+          }
+          
+          const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+          const countElement = document.getElementById('total-student-messages-count');
+          if (totalUnread > 0) {
+            countElement.textContent = totalUnread;
+            countElement.classList.remove('hidden');
+          } else {
+            countElement.classList.add('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading conversations:', error);
+        });
+    }
+    
+    function loadSidebarConversations() {
+      fetch('/all/student/conversations')
+        .then(response => response.json())
+        .then(conversations => {
+          const container = document.getElementById('sidebar-recent-conversations');
+          
+          if (conversations.length === 0) {
+            container.innerHTML = `
+              <div class="sidebar-empty-conversations">
+                No recent conversations
+              </div>
+            `;
+          } else {
+            const recentConversations = conversations.slice(0, 3);
+            
+            container.innerHTML = recentConversations.map(conv => {
+              const lastMessage = conv.last_message;
+              const student = conv.student;
+              const unreadCount = conv.unread_count;
+              
+              let messagePreview = 'No messages yet';
+              if (lastMessage) {
+                if (lastMessage.message && lastMessage.message.trim()) {
+                  messagePreview = lastMessage.message;
+                } else if (lastMessage.image_url) {
+                  messagePreview = '📷 Photo';
+                }
+              }
+              
+              return `
+                <div class="sidebar-conversation-item" onclick="startStudentChatFromSidebar('${student.ic}', '${student.name}')">
+                  <div class="sidebar-conversation-avatar online">
+                    ${student.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div class="sidebar-conversation-details">
+                    <div class="sidebar-conversation-name">${student.name}</div>
+                    <div class="sidebar-conversation-preview ${unreadCount > 0 ? 'unread' : ''}">
+                      ${messagePreview}
+                    </div>
+                  </div>
+                  ${unreadCount > 0 ? `<div class="sidebar-conversation-unread">${unreadCount}</div>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+          
+          const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
+          const sidebarCountElement = document.getElementById('sidebar-student-messages-count');
+          if (totalUnread > 0) {
+            sidebarCountElement.textContent = totalUnread;
+            sidebarCountElement.classList.remove('hidden');
+          } else {
+            sidebarCountElement.classList.add('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading sidebar conversations:', error);
+        });
+    }
+
+    // Load teachers and setup messaging
+    function loadTeachers() {
+      fetch('/all/getTeachersList')
+        .then(response => response.json())
+        .then(teachers => {
+          const teacherMenu = document.getElementById('teacher-messages-menu');
+          if (teachers.length === 0) {
+            teacherMenu.innerHTML = `
+              <li>
+                <div style="padding: 10px 15px; text-align: center; color: #666;">
+                  No teachers available
+                </div>
+              </li>
+            `;
+            return;
+          }
+          
+          let menuHtml = '';
+          teachers.forEach(teacher => {
+            menuHtml += `
+              <li>
+                <a href="#" onclick="getMessage('${teacher.ic}', '${teacher.ic}')" class="teacher-message-link">
+                  ${teacher.name}
+                  <span id="teacher-count-${teacher.ic}" class="count-circle hidden">0</span>
+                </a>
+              </li>
+            `;
+          });
+          
+          teacherMenu.innerHTML = menuHtml;
+          
+          // Update message counts for each teacher
+          teachers.forEach(teacher => {
+            updateTeacherMessageCount(teacher.ic);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading teachers:', error);
+          const teacherMenu = document.getElementById('teacher-messages-menu');
+          teacherMenu.innerHTML = `
+            <li>
+              <div style="padding: 10px 15px; text-align: center; color: #dc3545;">
+                Error loading teachers
+              </div>
+            </li>
+          `;
+        });
+    }
+
+    function updateTeacherMessageCount(teacherIc) {
+      fetch(`/all/massage/user/countMessage?type=${teacherIc}`)
+        .then(response => response.json())
+        .then(data => {
+          const count = data.count;
+          const element = document.getElementById(`teacher-count-${teacherIc}`);
+          
+          if (element) {
+            if (count === 0) {
+              element.classList.add('hidden');
+            } else {
+              element.classList.remove('hidden');
+              element.innerText = count;
+            }
+          }
+        })
+        .catch(error => console.error('Error updating teacher message count:', error));
+    }
+
+    function updateAllTeacherMessageCounts() {
+      // Get all teacher message count elements and update them
+      const teacherCountElements = document.querySelectorAll('[id^="teacher-count-"]');
+      let totalTeacherMessages = 0;
+      
+      teacherCountElements.forEach(element => {
+        const teacherIc = element.id.replace('teacher-count-', '');
+        fetch(`/all/massage/user/countMessage?type=${teacherIc}`)
+          .then(response => response.json())
+          .then(data => {
+            const count = data.count;
+            
+            if (count === 0) {
+              element.classList.add('hidden');
+            } else {
+              element.classList.remove('hidden');
+              element.innerText = count;
+              totalTeacherMessages += count;
+            }
+            
+            // Update total count
+            const totalElement = document.getElementById('total-teacher-messages-count');
+            if (totalTeacherMessages === 0) {
+              totalElement.classList.add('hidden');
+            } else {
+              totalElement.classList.remove('hidden');
+              totalElement.innerText = totalTeacherMessages;
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      });
+    }
+
+    // Function to open messages with specific user types for students
+    function openDepartmentMessage(departmentType) {
+      const event = new CustomEvent('message-requested', {
+        detail: {
+          ic: departmentType,
+          messageType: departmentType
+        }
+      });
+      window.dispatchEvent(event);
+    }
+
+    // Global function to trigger messaging (for backward compatibility)
+    function getMessage(ic, type = null) {
+      const event = new CustomEvent('message-requested', {
+        detail: {
+          ic: ic,
+          messageType: type || ic
+        }
+      });
+      window.dispatchEvent(event);
+    }
+
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeMessaging();
+      
+      // Load teachers and setup messaging
+      loadTeachers();
+      
+      // Update teacher message counts periodically
+      setInterval(() => {
+        updateAllTeacherMessageCounts();
+      }, 5000); // Check every 5 seconds instead of 1 second for better performance
+    });
   </script>
   
   @yield('content')
