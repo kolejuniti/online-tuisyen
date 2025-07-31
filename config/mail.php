@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp2go'),
+    'default' => env('MAIL_MAILER', 'mailjet'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,6 +56,17 @@ return [
             'encryption' => env('SMTP2GO_ENCRYPTION', 'tls'),
             'username' => env('SMTP2GO_USERNAME'),
             'password' => env('SMTP2GO_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+        ],
+
+        'mailjet' => [
+            'transport' => 'smtp',
+            'host' => env('MAILJET_HOST', 'in-v3.mailjet.com'),
+            'port' => env('MAILJET_PORT', 587),
+            'encryption' => env('MAILJET_ENCRYPTION', 'tls'),
+            'username' => env('MAILJET_API_KEY'),
+            'password' => env('MAILJET_SECRET_KEY'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
