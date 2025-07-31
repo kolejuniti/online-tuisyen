@@ -34,11 +34,18 @@ MAIL_FROM_NAME="Online Tuition Platform"
 
 ### Alternative Port Options
 
-If port 587 doesn't work, try these alternatives:
+If port 587 doesn't work, try these alternatives (especially for live servers):
 
-- `MAILJET_PORT=25` (TLS)
-- `MAILJET_PORT=2525` (TLS)
+- `MAILJET_PORT=25` (TLS) - Often blocked by hosting providers
+- `MAILJET_PORT=2525` (TLS) - **RECOMMENDED for shared hosting**
 - `MAILJET_PORT=465` (SSL - change `MAILJET_ENCRYPTION=ssl`)
+- `MAILJET_PORT=588` (TLS) - Alternative port, less commonly blocked
+
+**For live servers experiencing timeouts, try port 2525 first:**
+```env
+MAILJET_PORT=2525
+MAILJET_ENCRYPTION=tls
+```
 
 ## Step 3: Replace SMTP2GO Configuration
 
@@ -97,11 +104,45 @@ When a student application is approved (individual or bulk), the system will aut
 
 ### Common Issues:
 
-1. **Email not sending**: Check your Mailjet API credentials
-2. **Authentication failed**: Verify API Key and Secret Key are correct
-3. **Domain not verified**: Complete domain verification in Mailjet dashboard
-4. **Rate limiting**: Check your Mailjet account limits
-5. **Wrong sender address**: Update `MAIL_FROM_ADDRESS` in `.env`
+1. **Gateway Timeout on Live Server**: Most common cause is blocked SMTP ports
+   - Try port 2525: `MAILJET_PORT=2525`
+   - Or port 588: `MAILJET_PORT=588`
+   - Contact your hosting provider if all ports are blocked
+
+2. **Email not sending**: Check your Mailjet API credentials
+3. **Authentication failed**: Verify API Key and Secret Key are correct
+4. **Domain not verified**: Complete domain verification in Mailjet dashboard
+5. **Rate limiting**: Check your Mailjet account limits
+6. **Wrong sender address**: Update `MAIL_FROM_ADDRESS` in `.env`
+
+### Live Server Gateway Timeout Fix
+
+If you're getting "Gateway Timeout" errors on your live server:
+
+1. **Run the troubleshooting script** (upload `email_timeout_troubleshooting.php` to your server):
+   ```bash
+   php email_timeout_troubleshooting.php
+   ```
+
+2. **Try alternative ports** in your `.env` file:
+   ```env
+   # Option 1 (most compatible with shared hosting):
+   MAILJET_PORT=2525
+   MAILJET_ENCRYPTION=tls
+   
+   # Option 2 (alternative):
+   MAILJET_PORT=588
+   MAILJET_ENCRYPTION=tls
+   
+   # Option 3 (SSL):
+   MAILJET_PORT=465
+   MAILJET_ENCRYPTION=ssl
+   ```
+
+3. **Clear cache and test**:
+   ```bash
+   php artisan config:clear
+   ```
 
 ### Error Logging
 
