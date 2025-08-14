@@ -227,7 +227,7 @@
               </li>
 
               <li>
-                <a href="#">
+                <a href="{{ route('student.settings.edit') }}">
                   <i data-feather="settings"></i><span>Settings</span>
                 </a>
               </li>
@@ -331,7 +331,7 @@
             
             <div>
               <div class="col-sm-12 d-flex justify-content-center">
-                <a href="#" type="button" class="waves-effect waves-light btn btn-secondary btn-rounded mb-5" style="margin-right:10px;">
+                <a href="{{ route('student.settings.edit') }}" type="button" class="waves-effect waves-light btn btn-secondary btn-rounded mb-5" style="margin-right:10px;">
                   <i class="mdi mdi-account-edit"></i> Edit
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;" id="logout-form">

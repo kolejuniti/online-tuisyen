@@ -231,6 +231,8 @@ Route::middleware(['auth:student'])->group(function () {
     Route::get('/student/subjects', [App\Http\Controllers\Student\SubjectController::class, 'index'])->name('student.subjects.index');
     Route::post('/student/subjects/filter', [App\Http\Controllers\Student\SubjectController::class, 'getCourseList']);
 
+    Route::get('/student/settings', [App\Http\Controllers\Student\SettingController::class, 'edit'])->name('student.settings.edit');
+    Route::put('/student/settings', [App\Http\Controllers\Student\SettingController::class, 'update'])->name('student.settings.update');
 
 
     Route::get('/student/{id}', [App\Http\Controllers\Student\SummaryController::class, 'show'])->name('student.subjects.show');
@@ -287,7 +289,7 @@ Route::middleware(['auth:student'])->group(function () {
         Route::get('/for-layout', [App\Http\Controllers\Student\NotificationController::class, 'getForLayout'])->name('for-layout');
     });
 
-    
+    // Student Settings Routes
 
 });
 
