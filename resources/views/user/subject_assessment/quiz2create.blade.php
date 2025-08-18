@@ -130,6 +130,17 @@ div.form-actions.btn-group > button{
                                                     <th></th>
                                                     </thead>
                                                     <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <label>Select All</label>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-check pull-right">
+                                                                <input type="checkbox" id="select-all-groups" class="form-check-input">
+                                                                <label class="form-check-label" for="select-all-groups"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                     @foreach ($group as $grp)
                                                         <tr>
                                                             <td>
@@ -144,6 +155,17 @@ div.form-actions.btn-group > button{
                                                             </td>
                                                         </tr>
                                                     @endforeach
+                                                    <tr>
+                                                        <td>
+                                                            <label>Deselect All</label>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-check pull-right">
+                                                                <input type="checkbox" id="deselect-all-groups" class="form-check-input">
+                                                                <label class="form-check-label" for="deselect-all-groups"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -236,6 +258,28 @@ function getChapters(folder)
 }
 </script>
 
+<script>
+$(document).ready(function(){
+    // Select All groups
+    $(document).on('change', '#select-all-groups', function(){
+        var isChecked = $(this).is(':checked');
+        $('input[name="group[]"]').prop('checked', isChecked);
+    });
 
+    // Deselect All groups
+    $(document).on('change', '#deselect-all-groups', function(){
+        $('input[name="group[]"]').prop('checked', false);
+        $('#select-all-groups').prop('checked', false);
+        $(this).prop('checked', false);
+    });
+
+    // Keep Select All checkbox in sync
+    $(document).on('change', 'input[name="group[]"]', function(){
+        var total = $('input[name="group[]"]').length;
+        var checked = $('input[name="group[]"]:checked').length;
+        $('#select-all-groups').prop('checked', total > 0 && checked === total);
+    });
+});
+</script>
 
 @stop
