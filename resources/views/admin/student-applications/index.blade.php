@@ -226,12 +226,10 @@
 
 <form id="bulk-approve-form" action="{{ route('admin.student-applications.bulk-approve') }}" method="POST" style="display: none;">
     @csrf
-    <input type="hidden" name="application_ids" id="bulk-approve-ids">
 </form>
 
 <form id="bulk-reject-form" action="{{ route('admin.student-applications.bulk-reject') }}" method="POST" style="display: none;">
     @csrf
-    <input type="hidden" name="application_ids" id="bulk-reject-ids">
 </form>
 
 @endsection
@@ -579,8 +577,12 @@
                 confirmButtonText: 'Yes, approve them!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#bulk-approve-ids').val(JSON.stringify(checkedIds));
-                    $('#bulk-approve-form').submit();
+                    var $form = $('#bulk-approve-form');
+                    $form.find('input[name="application_ids[]"]').remove();
+                    checkedIds.forEach(function(id) {
+                        $form.append($('<input>', { type: 'hidden', name: 'application_ids[]', value: id }));
+                    });
+                    $form.submit();
                 }
             });
         });
@@ -603,8 +605,12 @@
                 confirmButtonText: 'Yes, reject them!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#bulk-reject-ids').val(JSON.stringify(checkedIds));
-                    $('#bulk-reject-form').submit();
+                    var $form = $('#bulk-reject-form');
+                    $form.find('input[name="application_ids[]"]').remove();
+                    checkedIds.forEach(function(id) {
+                        $form.append($('<input>', { type: 'hidden', name: 'application_ids[]', value: id }));
+                    });
+                    $form.submit();
                 }
             });
         });
