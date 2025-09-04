@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class StudentApprovalMail extends Mailable
+class StudentPasswordCorrectionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,7 +29,7 @@ class StudentApprovalMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome! Your Student Account Has Been Approved',
+            subject: 'Correction: Your Online Tuition Account Password',
         );
     }
 
@@ -39,12 +39,12 @@ class StudentApprovalMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.student-approval',
+            view: 'emails.student-password-correction',
             with: [
                 'studentName' => $this->student->name,
                 'schoolName' => $this->student->school->name ?? 'N/A',
                 'username' => $this->student->email,
-                'password' => '12345678', // As requested by user
+                'password' => '12345678',
                 'loginUrl' => route('login'),
             ]
         );
@@ -59,4 +59,6 @@ class StudentApprovalMail extends Mailable
     {
         return [];
     }
-} 
+}
+
+
