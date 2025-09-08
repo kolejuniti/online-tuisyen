@@ -754,7 +754,7 @@
                                                     <input type="text" class="form-control rename-input" id="test-{{ $key }}" 
                                                         value="{{ basename($mats) }}"> 
                                                     <div class="input-group-append ms-2">
-                                                        <button class="btn btn-floating" type="button" onclick="renameFile('{{ basename($mats)}}','{{ $key }}','{{ pathinfo(storage_path($mats), PATHINFO_EXTENSION); }}')">
+                                                        <button class="btn btn-floating" type="button" onclick="renameFile('{{ basename($mats)}}','{{ $key }}','{{ pathinfo(storage_path($mats), PATHINFO_EXTENSION) }}')">
                                                             <i class="fa fa-check text-success"></i>
                                                         </button>
                                                         <button class="btn btn-floating ms-1" data-bs-toggle="collapse" 
@@ -768,21 +768,57 @@
                                     </div>
                                     @endforeach
 
-                                    <!-- YouTube Videos -->
+                                    <!-- Video/Link Cards -->
                                     @if($url != null)
                                         @foreach($url as $key => $ul)
                                             @php
-                                                $originalURL = $ul->url;
-                                                $search = 'https://www.youtube.com/watch?v=';
-                                                $replace = 'https://www.youtube.com/embed/';
-                                                $newURL = str_replace($search, $replace, $originalURL);
+                                                $originalURL = trim($ul->url);
+                                                $embedURL = null;
+                                                $host = parse_url($originalURL, PHP_URL_HOST) ?? '';
+                                                $lowerHost = strtolower($host);
+
+                                                // YouTube: support watch and youtu.be
+                                                if (strpos($lowerHost, 'youtube.com') !== false || strpos($lowerHost, 'youtu.be') !== false) {
+                                                    if (preg_match('/youtu\.be\/([A-Za-z0-9_-]+)/', $originalURL, $m)) {
+                                                        $videoId = $m[1];
+                                                        $embedURL = 'https://www.youtube.com/embed/' . $videoId;
+                                                    } else {
+                                                        $embedURL = str_replace('watch?v=', 'embed/', $originalURL);
+                                                    }
+                                                }
+
+                                                // Google Drive: convert to preview URL
+                                                if ($embedURL === null && strpos($lowerHost, 'drive.google.com') !== false) {
+                                                    if (preg_match('/\/file\/d\/([^\/]+)/', $originalURL, $m)) {
+                                                        $fileId = $m[1];
+                                                        $embedURL = 'https://drive.google.com/file/d/' . $fileId . '/preview';
+                                                    } elseif (preg_match('/[?&]id=([^&]+)/', $originalURL, $m)) {
+                                                        $fileId = $m[1];
+                                                        $embedURL = 'https://drive.google.com/file/d/' . $fileId . '/preview';
+                                                    }
+                                                }
+
+                                                // Google Meet: cannot be embedded; will show open button instead
+                                                $isMeet = ($embedURL === null && (strpos($lowerHost, 'meet.google.com') !== false));
                                             @endphp
                                             <div class="col-md-3 col-sm-6 mb-4">
                                                 <div class="video-card material-card-visible" style="opacity: 1; transform: translateY(0); background-color: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 16px; overflow: hidden; border: none;">
+                                                    @if($embedURL)
                                                     <div class="video-container">
-                                                        <iframe src="{{ $newURL }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                        <iframe src="{{ $embedURL }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                                         <div class="video-overlay"></div>
                                                     </div>
+                                                    @else
+                                                    <div class="text-center p-4">
+                                                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 6h2v5h-2V8zm0 6h2v2h-2v-2z" fill="#4cc9f0"/>
+                                                        </svg>
+                                                        <h5 class="content-name">Open Link</h5>
+                                                        <a href="{{ $originalURL }}" target="_blank" class="btn btn-info-floating" data-bs-toggle="tooltip" title="Open in new tab">
+                                                            <i class="fa fa-external-link"></i>
+                                                        </a>
+                                                    </div>
+                                                    @endif
                                                     <div class="video-actions">
                                                         <button type="button" class="btn btn-info-floating" id="infoButton{{ $key }}" data-bs-toggle="tooltip" title="View Description">
                                                             <i class="fa fa-info"></i>
