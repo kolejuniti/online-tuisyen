@@ -90,8 +90,7 @@ class StudentRegistrationController extends Controller
     {
         $search = $request->get('q');
         
-        $schools = School::where('status', 'inactive')
-                        ->where('name', 'LIKE', "%{$search}%")
+        $schools = School::where('name', 'LIKE', "%{$search}%")
                         ->orderBy('name')
                         ->limit(20)
                         ->get(['id', 'name']);
