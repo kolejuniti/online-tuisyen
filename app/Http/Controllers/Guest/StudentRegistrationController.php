@@ -18,8 +18,7 @@ class StudentRegistrationController extends Controller
     public function show()
     {
         // Get all active schools for the dropdown
-        $schools = School::where('status', 'inactive')
-                        ->orderBy('name')
+        $schools = School::orderBy('name')
                         ->get(['id', 'name']);
         
         return view('guest.individual.register', compact('schools'));
