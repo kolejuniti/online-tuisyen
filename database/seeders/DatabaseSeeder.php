@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
         Student::create([
             'name' => 'Student User',
             'email' => 'student@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
             'school_id' => $school->id,
             'ic' => '000000000000', // Adding a dummy IC number
             'status' => 'active',

@@ -608,6 +608,53 @@ body {
   color: #b91c1c;
 }
 
+/* Field-specific error messages */
+.field-error-message {
+  background: rgba(254, 226, 226, 0.9);
+  color: #b91c1c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  border-left: 3px solid #dc2626;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.field-error-message i {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Invalid input styling */
+.form-control.is-invalid {
+  border: 2px solid #dc2626 !important;
+  background: rgba(254, 226, 226, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2) !important;
+}
+
+.form-control.is-invalid + .input-icon {
+  color: #dc2626 !important;
+}
+
 /* Toggle Password */
 .toggle-password {
   position: absolute;
@@ -835,11 +882,15 @@ body {
     
     <div class="login-body">
       <!-- Error Container -->
-      <div class="error-container" id="errorContainer" style="display: none;">
+      @if ($errors->any())
+      <div class="error-container" id="errorContainer">
         <ul id="errorList">
-          <!-- Error messages will be added here dynamically -->
+          @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+          @endforeach
         </ul>
       </div>
+      @endif
       
       <!-- Teacher Login Form -->
       <div class="tab-content active" id="userContent">
@@ -848,16 +899,22 @@ body {
           <input type="hidden" name="login_type" value="user">
           
           <div class="form-group form-floating">
-            <input type="email" name="email" class="form-control" id="userEmail" placeholder=" " required>
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder=" " required value="{{ old('email') }}">
             <div class="input-icon">
               <i class="fas fa-envelope"></i>
             </div>
             <label for="userEmail">Email address</label>
             <div class="focus-indicator"></div>
+            @error('email')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
           </div>
           
           <div class="form-group form-floating">
-            <input type="password" name="password" class="form-control" id="userPassword" placeholder=" " required>
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="userPassword" placeholder=" " required>
             <div class="input-icon">
               <i class="fas fa-lock"></i>
             </div>
@@ -867,6 +924,12 @@ body {
             <div class="password-strength">
               <div class="password-strength-bar" id="userPasswordStrength"></div>
             </div>
+            @error('password')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
           </div>
           
           <div class="form-options">
@@ -894,16 +957,22 @@ body {
           <input type="hidden" name="login_type" value="student">
           
           <div class="form-group form-floating">
-            <input type="email" name="email" class="form-control" id="studentEmail" placeholder=" " required>
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="studentEmail" placeholder=" " required value="{{ old('email') }}">
             <div class="input-icon">
               <i class="fas fa-id-card"></i>
             </div>
             <label for="studentEmail">Email address</label>
             <div class="focus-indicator"></div>
+            @error('email')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
           </div>
           
           <div class="form-group form-floating">
-            <input type="password" name="password" class="form-control" id="studentPassword" placeholder=" " required>
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="studentPassword" placeholder=" " required>
             <div class="input-icon">
               <i class="fas fa-lock"></i>
             </div>
@@ -913,6 +982,12 @@ body {
             <div class="password-strength">
               <div class="password-strength-bar" id="studentPasswordStrength"></div>
             </div>
+            @error('password')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
           </div>
           
           <div class="form-options">
@@ -973,6 +1048,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize any error messages present in the session
   renderErrorMessages();
+  
+  // Handle form errors - show correct tab based on login_type
+  handleFormErrors();
   
   // Restore emails after all initialization is complete
   setTimeout(() => {
@@ -1690,6 +1768,52 @@ function renderErrorMessages() {
     } else {
       errorContainer.style.display = 'none';
     }
+  }
+}
+
+// Handle form errors and show correct tab
+function handleFormErrors() {
+  // Check if there are validation errors
+  const hasErrors = document.querySelector('.field-error-message') || document.querySelector('.error-container');
+  
+  if (hasErrors) {
+    // Get the old login_type from Laravel's old() helper
+    const oldLoginType = '{{ old("login_type") }}';
+    
+    if (oldLoginType === 'student') {
+      // Switch to student tab
+      const studentTab = document.getElementById('studentTab');
+      const userTab = document.getElementById('userTab');
+      const tabSlider = document.getElementById('tabSlider');
+      const userContent = document.getElementById('userContent');
+      const studentContent = document.getElementById('studentContent');
+      
+      // Update tab appearance
+      tabSlider.classList.add('right');
+      studentTab.classList.add('active');
+      userTab.classList.remove('active');
+      
+      // Switch content
+      userContent.classList.remove('active');
+      studentContent.classList.add('active');
+      
+      // Update hidden input value for future submissions
+      const hiddenInput = document.querySelector('input[name="login_type"]');
+      if (hiddenInput) {
+        hiddenInput.value = 'student';
+      }
+    }
+    
+    // Add error animation to field error messages
+    document.querySelectorAll('.field-error-message').forEach(errorMsg => {
+      errorMsg.animate([
+        { opacity: 0, transform: 'translateY(-10px)' },
+        { opacity: 1, transform: 'translateY(0)' }
+      ], {
+        duration: 400,
+        easing: 'ease-out'
+      });
+    });
   }
 }
 

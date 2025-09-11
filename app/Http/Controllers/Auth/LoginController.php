@@ -26,6 +26,21 @@ class LoginController extends Controller
         $guard = $request->input('login_type') === 'user' ? 'web' : 'student';
         $remember = $request->boolean('remember'); // Get the remember checkbox value
 
+        // Check if email exists in the respective user table
+        if ($guard === 'web') {
+            $user = \App\Models\User::where('email', $credentials['email'])->first();
+        } else {
+            $user = \App\Models\Student::where('email', $credentials['email'])->first();
+        }
+
+        if (!$user) {
+            // Email doesn't exist in the system
+            $userType = $request->input('login_type') === 'user' ? 'teacher' : 'student';
+            throw ValidationException::withMessages([
+                'email' => ["This email address is not registered as a {$userType} account."],
+            ]);
+        }
+
         if (Auth::guard($guard)->attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
@@ -41,8 +56,9 @@ class LoginController extends Controller
             }
         }
 
+        // Email exists but password is wrong
         throw ValidationException::withMessages([
-            'email' => [trans('auth.failed')],
+            'password' => ['The password you entered is incorrect.'],
         ]);
     }
 
