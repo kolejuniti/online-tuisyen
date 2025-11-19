@@ -647,7 +647,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span data-key="contact.phone">+60 12-345 6789</span>
+                        <span data-key="contact.phone">+60 12-317 3853</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock"></i>
