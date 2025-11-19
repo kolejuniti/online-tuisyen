@@ -701,7 +701,7 @@
                 
                 // Contact info
                 'contact.email': 'etuition@uniti.edu.my',
-                'contact.phone': '+60 12-345 6789',
+                'contact.phone': '+60 12-317 3853',
                 'contact.support': 'Sokongan Waktu Bekerja (9-5)'
             },
             en: {
@@ -738,7 +738,7 @@
                 
                 // Contact info
                 'contact.email': 'etuition@uniti.edu.my',
-                'contact.phone': '+60 12-345 6789',
+                'contact.phone': '+60 12-317 3853',
                 'contact.support': 'Business Hours Support (9-5)'
             }
         };
