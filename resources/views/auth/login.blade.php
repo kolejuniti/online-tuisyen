@@ -168,6 +168,7 @@ body {
   margin-bottom: 1.5rem;
   transform: scale(1);
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-wrap: wrap;
 }
 
 .logo-container:hover {
@@ -212,6 +213,7 @@ body {
   font-weight: 700;
   line-height: 1;
   position: relative;
+  white-space: nowrap;
 }
 
 .logo-text span {
@@ -377,7 +379,7 @@ body {
 .input-icon {
   position: absolute;
   left: 22px;
-  top: 50%;
+  top: 27px;
   transform: translateY(-50%);
   font-size: 1.2rem;
   color: var(--primary);
@@ -585,48 +587,30 @@ body {
   left: 100%;
 }
 
-/* Error Message */
-.error-container {
-  background: rgba(254, 226, 226, 0.7);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 1.5rem;
-  border-left: 4px solid #dc2626;
-  backdrop-filter: blur(4px);
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
-
-.error-container ul {
-  margin: 0;
-  padding-left: 1.5rem;
-  color: #b91c1c;
-}
-
 /* Field-specific error messages */
 .field-error-message {
-  background: rgba(254, 226, 226, 0.9);
+  background: rgba(254, 226, 226, 0.95);
   color: #b91c1c;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-radius: 8px;
   font-size: 0.85rem;
-  margin-top: 8px;
+  margin-top: 10px;
   border-left: 3px solid #dc2626;
   backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 8px;
   animation: slideIn 0.3s ease-out;
+  line-height: 1.4;
+  word-break: break-word;
+  position: relative;
+  z-index: 1;
 }
 
 .field-error-message i {
   font-size: 0.9rem;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 @keyframes slideIn {
@@ -659,7 +643,7 @@ body {
 .toggle-password {
   position: absolute;
   right: 20px;
-  top: 50%;
+  top: 27px;
   transform: translateY(-50%);
   color: var(--primary);
   cursor: pointer;
@@ -735,33 +719,106 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments - Tablet */
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  .login-container {
+    max-width: 90%;
+  }
+
+  .login-header {
+    padding: 2rem 2rem 1.25rem;
+  }
+
+  .login-body {
+    padding: 0 2rem 2rem;
+  }
+
+  .logo-container {
+    gap: 12px;
+  }
+
+  .logo-img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .logo-img:first-child {
+    width: 90px;
+    height: 58px;
+  }
+
+  .logo-text {
+    font-size: 1.9rem;
+  }
+
+  .partnership-text {
+    font-size: 0.8rem;
+  }
+
+  .welcome-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-switcher {
+    max-width: 320px;
+  }
+
+  .tab-btn {
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+}
+
+/* Responsive adjustments - Mobile */
 @media (max-width: 576px) {
   body {
     padding: 1rem;
   }
 
   .login-container {
-    max-width: 95%;
+    max-width: 100%;
+    border-radius: 12px;
   }
 
-  .login-header, .login-body {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+  .login-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .login-body {
+    padding: 0 1.5rem 1.5rem;
   }
 
   .form-control {
-    padding-left: 50px;
+    padding: 12px 18px 12px 50px;
+    font-size: 0.95rem;
   }
 
   .form-floating label {
     left: 50px;
+    font-size: 0.9rem;
+  }
+
+  .input-icon {
+    left: 18px;
+    top: 24px;
+    font-size: 1.1rem;
+  }
+
+  .toggle-password {
+    right: 18px;
+    top: 24px;
   }
 
   .form-options {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .forgot-link {
@@ -770,27 +827,185 @@ body {
 
   /* Mobile logo adjustments */
   .logo-container {
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 1rem;
   }
 
   .logo-img {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
   }
 
   .logo-img:first-child {
-    width: 70px;
-    height: 45px;
+    width: 75px;
+    height: 48px;
   }
 
   .logo-text {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
+  }
+
+  .partnership-text {
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
   }
 
   .welcome-text {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .tab-switcher {
+    max-width: 100%;
     margin-bottom: 1.5rem;
+  }
+
+  .tab-btn {
+    font-size: 0.85rem;
+    padding: 10px 0;
+  }
+
+  .submit-btn {
+    padding: 13px 18px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mobile error message styling */
+  .field-error-message {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    gap: 6px;
+  }
+
+  .field-error-message i {
+    font-size: 0.85rem;
+  }
+}
+
+/* Responsive adjustments - Small Mobile */
+@media (max-width: 400px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  .login-container {
+    border-radius: 10px;
+  }
+
+  .login-header {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .login-body {
+    padding: 0 1rem 1.25rem;
+  }
+
+  /* Stack logo elements vertically on very small screens */
+  .logo-container {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 5px;
+  }
+
+  .logo-img:first-child {
+    width: 60px;
+    height: 40px;
+  }
+
+  .logo-text {
+    font-size: 1.4rem;
+  }
+
+  .partnership-text {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .welcome-text {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .tab-switcher {
+    padding: 4px;
+    margin-bottom: 1.25rem;
+  }
+
+  .tab-btn {
+    font-size: 0.8rem;
+    padding: 8px 0;
+  }
+
+  .form-control {
+    padding: 11px 16px 11px 45px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .form-floating label {
+    left: 45px;
+    font-size: 0.85rem;
+    top: 12px;
+  }
+
+  .input-icon {
+    left: 16px;
+    top: 21px;
+    font-size: 1rem;
+  }
+
+  .toggle-password {
+    right: 14px;
+    top: 21px;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-options {
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-check-label {
+    font-size: 0.8rem;
+  }
+
+  .forgot-link {
+    font-size: 0.8rem;
+  }
+
+  .submit-btn {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  /* Small mobile error message styling */
+  .field-error-message {
+    padding: 7px 10px;
+    font-size: 0.75rem;
+    margin-top: 6px;
+    gap: 5px;
+    border-radius: 6px;
+  }
+
+  .field-error-message i {
+    font-size: 0.8rem;
   }
 }
 
@@ -881,17 +1096,6 @@ body {
     </div>
     
     <div class="login-body">
-      <!-- Error Container -->
-      @if ($errors->any())
-      <div class="error-container" id="errorContainer">
-        <ul id="errorList">
-          @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-      @endif
-      
       <!-- Teacher Login Form -->
       <div class="tab-content active" id="userContent">
         <form action="{{ route('login') }}" method="post" id="userForm">
@@ -1744,37 +1948,28 @@ function showRememberMessage(message, type = 'info') {
   }, 4000);
 }
 
-// Handle error messages from server
+// Handle error messages from server - animate field-specific error messages
 function renderErrorMessages() {
-  const errorContainer = document.getElementById('errorContainer');
-  const errorList = document.getElementById('errorList');
+  const fieldErrors = document.querySelectorAll('.field-error-message');
   
-  // Check if there are error messages in the session
-  if (errorContainer && errorList) {
-    if (errorList.children.length > 0) {
-      errorContainer.style.display = 'block';
-      
-      // Add shake animation
-      errorContainer.animate([
-        { transform: 'translateX(0)' },
-        { transform: 'translateX(-5px)' },
-        { transform: 'translateX(5px)' },
-        { transform: 'translateX(-5px)' },
-        { transform: 'translateX(0)' }
-      ], {
-        duration: 500,
-        easing: 'ease-in-out'
-      });
-    } else {
-      errorContainer.style.display = 'none';
-    }
-  }
+  // Animate any field-specific error messages
+  fieldErrors.forEach((errorMsg, index) => {
+    errorMsg.animate([
+      { opacity: 0, transform: 'translateY(-10px)' },
+      { opacity: 1, transform: 'translateY(0)' }
+    ], {
+      duration: 400,
+      delay: index * 100,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  });
 }
 
 // Handle form errors and show correct tab
 function handleFormErrors() {
   // Check if there are validation errors
-  const hasErrors = document.querySelector('.field-error-message') || document.querySelector('.error-container');
+  const hasErrors = document.querySelector('.field-error-message');
   
   if (hasErrors) {
     // Get the old login_type from Laravel's old() helper
