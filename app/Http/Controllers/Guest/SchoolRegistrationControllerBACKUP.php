@@ -101,23 +101,6 @@ class SchoolRegistrationController extends Controller
     }
 
     /**
-     * Display the registration success page
-     * This is a separate route that doesn't require authentication
-     */
-    public function showSuccess()
-    {
-        // If no success message, redirect to auth
-        if (!Session::has('success')) {
-            return redirect()->route('school.auth');
-        }
-        
-        Log::info("Displaying registration success page");
-        $schools = collect(); // Empty collection, not needed for success page
-        $authenticatedCoordinator = null;
-        return view('guest.school.register', compact('schools', 'authenticatedCoordinator'));
-    }
-
-    /**
      * Handle the school registration form submission
      */
     public function submit(Request $request)
@@ -210,20 +193,16 @@ class SchoolRegistrationController extends Controller
 
             DB::commit();
 
+            // Clear the authentication session after successful registration
+            Session::forget('authenticated_coordinator');
+
             $message = "Registration submitted successfully! School has been activated";
             if ($studentsCreated > 0) {
                 $message .= " and {$studentsCreated} students have been added";
             }
             $message .= ". You will receive a confirmation email shortly.";
 
-            // Clear the authentication session after successful registration
-            Session::forget('authenticated_coordinator');
-            
-            // Save session explicitly to ensure changes are persisted
-            Session::save();
-
-            // Use redirect with chained with() to properly flash success message
-            return redirect()->route('school.register.success')->with('success', $message);
+            return redirect()->back()->with('success', $message);
 
         } catch (\Exception $e) {
             DB::rollBack();

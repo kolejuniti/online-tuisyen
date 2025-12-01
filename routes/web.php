@@ -5,6 +5,15 @@ use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail; // Added for testing email
 
+// {
+//   "mcpServers": {
+//     "playwright-server": {
+//       "command": "node",
+//       "args": ["C:\\MCP\\playwright-server\\mcp-server.js"]
+//     }
+//   }
+// }
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,6 +39,9 @@ Route::prefix('school')->name('school.')->group(function () {
     
     // Handle school registration form submission
     Route::post('/register', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'submit'])->name('register.submit');
+    
+    // Registration success page (no authentication required)
+    Route::get('/register/success', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'showSuccess'])->name('register.success');
     
     // AJAX endpoint for school search
     Route::get('/search', [App\Http\Controllers\Guest\SchoolRegistrationController::class, 'searchSchools'])->name('search');

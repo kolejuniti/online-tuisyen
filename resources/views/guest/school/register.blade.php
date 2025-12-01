@@ -3,1205 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Registration - Online Tuition Platform</title>
+    <title>Pendaftaran Sekolah - Platform E-Tuisyen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="{{ asset('css/student-friendly.css') }}" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        
-        :root {
-            --primary-color: #6366f1;
-            --secondary-color: #4f46e5;
-            --accent-color: #8b5cf6;
-            --success-color: #06d6a0;
-            --warning-color: #ffd60a;
-            --danger-color: #ef476f;
-            --light-bg: #fefefe;
-            --dark-text: #0f172a;
-            --gray-text: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --shadow-light: 0 8px 32px rgba(99, 102, 241, 0.1);
-            --shadow-medium: 0 12px 40px rgba(99, 102, 241, 0.15);
-            --shadow-heavy: 0 20px 60px rgba(99, 102, 241, 0.2);
+        /* Page-specific styles for school registration */
+        .sf-progress-container {
+            background: linear-gradient(135deg, var(--sf-sky-light), rgba(189, 224, 254, 0.3));
+            padding: 2.5rem 1rem;
+            border-bottom: 2px dashed var(--sf-sky-medium);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.2) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.8));
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #ffffff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            opacity: 0.95;
-            margin-bottom: 3rem;
-            font-weight: 400;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-features {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .hero-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .hero-feature i {
-            color: #ffd60a;
-        }
-
-        .main-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin: -3rem auto 3rem;
-            border-radius: 24px;
-            box-shadow: var(--shadow-heavy);
-            overflow: hidden;
-            max-width: 1200px;
-            position: relative;
-        }
-
-        .notification-container {
-            max-width: 1200px;
-            margin: -1rem auto 0;
-            padding: 0 1rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .main-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            pointer-events: none;
-        }
-
-        .progress-bar-container {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            padding: 2rem 1rem;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-            position: relative;
-        }
-
-        .progress-bar-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 600px;
+        .sf-progress-container .sf-progress-steps {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            max-width: 700px;
             margin: 0 auto;
             position: relative;
+            gap: 0 !important;
         }
 
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* Connecting line behind all steps */
+        .sf-progress-container .sf-progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 2px;
+            background: #d1d5db;
+            z-index: 1;
+        }
+
+        .sf-progress-container .sf-progress-steps .sf-step {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
             position: relative;
             flex: 1;
             z-index: 2;
+            max-width: 180px;
+            width: auto !important;
+            height: auto !important;
+            background: transparent !important;
+            border-radius: 0 !important;
         }
 
-        .step-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
+        .sf-progress-container .sf-step-circle {
+            width: 56px !important;
+            height: 56px !important;
+            border-radius: 50% !important;
+            background: white !important;
+            border: 2px solid #d1d5db !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: 700 !important;
+            font-size: 1.25rem !important;
+            color: #9ca3af !important;
             margin-bottom: 0.75rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 3px solid white;
-            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             position: relative;
             z-index: 10;
         }
 
-        .step.active .step-circle {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            transform: scale(1.15);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-            z-index: 15;
+        .sf-progress-container .sf-step.active .sf-step-circle {
+            background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
+            color: white !important;
+            border-color: #7c3aed !important;
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
         }
 
-        .step.completed .step-circle {
-            background: linear-gradient(135deg, var(--success-color), #059669);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(6, 214, 160, 0.3);
-            z-index: 15;
+        .sf-progress-container .sf-step.completed .sf-step-circle {
+            background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
+            color: white !important;
+            border-color: #7c3aed !important;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
         }
 
-        .step-label {
+        .sf-progress-container .sf-step-label {
             font-weight: 600;
-            color: var(--gray-text);
-            font-size: 0.9rem;
+            color: #6b7280;
+            font-size: 0.875rem;
             text-align: center;
             transition: all 0.3s ease;
+            line-height: 1.3;
         }
 
-        .step.active .step-label {
-            color: var(--primary-color);
+        .sf-progress-container .sf-step.active .sf-step-label {
+            color: #7c3aed;
             font-weight: 700;
         }
 
-        .step.completed .step-label {
-            color: var(--success-color);
-            font-weight: 700;
+        .sf-progress-container .sf-step.completed .sf-step-label {
+            color: #7c3aed;
         }
 
-        .step-line {
-            position: absolute;
-            top: 30px;
-            left: calc(50% + 30px);
-            width: calc(100% - 60px);
-            height: 3px;
-            background: linear-gradient(90deg, #e2e8f0, #cbd5e1);
-            z-index: 1;
-            border-radius: 3px;
-        }
-
-        .step.completed .step-line {
-            background: linear-gradient(90deg, var(--success-color), #059669);
-            z-index: 1;
-        }
-
-        .step:last-child .step-line {
+        /* Form sections */
+        .sf-form-section {
             display: none;
+            opacity: 0;
         }
 
-        .form-section {
-            padding: 3rem 2.5rem;
-            display: none;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(248, 250, 252, 0.05));
-        }
-
-        .form-section.active {
+        .sf-form-section.active {
             display: block;
-            animation: fadeInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 1;
+            animation: sf-fadeUp 0.5s ease forwards;
         }
 
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark-text);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-description {
-            color: var(--gray-text);
-            margin-bottom: 2.5rem;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-
-        .form-group {
+        /* Feature highlight boxes */
+        .sf-feature-box {
+            background: var(--sf-sky-light);
+            border: 2px solid var(--sf-sky-medium);
+            border-left: 5px solid var(--sf-ocean-bright);
+            border-radius: var(--sf-radius-lg);
+            padding: 1.75rem;
             margin-bottom: 2rem;
         }
 
-        .form-label {
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 0.75rem;
+        .sf-feature-box.sf-green {
+            background: rgba(167, 232, 200, 0.15);
+            border-color: var(--sf-mint-soft);
+            border-left-color: var(--sf-mint-fresh);
+        }
+
+        .sf-feature-box-title {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            letter-spacing: 0.025em;
-        }
-
-        .required {
-            color: var(--danger-color);
-            font-weight: 700;
-        }
-
-        .form-control {
-            border: 2px solid rgba(226, 232, 240, 0.8);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            font-weight: 500;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 4px 20px rgba(99, 102, 241, 0.1);
-            outline: none;
-            background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-1px);
-        }
-
-        .form-control:hover:not(:focus) {
-            border-color: rgba(99, 102, 241, 0.5);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .btn-custom {
-            padding: 1rem 2.5rem;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 1rem;
-            border: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-flex;
-            align-items: center;
             gap: 0.75rem;
-            text-decoration: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.025em;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--sf-text-dark);
+            margin-bottom: 1rem;
         }
 
-        .btn-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
+        .sf-feature-box-title i {
+            font-size: 1.3rem;
         }
 
-        .btn-custom:hover::before {
-            left: 100%;
+        .sf-feature-box.sf-green .sf-feature-box-title i {
+            color: var(--sf-mint-fresh);
         }
 
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary-custom:hover {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-outline-custom {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-outline-custom:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .upload-area {
-            border: 3px dashed rgba(203, 213, 225, 0.8);
-            border-radius: 20px;
-            padding: 4rem 2rem;
+        /* Upload area */
+        .sf-upload-area {
+            border: 3px dashed var(--sf-sky-medium);
+            border-radius: var(--sf-radius-xl);
+            padding: 3rem 2rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.6));
-            backdrop-filter: blur(10px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(135deg, rgba(232, 244, 252, 0.5), rgba(189, 224, 254, 0.2));
+            transition: var(--sf-transition-smooth);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
 
-        .upload-area::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .sf-upload-area:hover {
+            border-color: var(--sf-ocean-bright);
+            background: linear-gradient(135deg, rgba(91, 164, 230, 0.08), rgba(189, 224, 254, 0.15));
+            transform: translateY(-3px);
+            box-shadow: var(--sf-shadow-md);
         }
 
-        .upload-area:hover {
-            border-color: var(--primary-color);
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.05));
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+        .sf-upload-area.dragover {
+            border-color: var(--sf-mint-fresh);
+            background: rgba(167, 232, 200, 0.15);
+            transform: translateY(-5px) scale(1.01);
         }
 
-        .upload-area:hover::before {
-            opacity: 1;
+        .sf-upload-icon {
+            font-size: 3.5rem;
+            color: var(--sf-ocean-bright);
+            margin-bottom: 1rem;
         }
 
-        .upload-area.dragover {
-            border-color: var(--primary-color);
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.08));
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.2);
+        .sf-upload-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--sf-text-dark);
+            margin-bottom: 0.5rem;
         }
 
-        .upload-icon {
-            font-size: 4rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* Template download box */
+        .sf-template-download {
+            background: linear-gradient(135deg, var(--sf-mint-fresh), var(--sf-mint-deep));
+            color: white;
+            padding: 1.75rem;
+            border-radius: var(--sf-radius-xl);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(107, 203, 158, 0.3);
+        }
+
+        .sf-template-download h5 {
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .sf-template-download p {
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        /* Student card */
+        .sf-student-card {
+            background: white;
+            border: 2px solid var(--sf-sky-medium);
+            border-radius: var(--sf-radius-xl);
+            padding: 1.75rem;
             margin-bottom: 1.5rem;
             position: relative;
-            z-index: 2;
+            box-shadow: var(--sf-shadow-sm);
+            transition: var(--sf-transition-normal);
         }
 
-        .student-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.8));
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(226, 232, 240, 0.5);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .student-card::before {
+        .sf-student-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            border-radius: 20px 20px 0 0;
+            background: linear-gradient(90deg, var(--sf-ocean-bright), var(--sf-mint-fresh));
+            border-radius: var(--sf-radius-xl) var(--sf-radius-xl) 0 0;
         }
 
-        .student-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.3);
+        .sf-student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--sf-shadow-md);
+            border-color: var(--sf-ocean-soft);
         }
 
-        .student-card h5 {
-            color: var(--dark-text);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
+        .sf-student-card-title {
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            font-weight: 700;
+            color: var(--sf-text-dark);
+            margin-bottom: 1.25rem;
         }
 
-        .student-card h5 i {
-            color: var(--primary-color);
-            font-size: 1.2rem;
+        .sf-student-card-title i {
+            color: var(--sf-ocean-bright);
         }
 
-        .remove-student {
+        .sf-remove-student {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            background: linear-gradient(135deg, var(--sf-danger), #dc4545);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(239, 71, 111, 0.3);
+            transition: var(--sf-transition-normal);
+            box-shadow: 0 4px 10px rgba(239, 107, 107, 0.3);
         }
 
-        .remove-student:hover {
+        .sf-remove-student:hover {
             transform: scale(1.1) rotate(90deg);
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            box-shadow: 0 6px 20px rgba(239, 71, 111, 0.4);
+            box-shadow: 0 6px 15px rgba(239, 107, 107, 0.4);
         }
 
-        .navigation-buttons {
+        /* Navigation buttons */
+        .sf-nav-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem 2rem;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
+            background: var(--sf-sky-light);
+            border-top: 2px dashed var(--sf-sky-medium);
         }
 
-        .template-download {
-            background: linear-gradient(135deg, var(--success-color), #059669);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(6, 214, 160, 0.3);
-        }
-
-        .template-download::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-            pointer-events: none;
-        }
-
-        .template-download h5 {
-            position: relative;
-            z-index: 2;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-        }
-
-        .template-download p {
-            position: relative;
-            z-index: 2;
-            opacity: 0.9;
-        }
-
-        .template-download .btn {
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature-highlight {
-            background: linear-gradient(135deg, rgba(221, 214, 254, 0.8), rgba(224, 231, 255, 0.6));
-            backdrop-filter: blur(10px);
-            border: none;
-            border-left: 6px solid var(--primary-color);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-highlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.03));
-            pointer-events: none;
-        }
-
-        .feature-highlight h4 {
-            color: var(--dark-text);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .feature-highlight p {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Enhanced animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInFromLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        /* Floating animation for hero features */
-        .hero-feature:nth-child(1) { animation: float 6s ease-in-out infinite; }
-        .hero-feature:nth-child(2) { animation: float 6s ease-in-out infinite 1.5s; }
-        .hero-feature:nth-child(3) { animation: float 6s ease-in-out infinite 3s; }
-        .hero-feature:nth-child(4) { animation: float 6s ease-in-out infinite 4.5s; }
-
-        /* Mobile responsiveness */
-        @media (max-width: 1024px) {
-            .main-container {
-                margin: -2rem 1rem 2rem;
-            }
-            
-            .notification-container {
-                margin: -0.5rem auto 0;
-                padding: 0 1rem;
-            }
-            
-            .form-section {
-                padding: 2rem 1.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.8rem;
-                line-height: 1.2;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .hero-features {
-                flex-direction: column;
-                gap: 1rem;
-                max-width: 300px;
-                margin: 2rem auto 0;
-            }
-
-            .hero-feature {
-                justify-content: center;
-                padding: 1rem 1.5rem;
-            }
-            
-            .notification-container {
-                margin: 0 auto 0;
-                padding: 0 0.5rem;
-            }
-            
-            .progress-steps {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            
-            .step-line {
-                display: none;
-            }
-
-            .step-circle {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .navigation-buttons {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1.5rem;
-            }
-
-            .form-section {
-                padding: 2rem 1rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .main-container {
-                margin: -2rem 0.5rem 2rem;
-                border-radius: 20px;
-            }
-
-            .student-card {
-                padding: 1.5rem;
-            }
-
-            .upload-area {
-                padding: 3rem 1rem;
-            }
-
-            .upload-icon {
-                font-size: 3rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 2.2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .btn-custom {
-                padding: 0.875rem 2rem;
-                font-size: 0.9rem;
-            }
-
-            .form-section {
-                padding: 1.5rem 0.75rem;
-            }
-
-            .template-download,
-            .feature-highlight {
-                padding: 1.5rem;
-            }
-
-            .excel-data-table .table thead th {
-                padding: 0.5rem 0.25rem;
-                font-size: 0.75rem;
-            }
-
-            .excel-data-table .table tbody td {
-                padding: 0.5rem 0.25rem;
-                font-size: 0.75rem;
-                max-width: 80px;
-            }
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background: white !important;
-                color: black !important;
-                font-family: Arial, sans-serif !important;
-                font-size: 12pt !important;
-                line-height: 1.4 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            body::before {
-                display: none !important;
-            }
-
-            .hero-section,
-            .language-switcher,
-            .action-buttons,
-            .loading-overlay {
-                display: none !important;
-            }
-
-            .container {
-                max-width: 100% !important;
-                margin: 0 !important;
-                padding: 20pt !important;
-            }
-
-            .main-container {
-                background: white !important;
-                box-shadow: none !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-                padding: 20pt !important;
-            }
-
-            .success-container {
-                padding: 0 !important;
-            }
-
-            .success-icon i {
-                color: #28a745 !important;
-                font-size: 48pt !important;
-            }
-
-            .success-title {
-                color: black !important;
-                font-size: 24pt !important;
-                margin: 20pt 0 !important;
-                text-align: center !important;
-            }
-
-            .alert {
-                background: #f8f9fa !important;
-                border: 1px solid #28a745 !important;
-                color: black !important;
-                padding: 15pt !important;
-                margin: 15pt 0 !important;
-                border-radius: 0 !important;
-            }
-
-            .success-details .row {
-                display: block !important;
-            }
-
-            .success-details .col-md-4 {
-                width: 100% !important;
-                margin-bottom: 15pt !important;
-                page-break-inside: avoid !important;
-            }
-
-            .success-step {
-                border: 1px solid #dee2e6 !important;
-                padding: 15pt !important;
-                margin-bottom: 10pt !important;
-            }
-
-            .success-step .step-icon i {
-                font-size: 18pt !important;
-                color: black !important;
-            }
-
-            .success-step h5 {
-                color: black !important;
-                font-size: 14pt !important;
-                margin: 10pt 0 5pt 0 !important;
-            }
-
-            .success-step p {
-                color: #666 !important;
-                font-size: 10pt !important;
-                margin: 0 !important;
-            }
-
-            .next-steps {
-                background: #f8f9fa !important;
-                border: 1px solid #dee2e6 !important;
-                padding: 15pt !important;
-                margin: 20pt 0 !important;
-                page-break-inside: avoid !important;
-            }
-
-            .next-steps h4 {
-                color: black !important;
-                font-size: 16pt !important;
-                margin-bottom: 10pt !important;
-            }
-
-            .next-steps ul {
-                margin: 0 !important;
-                padding-left: 20pt !important;
-            }
-
-            .next-steps li {
-                margin-bottom: 8pt !important;
-                font-size: 11pt !important;
-            }
-
-            .next-steps i {
-                color: black !important;
-            }
-
-            .contact-info {
-                background: #f8f9fa !important;
-                border: 1px solid #dee2e6 !important;
-                padding: 15pt !important;
-                margin: 15pt 0 !important;
-                page-break-inside: avoid !important;
-            }
-
-            .contact-info h6 {
-                color: black !important;
-                font-size: 14pt !important;
-                margin-bottom: 10pt !important;
-            }
-
-            .contact-info p {
-                color: black !important;
-                font-size: 11pt !important;
-                margin: 5pt 0 !important;
-            }
-
-            .print-header {
-                display: block !important;
-                text-align: center !important;
-                margin-bottom: 30pt !important;
-                padding-bottom: 15pt !important;
-                border-bottom: 2px solid #333 !important;
-            }
-
-            .print-date {
-                display: block !important;
-                text-align: right !important;
-                font-size: 10pt !important;
-                color: #666 !important;
-                margin-bottom: 20pt !important;
-            }
-
-            .print-section {
-                margin-bottom: 25pt !important;
-                page-break-inside: avoid-page !important;
-                break-inside: avoid !important;
-            }
-
-            .print-section-title {
-                color: black !important;
-                font-size: 16pt !important;
-                font-weight: bold !important;
-                margin-bottom: 10pt !important;
-                padding-bottom: 5pt !important;
-                border-bottom: 1px solid #ccc !important;
-                page-break-after: avoid !important;
-                break-after: avoid !important;
-            }
-
-            /* Page break rules */
-            .page-break-before {
-                page-break-before: always !important;
-                break-before: page !important;
-            }
-
-            .page-break-after {
-                page-break-after: always !important;
-                break-after: page !important;
-            }
-
-            .no-page-break {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            /* Table page break handling */
-            table {
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-            }
-
-            thead {
-                display: table-header-group !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            tbody {
-                display: table-row-group !important;
-            }
-
-            tr {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            th, td {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            /* Specific section breaks */
-            .registration-details-section {
-                page-break-after: avoid !important;
-                break-after: avoid !important;
-            }
-
-            .student-section {
-                page-break-before: auto !important;
-                break-before: auto !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            .student-table-container {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                margin-bottom: 20pt !important;
-            }
-
-            .notes-section {
-                page-break-before: auto !important;
-                break-before: auto !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            .submission-details {
-                display: block !important;
-            }
-
-            .detail-row {
-                display: flex !important;
-                justify-content: space-between !important;
-                margin-bottom: 8pt !important;
-                font-size: 11pt !important;
-            }
-
-            .detail-label {
-                font-weight: bold !important;
-                color: black !important;
-            }
-
-            .detail-value {
-                color: #333 !important;
-            }
-
-            /* Hide screen-only elements */
-            .screen-only {
-                display: none !important;
-            }
-
-            /* Show print-only elements */
-            .print-only {
-                display: block !important;
-            }
-        }
-
-        /* Select2 Custom Styling */
-        .select2-container--default .select2-selection--single {
-            border: 2px solid rgba(226, 232, 240, 0.8) !important;
-            border-radius: 12px !important;
-            padding: 1rem 1.25rem !important;
-            font-size: 1rem !important;
-            height: auto !important;
-            background: rgba(255, 255, 255, 0.8) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        }
-
-        .select2-container--default.select2-container--focus .select2-selection--single {
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 4px 20px rgba(99, 102, 241, 0.1) !important;
-            outline: none !important;
-            background: rgba(255, 255, 255, 0.95) !important;
-            transform: translateY(-1px);
-        }
-
-        .select2-container--default .select2-selection--single:hover:not(.select2-container--focus .select2-selection--single) {
-            border-color: rgba(99, 102, 241, 0.5) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: var(--dark-text) !important;
-            line-height: 1.5 !important;
-            padding: 0 !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--gray-text) !important;
-        }
-
-        .select2-dropdown {
-            border: 2px solid rgba(99, 102, 241, 0.3) !important;
-            border-radius: 12px !important;
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px) !important;
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15) !important;
-        }
-
-        .select2-results__option {
-            padding: 0.75rem 1rem !important;
-            font-weight: 500 !important;
-            transition: all 0.2s ease !important;
-        }
-
-        .select2-results__option--highlighted {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color)) !important;
-            color: white !important;
-        }
-
-        .select2-search--dropdown .select2-search__field {
-            border: 2px solid rgba(226, 232, 240, 0.8) !important;
-            border-radius: 8px !important;
-            padding: 0.5rem !important;
-            margin: 0.5rem !important;
-            width: calc(100% - 1rem) !important;
-        }
-
-        .select2-search--dropdown .select2-search__field:focus {
-            border-color: var(--primary-color) !important;
-            outline: none !important;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loading-spinner {
+        /* Excel data table */
+        .sf-excel-table {
             background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        /* Alert messages styling */
-        .alert {
-            border-radius: 15px;
-            margin-bottom: 1.5rem;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .alert-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border-left: 4px solid #047857;
-        }
-
-        .alert-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border-left: 4px solid #b91c1c;
-        }
-
-        .alert .btn-close {
-            filter: invert(1);
-        }
-
-        /* Excel Data Table Styles */
-        .excel-data-table {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+            border-radius: var(--sf-radius-lg);
+            box-shadow: var(--sf-shadow-md);
             overflow: hidden;
             margin-top: 1rem;
         }
 
-        .excel-data-table .table {
+        .sf-excel-table .table {
             margin: 0;
         }
 
-        .excel-data-table .table thead th {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        .sf-excel-table .table thead th {
+            background: linear-gradient(135deg, var(--sf-ocean-bright), var(--sf-ocean-soft));
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             border: none;
-            padding: 1rem 0.75rem;
-            font-size: 0.9rem;
+            padding: 0.875rem 0.75rem;
+            font-size: 0.85rem;
             text-align: center;
             white-space: nowrap;
         }
 
-        .excel-data-table .table tbody td {
-            padding: 0.75rem;
-            border-color: rgba(226, 232, 240, 0.5);
+        .sf-excel-table .table tbody td {
+            padding: 0.65rem 0.75rem;
+            border-color: var(--sf-sky-light);
             font-size: 0.85rem;
             vertical-align: middle;
             max-width: 150px;
@@ -1210,139 +319,308 @@
             white-space: nowrap;
         }
 
-        .excel-data-table .table tbody tr:nth-child(odd) {
-            background-color: rgba(248, 250, 252, 0.8);
+        .sf-excel-table .table tbody tr:nth-child(odd) {
+            background: var(--sf-cream-soft);
         }
 
-        .excel-data-table .table tbody tr:hover {
-            background-color: rgba(99, 102, 241, 0.08);
-            transform: translateY(-1px);
-            transition: all 0.2s ease;
+        .sf-excel-table .table tbody tr:hover {
+            background: rgba(91, 164, 230, 0.08);
         }
 
-        .data-summary {
-            background: linear-gradient(135deg, var(--success-color), #059669);
+        .sf-data-summary {
+            background: linear-gradient(135deg, var(--sf-mint-fresh), var(--sf-mint-deep));
             color: white;
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            border-radius: var(--sf-radius-md);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-        }
-
-        .data-summary i {
-            font-size: 1.2rem;
-        }
-
-        /* Language Switcher Styles */
-        .language-switcher {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            z-index: 100;
-        }
-
-        .language-selector {
-            display: flex;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            padding: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .language-option {
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            color: rgba(255, 255, 255, 0.8);
             font-weight: 600;
+        }
+
+        /* Success section styles */
+        .sf-success-container {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .sf-success-icon {
+            font-size: 5rem;
+            color: var(--sf-mint-fresh);
+            margin-bottom: 1.5rem;
+            animation: sf-bounce-gentle 2s ease-in-out infinite;
+        }
+
+        .sf-success-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--sf-text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .sf-success-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+
+        .sf-success-step {
+            background: white;
+            border-radius: var(--sf-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--sf-shadow-sm);
+            border: 2px solid var(--sf-sky-light);
+            transition: var(--sf-transition-normal);
+        }
+
+        .sf-success-step:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--sf-shadow-md);
+        }
+
+        .sf-success-step-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .sf-success-step:nth-child(1) .sf-success-step-icon { color: var(--sf-ocean-bright); }
+        .sf-success-step:nth-child(2) .sf-success-step-icon { color: var(--sf-mint-fresh); }
+        .sf-success-step:nth-child(3) .sf-success-step-icon { color: var(--sf-sunshine); }
+
+        .sf-success-step h5 {
+            font-weight: 700;
+            color: var(--sf-text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .sf-success-step p {
             font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color: var(--sf-text-soft);
+            margin: 0;
+        }
+
+        .sf-next-steps {
+            background: var(--sf-sky-light);
+            border-radius: var(--sf-radius-lg);
+            padding: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+            border: 2px solid var(--sf-sky-medium);
+        }
+
+        .sf-next-steps h4 {
+            font-weight: 700;
+            color: var(--sf-text-dark);
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .language-option.active {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--primary-color);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .sf-next-steps ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .language-option:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+        .sf-next-steps li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--sf-text-warm);
+            font-weight: 500;
         }
 
+        .sf-next-steps li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Loading overlay */
+        .sf-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .sf-loading-spinner {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--sf-radius-xl);
+            text-align: center;
+            box-shadow: var(--sf-shadow-xl);
+        }
+
+        .sf-loading-spinner .spinner-border {
+            color: var(--sf-ocean-bright);
+            width: 3rem;
+            height: 3rem;
+        }
+
+        /* Verified badge */
+        .sf-verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--sf-mint-soft);
+            color: var(--sf-mint-deep);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--sf-radius-full);
+            margin-left: 0.5rem;
+        }
+
+        .sf-readonly-input {
+            background-color: var(--sf-sky-light) !important;
+            color: var(--sf-ocean-deep) !important;
+            font-weight: 600 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white !important; }
+            .sf-bg-pattern, .sf-floating-shapes, .sf-hero, .sf-language-switcher, .sf-nav-buttons, .sf-loading-overlay { display: none !important; }
+            .sf-main-container { box-shadow: none !important; border: 1px solid #ccc !important; margin: 0 !important; }
+            .print-only { display: block !important; }
+            .screen-only { display: none !important; }
+        }
+
+        .print-only { display: none; }
+
+        /* Mobile responsive */
         @media (max-width: 768px) {
-            .language-switcher {
-                top: 1rem;
-                right: 1rem;
+            .sf-progress-container .sf-progress-steps {
+                flex-direction: row !important;
+                justify-content: center !important;
+                gap: 0 !important;
+                padding: 0 1rem;
             }
 
-            .language-selector {
-                padding: 0.25rem;
+            .sf-progress-container .sf-progress-steps::before {
+                width: 50%;
+                top: 22px;
             }
 
-            .language-option {
-                padding: 0.375rem 0.75rem;
-                font-size: 0.8rem;
+            .sf-progress-container .sf-progress-steps .sf-step {
+                max-width: 110px;
+            }
+
+            .sf-progress-container .sf-step-circle {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1rem !important;
+            }
+
+            .sf-progress-container .sf-step-label {
+                font-size: 0.75rem;
+            }
+
+            .sf-nav-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .sf-success-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sf-progress-container .sf-progress-steps::before {
+                width: 45%;
+            }
+
+            .sf-progress-container .sf-progress-steps .sf-step {
+                max-width: 90px;
+            }
+
+            .sf-progress-container .sf-step-circle {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .sf-progress-container .sf-step-label {
+                font-size: 0.7rem;
             }
         }
     </style>
 </head>
-<body>
+<body class="sf-body">
+    <!-- Background Pattern -->
+    <div class="sf-bg-pattern"></div>
+    
+    <!-- Floating Shapes -->
+    <div class="sf-floating-shapes">
+        <div class="sf-shape sf-shape-1"></div>
+        <div class="sf-shape sf-shape-2"></div>
+        <div class="sf-shape sf-shape-3"></div>
+    </div>
+
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner">
-            <div class="spinner-border text-primary" role="status">
+    <div class="sf-loading-overlay" id="loadingOverlay">
+        <div class="sf-loading-spinner">
+            <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-3 mb-0">Processing your registration...</p>
+            <p class="mt-3 mb-0 fw-bold" style="color: var(--sf-text-dark);">Memproses pendaftaran anda...</p>
         </div>
     </div>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="sf-hero">
         <!-- Language Switcher -->
-        <div class="language-switcher">
-            <div class="language-selector">
-                <div class="language-option active" data-lang="ms">
-                    <i class="fas fa-globe"></i>
-                    <span>Bahasa Malaysia</span>
+        <div class="sf-language-switcher">
+            <div class="sf-language-selector">
+                <div class="sf-language-option active" data-lang="ms">
+                    <i class="fas fa-globe-asia"></i>
+                    <span>BM</span>
                 </div>
-                <div class="language-option" data-lang="en">
+                <div class="sf-language-option" data-lang="en">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span>EN</span>
                 </div>
             </div>
         </div>
 
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title animate__animated animate__fadeInDown" data-key="hero.title">Transformasi Pendidikan dengan Platform Kami</h1>
-                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s" data-key="hero.subtitle">
-                    Sertai ribuan sekolah di seluruh dunia dalam merevolusi pendidikan dalam talian. Daftarkan institusi anda dan buka kunci alat berkuasa untuk pengurusan pelajar, penyampaian kandungan, dan kecemerlangan akademik.
+            <div class="sf-hero-content">
+                <div style="width: 90px; height: 90px; margin: 0 auto 1.5rem; animation: sf-bounce-gentle 3s ease-in-out infinite;">
+                    <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));">
+                </div>
+                <p class="sf-hero-greeting" data-key="hero.greeting">Pendaftaran Sekolah</p>
+                <h1 class="sf-hero-title" data-key="hero.title">
+                    Daftar Sekolah Anda 🏫
+                </h1>
+                <p class="sf-hero-subtitle" data-key="hero.subtitle">
+                    Daftarkan sekolah dan pelajar anda dengan mudah. Nikmati platform pembelajaran dalam talian yang terbaik!
                 </p>
-                <div class="hero-features animate__animated animate__fadeInUp animate__delay-2s">
-                    <div class="hero-feature">
+                <div class="sf-hero-features">
+                    <div class="sf-hero-feature">
                         <i class="fas fa-rocket"></i>
                         <span data-key="hero.features.setup">Persediaan Pantas</span>
                     </div>
-                    <div class="hero-feature">
+                    <div class="sf-hero-feature">
                         <i class="fas fa-users"></i>
-                        <span data-key="hero.features.import">Import Pelajar Berkelompok</span>
+                        <span data-key="hero.features.import">Import Berkelompok</span>
                     </div>
-                    <div class="hero-feature">
+                    <div class="sf-hero-feature">
                         <i class="fas fa-shield-alt"></i>
-                        <span data-key="hero.features.secure">Selamat & Boleh Dipercayai</span>
-                    </div>
-                    <div class="hero-feature">
-                        <i class="fas fa-chart-line"></i>
-                        <span data-key="hero.features.analytics">Analisis Canggih</span>
+                        <span data-key="hero.features.secure">Selamat</span>
                     </div>
                 </div>
             </div>
@@ -1350,478 +628,416 @@
     </section>
 
     <!-- Main Registration Container -->
-    <div class="container">
+    <div class="container" style="position: relative; z-index: 1; padding: 0 1rem 3rem;">
         @if(session('success'))
-            <!-- Success State - Hide form and show success message -->
-            <div class="main-container animate__animated animate__fadeInUp">
-                <!-- Print Header (Print Only) -->
-                <div class="print-only print-header" style="display: none;">
-                    <h1 style="margin: 0; font-size: 24pt; color: #333;">School Registration Confirmation</h1>
-                    <p style="margin: 5pt 0 0 0; font-size: 14pt; color: #666;">Online Tuition Platform</p>
-                </div>
-                
-                <!-- Print Date (Print Only) -->
-                <div class="print-only print-date" style="display: none;">
-                    Registration Date: <span id="printDate"></span>
-                </div>
-
-                <div class="success-container text-center" style="padding: 4rem 2rem;">
-                    <div class="success-icon mb-4 screen-only">
-                        <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--success-color);"></i>
+            <!-- Success State -->
+            <div class="sf-main-container sf-fade-in">
+                <div class="sf-success-container">
+                    <div class="sf-success-icon screen-only">
+                        <i class="fas fa-check-circle"></i>
                     </div>
                     
-                    <h2 class="success-title mb-3" style="color: var(--dark-text); font-weight: 700;">
-                        <span data-key="success.title">Pendaftaran Berjaya!</span>
-                    </h2>
+                    <h2 class="sf-success-title" data-key="success.title">Pendaftaran Berjaya! 🎉</h2>
 
-                    <!-- Print-Only Submission Details -->
-                    <div class="print-only print-section registration-details-section no-page-break" style="display: none;">
-                        <h3 class="print-section-title">Registration Details</h3>
-                        <div id="printSubmissionDetails">
-                            <!-- Details will be populated by JavaScript -->
+                    <div class="sf-alert sf-alert-success" style="max-width: 600px; margin: 0 auto 2rem;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+
+                    <div class="sf-success-steps">
+                        <div class="sf-success-step">
+                            <div class="sf-success-step-icon">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <h5 data-key="success.step1.title">Sekolah Diaktifkan</h5>
+                            <p data-key="success.step1.desc">Sekolah anda telah berjaya diaktifkan dalam sistem kami</p>
                         </div>
-                    </div>
-                    
-                    <div class="alert alert-success border-0" style="background: linear-gradient(135deg, #10b981, #059669); max-width: 600px; margin: 0 auto 2rem;">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-            </div>
-
-                    <div class="success-details" style="max-width: 700px; margin: 0 auto;">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="success-step">
-                                    <div class="step-icon mb-2">
-                                        <i class="fas fa-school" style="font-size: 2rem; color: var(--primary-color);"></i>
-                                    </div>
-                                    <h5 data-key="success.step1.title">Sekolah Diaktifkan</h5>
-                                    <p class="text-muted small" data-key="success.step1.desc">Sekolah anda telah berjaya diaktifkan dalam sistem kami</p>
-                                </div>
+                        <div class="sf-success-step">
+                            <div class="sf-success-step-icon">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="success-step">
-                                    <div class="step-icon mb-2">
-                                        <i class="fas fa-users" style="font-size: 2rem; color: var(--accent-color);"></i>
-                                    </div>
-                                    <h5 data-key="success.step2.title">Pelajar Didaftarkan</h5>
-                                    <p class="text-muted small" data-key="success.step2.desc">Akaun pelajar telah dicipta dengan kata laluan default</p>
-                                </div>
+                            <h5 data-key="success.step2.title">Pelajar Didaftarkan</h5>
+                            <p data-key="success.step2.desc">Akaun pelajar telah dicipta dengan kata laluan default</p>
+                        </div>
+                        <div class="sf-success-step">
+                            <div class="sf-success-step-icon">
+                                <i class="fas fa-envelope"></i>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="success-step">
-                                    <div class="step-icon mb-2">
-                                        <i class="fas fa-envelope" style="font-size: 2rem; color: var(--warning-color);"></i>
-                                    </div>
-                                    <h5 data-key="success.step3.title">E-mel Pengesahan</h5>
-                                    <p class="text-muted small" data-key="success.step3.desc">Maklumat login akan dihantar ke e-mel anda</p>
-                                </div>
-                            </div>
+                            <h5 data-key="success.step3.title">E-mel Pengesahan</h5>
+                            <p data-key="success.step3.desc">Maklumat login akan dihantar ke e-mel anda</p>
                         </div>
                     </div>
 
-                    <div class="next-steps mt-4 p-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.03)); border-radius: 15px; max-width: 600px; margin: 2rem auto;">
-                        <h4 class="mb-3" data-key="success.next.title">Langkah Seterusnya:</h4>
-                        <ul class="list-unstyled text-left" style="max-width: 500px; margin: 0 auto;">
-                            <li class="mb-2" data-key="success.next.step1"><i class="fas fa-clock text-primary me-2"></i>Tunggu e-mel pengesahan dalam masa 24-48 jam</li>
-                            <li class="mb-2" data-key="success.next.step2"><i class="fas fa-key text-success me-2"></i>Kongsikan maklumat login dengan pelajar</li>
-                            <li class="mb-2" data-key="success.next.step3"><i class="fas fa-rocket text-warning me-2"></i>Mula gunakan platform setelah kelulusan</li>     
+                    <div class="sf-next-steps">
+                        <h4><i class="fas fa-list-check"></i> <span data-key="success.next.title">Langkah Seterusnya:</span></h4>
+                        <ul>
+                            <li><i class="fas fa-clock" style="color: var(--sf-ocean-bright);"></i> <span data-key="success.next.step1">Tunggu e-mel pengesahan dalam masa 24-48 jam</span></li>
+                            <li><i class="fas fa-key" style="color: var(--sf-mint-fresh);"></i> <span data-key="success.next.step2">Kongsikan maklumat login dengan pelajar</span></li>
+                            <li><i class="fas fa-rocket" style="color: var(--sf-coral-warm);"></i> <span data-key="success.next.step3">Mula gunakan platform setelah kelulusan</span></li>
                         </ul>
                     </div>
 
-                    <div class="contact-info mt-4 p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; max-width: 500px; margin: 2rem auto;">
-                        <h6 class="mb-2" data-key="success.contact.title">Butuh Bantuan?</h6>
-                        <p class="mb-2 small">
-                            <i class="fas fa-envelope me-2"></i>
-                            <span data-key="success.contact.email">E-mel: etuition@uniti.edu.my</span>
-                        </p>
-                        <p class="mb-0 small">
-                            <i class="fas fa-phone me-2"></i>
-                            <span data-key="success.contact.phone">Telefon: +60 12-345 6789</span>
-                        </p>
-                    </div>
-
-                    <!-- Print-Only Student Information -->
-                    <div class="print-only print-section student-section" style="display: none;">
-                        <h3 class="print-section-title">Student Information</h3>
-                        <div id="printStudentDetails">
-                            <!-- Student details will be populated by JavaScript -->
+                    <div class="sf-contact-info" style="max-width: 500px; margin: 0 auto;">
+                        <div class="sf-contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span data-key="success.contact.email">etuition@uniti.edu.my</span>
+                        </div>
+                        <div class="sf-contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span data-key="success.contact.phone">+60 12-317 3853</span>
                         </div>
                     </div>
 
-                    <!-- Print-Only Important Notes -->
-                    <div class="print-only print-section notes-section no-page-break" style="display: none;">
-                        <h3 class="print-section-title">Important Notes</h3>
-                        <ul style="margin: 0; padding-left: 20pt; font-size: 11pt;">
-                            <li style="margin-bottom: 8pt;">Default student passwords have been set to "student123" for individual entries</li>
-                            <li style="margin-bottom: 8pt;">Students imported via Excel have default password "password"</li>
-                            <li style="margin-bottom: 8pt;">Please ensure students change their passwords after first login</li>
-                            <li style="margin-bottom: 8pt;">Login credentials will be sent via email within 24-48 hours</li>
-                            <li style="margin-bottom: 8pt;">Keep this document for your records</li>
-                        </ul>
-                    </div>
-
-                    <div class="action-buttons mt-4 screen-only">
-                        <a href="{{ url('/') }}" class="btn btn-primary-custom me-3">
-                            <i class="fas fa-home"></i> <span data-key="success.btn.home">Kembali ke Laman Utama</span>
+                    <div class="mt-4 screen-only">
+                        <a href="{{ url('/') }}" class="sf-btn sf-btn-primary">
+                            <i class="fas fa-home"></i>
+                            <span data-key="success.btn.home">Kembali ke Laman Utama</span>
                         </a>
-                        <button onclick="printRegistrationDetails()" class="btn btn-outline-custom">
-                            <i class="fas fa-print"></i> <span data-key="success.btn.print">Cetak Maklumat</span>
-                        </button>
                     </div>
                 </div>
             </div>
         @else
-            <!-- Error Messages -->
-        <!-- Notification Messages -->
-        <div class="notification-container" style="margin-bottom: 2rem;">
+            <!-- Notification Messages -->
             @if(session('auth_success'))
-                <div class="alert alert-success alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
-                    <i class="fas fa-check-circle me-2"></i>
-                    {{ session('auth_success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="sf-alert sf-alert-success sf-fade-in mb-3">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('auth_success') }}</span>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="sf-alert sf-alert-danger sf-fade-in mb-3">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown" role="alert" style="margin-bottom: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Please fix the following errors:</strong>
-                    <ul class="mb-0 mt-2">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-        </div>
-
-            <!-- Registration Form -->
-        <div class="main-container animate__animated animate__fadeInUp animate__delay-2s">
-            <!-- Progress Bar -->
-            <div class="progress-bar-container">
-                <div class="progress-steps">
-                    <div class="step active" data-step="1">
-                        <div class="step-circle">1</div>
-                        <span class="step-label" data-key="steps.school">Butiran Sekolah</span>
-                        <div class="step-line"></div>
-                    </div>
-                    <div class="step" data-step="2">
-                        <div class="step-circle">2</div>
-                        <span class="step-label" data-key="steps.students">Tambah Pelajar</span>
-                        <div class="step-line"></div>
-                    </div>
-                    <div class="step" data-step="3">
-                        <div class="step-circle">3</div>
-                        <span class="step-label" data-key="steps.review">Semak & Hantar</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Registration Form -->
-            <form id="registrationForm" method="POST" action="{{ route('school.register.submit') }}" enctype="multipart/form-data">
-                @csrf
-                
-                <!-- Step 1: School Details -->
-                <div class="form-section active" id="step1">
-                    <h2 class="section-title">
-                        <i class="fas fa-school text-primary"></i>
-                        <span data-key="form.school.title">Maklumat Sekolah</span>
-                    </h2>
-                    <p class="section-description" data-key="form.school.description">
-                        Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.
-                    </p>
-
-                    <!-- School Information Section -->
-                    <div class="feature-highlight mb-4">
-                        <h4><i class="fas fa-building text-primary"></i> <span data-key="form.school.info_title">Maklumat Sekolah</span></h4>
-                        
-                        <div class="row">
-                            @if(!isset($authenticatedCoordinator))
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <span data-key="form.school.name">Nama Sekolah</span> <span class="required">*</span>
-                                        </label>
-                                        <select name="school_id" id="schoolSelect" class="form-control" data-placeholder-key="form.school.name_placeholder" required>
-                                            <option value="" data-key="form.school.name_placeholder">Pilih sekolah anda</option>
-                                            @foreach($schools as $school)
-                                                <option value="{{ $school->id }}">{{ $school->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            @else
-                                <!-- Hidden input for authenticated coordinator's school -->
-                                <input type="hidden" name="school_id" value="{{ $authenticatedCoordinator['school_id'] }}">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <span data-key="form.school.name">Nama Sekolah</span>
-                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Pre-selected</span>
-                                        </label>
-                                        <input type="text" 
-                                               class="form-control border-success" 
-                                               value="{{ $authenticatedCoordinator['school_name'] }}"
-                                               readonly 
-                                               style="background-color: #f0f9ff; color: #1e40af; font-weight: 600;">
-                                        <small class="text-success mt-1 d-block">
-                                            <i class="fas fa-info-circle"></i> School automatically selected based on your coordinator assignment.
-                                        </small>
-                                    </div>
-                                </div>
-                            @endif
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.phone">Telefon Hubungan</span> <span class="required">*</span>
-                                    </label>
-                                    <input type="tel" name="phone" class="form-control" data-placeholder-key="form.school.phone_placeholder" placeholder="+60 12-345 6789" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.email">Alamat E-mel Sekolah</span> <span class="required">*</span>
-                                    </label>
-                                    <input type="email" name="school_email" class="form-control" data-placeholder-key="form.school.email_placeholder" placeholder="sekolah@contoh.com" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.type">Jenis Sekolah</span> <span class="required">*</span>
-                                    </label>
-                                    <select name="school_type" class="form-control" id="schoolTypeSelect" required>
-                                        <option value="" data-key="form.school.type_placeholder">Pilih jenis sekolah</option>
-                                        <option value="public" data-key="form.school.types.public">Sekolah Kerajaan</option>
-                                        <option value="private" data-key="form.school.types.private">Sekolah Swasta</option>
-                                        <option value="charter" data-key="form.school.types.charter">Sekolah Piagam</option>
-                                        <option value="international" data-key="form.school.types.international">Sekolah Antarabangsa</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.address">Alamat Sekolah</span> <span class="required">*</span>
-                                    </label>
-                                    <textarea name="address" class="form-control" rows="3" data-placeholder-key="form.school.address_placeholder" placeholder="Masukkan alamat lengkap sekolah" required></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.school.total_students">Jumlah Pelajar (Anggaran)</span>
-                                    </label>
-                                    <input type="number" name="total_students" class="form-control" data-placeholder-key="form.school.total_placeholder" placeholder="cth: 500" min="1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Guru Pembimbing Section -->
-                    <div class="feature-highlight">
-                        <h4><i class="fas fa-user-tie text-success"></i> <span data-key="form.teacher.title">Guru Pembimbing</span></h4>
-                        @if(isset($authenticatedCoordinator))
-                            <div class="alert alert-success border-0 mb-3" style="background: linear-gradient(135deg, #10b981, #059669);">
-                                <i class="fas fa-check-circle me-2"></i>
-                                <strong>Authenticated Coordinator:</strong> The coordinator information below has been verified and pre-filled based on your authentication.
-                            </div>
-                            <p class="text-muted mb-3">
-                                <span data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</span>
-                                <br><small class="text-success"><i class="fas fa-lock"></i> These fields are automatically filled and protected based on your authentication.</small>
-                            </p>
-                        @else
-                            <p class="text-muted mb-3" data-key="form.teacher.description">Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.</p>
-                        @endif
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.teacher.name">Nama Guru Pembimbing</span> <span class="required">*</span>
-                                        @if(isset($authenticatedCoordinator))
-                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Verified</span>
-                                        @endif
-                                    </label>
-                                    <input type="text" 
-                                           name="teacher_name" 
-                                           class="form-control @if(isset($authenticatedCoordinator)) border-success @endif" 
-                                           data-placeholder-key="form.teacher.name_placeholder" 
-                                           placeholder="Nama penuh guru pembimbing" 
-                                           value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['name'] : old('teacher_name') }}"
-                                           @if(isset($authenticatedCoordinator)) readonly style="background-color: #f8f9fa; color: #495057;" @endif
-                                           required>
-                                    @if(isset($authenticatedCoordinator))
-                                        <small class="text-success mt-1 d-block">
-                                            <i class="fas fa-info-circle"></i> This information is automatically filled from your verified coordinator account.
-                                        </small>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <span data-key="form.teacher.email">E-mel Guru Pembimbing</span> <span class="required">*</span>
-                                        @if(isset($authenticatedCoordinator))
-                                            <span class="badge bg-success ms-2"><i class="fas fa-shield-alt"></i> Verified</span>
-                                        @endif
-                                    </label>
-                                    <input type="email" 
-                                           name="teacher_email" 
-                                           class="form-control @if(isset($authenticatedCoordinator)) border-success @endif" 
-                                           data-placeholder-key="form.teacher.email_placeholder" 
-                                           placeholder="guru@contoh.com" 
-                                           value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['email'] : old('teacher_email') }}"
-                                           @if(isset($authenticatedCoordinator)) readonly style="background-color: #f8f9fa; color: #495057;" @endif
-                                           required>
-                                    @if(isset($authenticatedCoordinator))
-                                        <small class="text-success mt-1 d-block">
-                                            <i class="fas fa-info-circle"></i> This information is automatically filled from your verified coordinator account.
-                                        </small>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        
-                        @if(isset($authenticatedCoordinator))
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <span>Assigned School</span>
-                                            <span class="badge bg-primary ms-2"><i class="fas fa-school"></i> Pre-selected</span>
-                                        </label>
-                                        <input type="text" 
-                                               class="form-control border-primary" 
-                                               value="{{ $authenticatedCoordinator['school_name'] }}"
-                                               readonly 
-                                               style="background-color: #e3f2fd; color: #1976d2; font-weight: 600;">
-                                        <small class="text-primary mt-1 d-block">
-                                            <i class="fas fa-info-circle"></i> This is the school you are assigned to coordinate. School selection is automatically handled.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Step 2: Add Students -->
-                <div class="form-section" id="step2">
-                    <h2 class="section-title">
-                        <i class="fas fa-users text-primary"></i>
-                        <span data-key="form.students.title">Pengurusan Pelajar</span>
-                    </h2>
-                    <p class="section-description" data-key="form.students.description">
-                        Tambah pelajar secara individu atau muat naik secara berkelompok menggunakan template Excel kami.
-                    </p>
-
-                    <!-- Bulk Upload Section -->
-                    <div class="feature-highlight">
-                        <h4><i class="fas fa-file-excel text-success"></i> <span data-key="form.bulk.title">Muat Naik Pelajar Berkelompok</span></h4>
-                        <p class="mb-3" data-key="form.bulk.description">Jimat masa dengan memuat naik berbilang pelajar sekaligus menggunakan template Excel kami.</p>
-                        
-                        <div class="template-download">
-                            <h5><i class="fas fa-download"></i> <span data-key="form.bulk.template_title">Muat Turun Template Excel</span></h5>
-                            <p class="mb-3" data-key="form.bulk.template_description">Muat turun template Excel yang telah diformat untuk menambah maklumat pelajar anda</p>
-                            <button type="button" class="btn btn-light btn-custom" id="downloadTemplate">
-                                <i class="fas fa-file-excel"></i> <span data-key="form.bulk.download_btn">Muat Turun Template</span>
-                            </button>
-                        </div>
-
-                        <div class="upload-area" id="uploadArea">
-                            <div class="upload-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                            </div>
-                            <h4 data-key="form.bulk.drag_title">Seret & Lepas Fail Excel Di Sini</h4>
-                            <p class="text-muted" data-key="form.bulk.browse_text">atau klik untuk cari fail</p>
-                            <p class="small text-muted" data-key="form.bulk.format_info">Format disokong: .xlsx, .xls (Saiz maksimum: 10MB)</p>
-                            <input type="file" name="students_excel" id="excelFile" accept=".xlsx,.xls" style="display: none;">
-                        </div>
-
-                        <div id="uploadProgress" class="mt-3" style="display: none;">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
-                            </div>
-                            <p class="mt-2 text-center" data-key="form.bulk.processing">Memproses fail Excel...</p>
-                        </div>
-
-                        <div id="uploadResults" class="mt-3" style="display: none;"></div>
-                    </div>
-
-                    <!-- Individual Student Addition -->
-                    <div class="mt-4">
-                        <h4><i class="fas fa-user-plus text-primary"></i> <span data-key="form.individual.title">Tambah Pelajar Individu</span></h4>
-                        <p class="text-muted mb-3" data-key="form.individual.description">Tambah pelajar satu persatu menggunakan borang di bawah</p>
-                        
-                        <div id="studentsContainer">
-                            <!-- Individual student forms will be added here -->
-                        </div>
-
-                        <button type="button" class="btn btn-outline-custom" id="addStudentBtn">
-                            <i class="fas fa-plus"></i> <span data-key="form.individual.add_btn">Tambah Pelajar</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Step 3: Review & Submit -->
-                <div class="form-section" id="step3">
-                    <h2 class="section-title">
-                        <i class="fas fa-check-circle text-success"></i>
-                        <span data-key="form.review.title">Semak & Hantar</span>
-                    </h2>
-                    <p class="section-description" data-key="form.review.description">
-                        Sila semak semua maklumat sebelum menghantar pendaftaran anda.
-                    </p>
-
-                    <div id="reviewContent">
-                        <!-- Review content will be populated by JavaScript -->
-                    </div>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        <strong data-key="form.review.next_title">Apa yang berlaku seterusnya?</strong>
+                <div class="sf-alert sf-alert-danger sf-fade-in mb-3">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Sila betulkan ralat berikut:</strong>
                         <ul class="mb-0 mt-2">
-                            <li data-key="form.review.next_1">Pasukan kami akan menyemak pendaftaran anda dalam masa 24-48 jam</li>
-                            <li data-key="form.review.next_2">Anda akan menerima e-mel pengesahan dengan butiran akaun anda</li>
-                            <li data-key="form.review.next_3">Pelajar akan mendapat maklumat log masuk individu</li>
-                            <li data-key="form.review.next_4">Anda boleh mula menggunakan platform selepas kelulusan</li>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
+            @endif
 
-                <!-- Navigation Buttons -->
-                <div class="navigation-buttons">
-                    <button type="button" class="btn btn-outline-custom" id="prevBtn" style="display: none;">
-                        <i class="fas fa-arrow-left"></i> <span data-key="nav.previous">Sebelumnya</span>
-                    </button>
-                    <div></div>
-                    <button type="button" class="btn btn-primary-custom" id="nextBtn">
-                        <span data-key="nav.next">Seterusnya</span> <i class="fas fa-arrow-right"></i>
-                    </button>
-                    <button type="submit" class="btn btn-primary-custom" id="submitBtn" style="display: none;">
-                        <i class="fas fa-paper-plane"></i> <span data-key="nav.submit">Hantar Pendaftaran</span>
-                    </button>
+            <!-- Registration Form -->
+            <div class="sf-main-container sf-fade-in">
+                <!-- Progress Bar -->
+                <div class="sf-progress-container">
+                    <div class="sf-progress-steps">
+                        <div class="sf-step active" data-step="1">
+                            <div class="sf-step-circle">1</div>
+                            <span class="sf-step-label" data-key="steps.school">Butiran Sekolah</span>
+                        </div>
+                        <div class="sf-step" data-step="2">
+                            <div class="sf-step-circle">2</div>
+                            <span class="sf-step-label" data-key="steps.students">Tambah Pelajar</span>
+                        </div>
+                        <div class="sf-step" data-step="3">
+                            <div class="sf-step-circle">3</div>
+                            <span class="sf-step-label" data-key="steps.review">Semak & Hantar</span>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
+
+                <!-- Registration Form -->
+                <form id="registrationForm" method="POST" action="{{ route('school.register.submit') }}" enctype="multipart/form-data">
+                    @csrf
+                    
+                    <!-- Step 1: School Details -->
+                    <div class="sf-form-section active" id="step1">
+                        <div class="sf-form-section-inner" style="padding: 2.5rem 2rem;">
+                            <div class="sf-section-header">
+                                <div class="sf-section-icon sf-blue">
+                                    <i class="fas fa-school"></i>
+                                </div>
+                                <h2 class="sf-section-title" data-key="form.school.title">Maklumat Sekolah</h2>
+                            </div>
+                            <p class="sf-section-description" data-key="form.school.description">
+                                Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.
+                            </p>
+
+                            <!-- School Information -->
+                            <div class="sf-feature-box">
+                                <div class="sf-feature-box-title">
+                                    <i class="fas fa-building" style="color: var(--sf-ocean-bright);"></i>
+                                    <span data-key="form.school.info_title">Maklumat Sekolah</span>
+                                </div>
+                                
+                                <div class="row">
+                                    @if(!isset($authenticatedCoordinator))
+                                        <div class="col-md-6">
+                                            <div class="sf-form-group">
+                                                <label class="sf-form-label">
+                                                    <span data-key="form.school.name">Nama Sekolah</span> 
+                                                    <span class="sf-required">*</span>
+                                                </label>
+                                                <select name="school_id" id="schoolSelect" class="sf-form-control" required>
+                                                    <option value="" data-key="form.school.name_placeholder">Pilih sekolah anda</option>
+                                                    @foreach($schools as $school)
+                                                        <option value="{{ $school->id }}">{{ $school->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <input type="hidden" name="school_id" value="{{ $authenticatedCoordinator['school_id'] }}">
+                                        <div class="col-md-6">
+                                            <div class="sf-form-group">
+                                                <label class="sf-form-label">
+                                                    <span data-key="form.school.name">Nama Sekolah</span>
+                                                    <span class="sf-verified-badge"><i class="fas fa-shield-alt"></i> Disahkan</span>
+                                                </label>
+                                                <input type="text" 
+                                                       class="sf-form-control sf-readonly-input" 
+                                                       value="{{ $authenticatedCoordinator['school_name'] }}"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <div class="col-md-6">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.school.phone">Telefon Hubungan</span> 
+                                                <span class="sf-required">*</span>
+                                            </label>
+                                            <input type="tel" name="phone" class="sf-form-control" placeholder="+60 12-345 6789" value="{{ old('phone') }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.school.email">Alamat E-mel Sekolah</span> 
+                                                <span class="sf-required">*</span>
+                                            </label>
+                                            <input type="email" name="school_email" class="sf-form-control" placeholder="sekolah@contoh.com" value="{{ old('school_email') }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.school.type">Jenis Sekolah</span> 
+                                                <span class="sf-required">*</span>
+                                            </label>
+                                            <select name="school_type" class="sf-form-control" id="schoolTypeSelect" required>
+                                                <option value="" data-key="form.school.type_placeholder">Pilih jenis sekolah</option>
+                                                <option value="public" data-key="form.school.types.public" {{ old('school_type') == 'public' ? 'selected' : '' }}>Sekolah Kerajaan</option>
+                                                <option value="private" data-key="form.school.types.private" {{ old('school_type') == 'private' ? 'selected' : '' }}>Sekolah Swasta</option>
+                                                <option value="charter" data-key="form.school.types.charter" {{ old('school_type') == 'charter' ? 'selected' : '' }}>Sekolah Piagam</option>
+                                                <option value="international" data-key="form.school.types.international" {{ old('school_type') == 'international' ? 'selected' : '' }}>Sekolah Antarabangsa</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.school.address">Alamat Sekolah</span> 
+                                                <span class="sf-required">*</span>
+                                            </label>
+                                            <textarea name="address" class="sf-form-control" rows="3" placeholder="Masukkan alamat lengkap sekolah" required>{{ old('address') }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.school.total_students">Jumlah Pelajar</span>
+                                            </label>
+                                            <input type="number" name="total_students" class="sf-form-control" placeholder="cth: 500" min="1" value="{{ old('total_students') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Teacher Coordinator -->
+                            <div class="sf-feature-box sf-green">
+                                <div class="sf-feature-box-title">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span data-key="form.teacher.title">Guru Pembimbing</span>
+                                </div>
+                                
+                                @if(isset($authenticatedCoordinator))
+                                    <div class="sf-alert sf-alert-success mb-3">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Maklumat penyelaras telah disahkan dan diisi secara automatik.</span>
+                                    </div>
+                                @endif
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.teacher.name">Nama Guru Pembimbing</span> 
+                                                <span class="sf-required">*</span>
+                                                @if(isset($authenticatedCoordinator))
+                                                    <span class="sf-verified-badge"><i class="fas fa-shield-alt"></i> Disahkan</span>
+                                                @endif
+                                            </label>
+                                            <input type="text" 
+                                                   name="teacher_name" 
+                                                   class="sf-form-control @if(isset($authenticatedCoordinator)) sf-readonly-input @endif" 
+                                                   placeholder="Nama penuh guru pembimbing" 
+                                                   value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['name'] : old('teacher_name') }}"
+                                                   @if(isset($authenticatedCoordinator)) readonly @endif
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="sf-form-group">
+                                            <label class="sf-form-label">
+                                                <span data-key="form.teacher.email">E-mel Guru Pembimbing</span> 
+                                                <span class="sf-required">*</span>
+                                                @if(isset($authenticatedCoordinator))
+                                                    <span class="sf-verified-badge"><i class="fas fa-shield-alt"></i> Disahkan</span>
+                                                @endif
+                                            </label>
+                                            <input type="email" 
+                                                   name="teacher_email" 
+                                                   class="sf-form-control @if(isset($authenticatedCoordinator)) sf-readonly-input @endif" 
+                                                   placeholder="guru@contoh.com" 
+                                                   value="{{ isset($authenticatedCoordinator) ? $authenticatedCoordinator['email'] : old('teacher_email') }}"
+                                                   @if(isset($authenticatedCoordinator)) readonly @endif
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Add Students -->
+                    <div class="sf-form-section" id="step2">
+                        <div class="sf-form-section-inner" style="padding: 2.5rem 2rem;">
+                            <div class="sf-section-header">
+                                <div class="sf-section-icon sf-green">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h2 class="sf-section-title" data-key="form.students.title">Pengurusan Pelajar</h2>
+                            </div>
+                            <p class="sf-section-description" data-key="form.students.description">
+                                Tambah pelajar secara individu atau muat naik secara berkelompok menggunakan template Excel kami.
+                            </p>
+
+                            <!-- Bulk Upload Section -->
+                            <div class="sf-feature-box">
+                                <div class="sf-feature-box-title">
+                                    <i class="fas fa-file-excel" style="color: var(--sf-mint-fresh);"></i>
+                                    <span data-key="form.bulk.title">Muat Naik Pelajar Berkelompok</span>
+                                </div>
+                                <p class="text-muted mb-3" data-key="form.bulk.description">Jimat masa dengan memuat naik berbilang pelajar sekaligus menggunakan template Excel kami.</p>
+                                
+                                <div class="sf-template-download">
+                                    <h5><i class="fas fa-download"></i> <span data-key="form.bulk.template_title">Muat Turun Template Excel</span></h5>
+                                    <p data-key="form.bulk.template_description">Muat turun template Excel yang telah diformat untuk menambah maklumat pelajar anda</p>
+                                    <button type="button" class="sf-btn" style="background: white; color: var(--sf-mint-deep);" id="downloadTemplate">
+                                        <i class="fas fa-file-excel"></i> <span data-key="form.bulk.download_btn">Muat Turun Template</span>
+                                    </button>
+                                </div>
+
+                                <div class="sf-upload-area" id="uploadArea">
+                                    <div class="sf-upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <h4 class="sf-upload-title" data-key="form.bulk.drag_title">Seret & Lepas Fail Excel Di Sini</h4>
+                                    <p class="text-muted" data-key="form.bulk.browse_text">atau klik untuk cari fail</p>
+                                    <p class="small text-muted" data-key="form.bulk.format_info">Format disokong: .xlsx, .xls (Saiz maksimum: 10MB)</p>
+                                    <input type="file" name="students_excel" id="excelFile" accept=".xlsx,.xls" style="display: none;">
+                                </div>
+
+                                <div id="uploadProgress" class="mt-3" style="display: none;">
+                                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%; background: var(--sf-ocean-bright);"></div>
+                                    </div>
+                                    <p class="mt-2 text-center fw-semibold" style="color: var(--sf-ocean-bright);" data-key="form.bulk.processing">Memproses fail Excel...</p>
+                                </div>
+
+                                <div id="uploadResults" class="mt-3" style="display: none;"></div>
+                            </div>
+
+                            <!-- Individual Student Addition -->
+                            <div class="mt-4">
+                                <div class="sf-feature-box-title">
+                                    <i class="fas fa-user-plus" style="color: var(--sf-ocean-bright);"></i>
+                                    <span data-key="form.individual.title">Tambah Pelajar Individu</span>
+                                </div>
+                                <p class="text-muted mb-3" data-key="form.individual.description">Tambah pelajar satu persatu menggunakan borang di bawah</p>
+                                
+                                <div id="studentsContainer">
+                                    <!-- Individual student forms will be added here -->
+                                </div>
+
+                                <button type="button" class="sf-btn sf-btn-outline" id="addStudentBtn">
+                                    <i class="fas fa-plus"></i> <span data-key="form.individual.add_btn">Tambah Pelajar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Review & Submit -->
+                    <div class="sf-form-section" id="step3">
+                        <div class="sf-form-section-inner" style="padding: 2.5rem 2rem;">
+                            <div class="sf-section-header">
+                                <div class="sf-section-icon sf-coral">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h2 class="sf-section-title" data-key="form.review.title">Semak & Hantar</h2>
+                            </div>
+                            <p class="sf-section-description" data-key="form.review.description">
+                                Sila semak semua maklumat sebelum menghantar pendaftaran anda.
+                            </p>
+
+                            <div id="reviewContent">
+                                <!-- Review content will be populated by JavaScript -->
+                            </div>
+
+                            <div class="sf-info-box mt-4">
+                                <div class="sf-info-box-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span data-key="form.review.next_title">Apa yang berlaku seterusnya?</span>
+                                </div>
+                                <ul>
+                                    <li data-key="form.review.next_1">Pasukan kami akan menyemak pendaftaran anda dalam masa 24-48 jam</li>
+                                    <li data-key="form.review.next_2">Anda akan menerima e-mel pengesahan dengan butiran akaun anda</li>
+                                    <li data-key="form.review.next_3">Pelajar akan mendapat maklumat log masuk individu</li>
+                                    <li data-key="form.review.next_4">Anda boleh mula menggunakan platform selepas kelulusan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="sf-nav-buttons">
+                        <button type="button" class="sf-btn sf-btn-outline" id="prevBtn" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> <span data-key="nav.previous">Sebelumnya</span>
+                        </button>
+                        <div></div>
+                        <button type="button" class="sf-btn sf-btn-primary" id="nextBtn">
+                            <span data-key="nav.next">Seterusnya</span> <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="sf-btn sf-btn-success sf-btn-lg" id="submitBtn" style="display: none;">
+                            <i class="fas fa-paper-plane"></i> <span data-key="nav.submit">Hantar Pendaftaran</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         @endif
+    </div>
+
+    <!-- Footer -->
+    <div class="sf-footer">
+        <div class="sf-footer-emojis">🏫 📚 ✨</div>
+        <p class="sf-footer-text">Pendaftaran Sekolah - Kolej UNITI</p>
     </div>
 
     <!-- Bootstrap JS -->
@@ -1833,60 +1049,41 @@
     <!-- SheetJS for Excel reading -->
     <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
-    <!-- Custom JavaScript -->
     <script>
         // Language management
         let currentLanguage = 'ms';
         
         const translations = {
             ms: {
-                // Hero section
-                'hero.title': 'Transformasi Pendidikan dengan Platform Kami',
-                'hero.subtitle': 'Sertai ribuan sekolah di seluruh dunia dalam merevolusi pendidikan dalam talian. Daftarkan institusi anda dan buka kunci alat berkuasa untuk pengurusan pelajar, penyampaian kandungan, dan kecemerlangan akademik.',
+                'hero.greeting': 'Pendaftaran Sekolah',
+                'hero.title': 'Daftar Sekolah Anda 🏫',
+                'hero.subtitle': 'Daftarkan sekolah dan pelajar anda dengan mudah. Nikmati platform pembelajaran dalam talian yang terbaik!',
                 'hero.features.setup': 'Persediaan Pantas',
-                'hero.features.import': 'Import Pelajar Berkelompok',
-                'hero.features.secure': 'Selamat & Boleh Dipercayai',
-                'hero.features.analytics': 'Analisis Canggih',
-                
-                // Steps
+                'hero.features.import': 'Import Berkelompok',
+                'hero.features.secure': 'Selamat',
                 'steps.school': 'Butiran Sekolah',
                 'steps.students': 'Tambah Pelajar',
                 'steps.review': 'Semak & Hantar',
-                
-                // Form - School
                 'form.school.title': 'Maklumat Sekolah',
                 'form.school.description': 'Sila berikan maklumat asas sekolah anda untuk memulakan dengan platform kami.',
                 'form.school.info_title': 'Maklumat Sekolah',
                 'form.school.name': 'Nama Sekolah',
                 'form.school.name_placeholder': 'Pilih sekolah anda',
-                'form.school.phone': 'No. Telefon Sekolah',
-                'form.school.phone_placeholder': '+60 12-345 6789',
+                'form.school.phone': 'Telefon Hubungan',
                 'form.school.email': 'Alamat E-mel Sekolah',
-                'form.school.email_placeholder': 'sekolah@contoh.com',
                 'form.school.address': 'Alamat Sekolah',
-                'form.school.address_placeholder': 'Masukkan alamat lengkap sekolah',
                 'form.school.type': 'Jenis Sekolah',
                 'form.school.type_placeholder': 'Pilih jenis sekolah',
                 'form.school.types.public': 'Sekolah Kerajaan',
                 'form.school.types.private': 'Sekolah Swasta',
                 'form.school.types.charter': 'Sekolah Piagam',
                 'form.school.types.international': 'Sekolah Antarabangsa',
-                'form.school.total_students': 'Jumlah Pelajar (Anggaran)',
-                'form.school.total_placeholder': 'cth: 500',
-                
-                // Form - Teacher/Mentor
+                'form.school.total_students': 'Jumlah Pelajar',
                 'form.teacher.title': 'Guru Pembimbing',
-                'form.teacher.description': 'Maklumat guru atau pentadbir yang akan bertanggungjawab menguruskan platform ini.',
                 'form.teacher.name': 'Nama Guru Pembimbing',
-                'form.teacher.name_placeholder': 'Nama penuh guru pembimbing',
                 'form.teacher.email': 'E-mel Guru Pembimbing',
-                'form.teacher.email_placeholder': 'guru@contoh.com',
-                
-                // Form - Students
                 'form.students.title': 'Pengurusan Pelajar',
                 'form.students.description': 'Tambah pelajar secara individu atau muat naik secara berkelompok menggunakan template Excel kami.',
-                
-                // Form - Bulk Upload
                 'form.bulk.title': 'Muat Naik Pelajar Berkelompok',
                 'form.bulk.description': 'Jimat masa dengan memuat naik berbilang pelajar sekaligus menggunakan template Excel kami.',
                 'form.bulk.template_title': 'Muat Turun Template Excel',
@@ -1896,41 +1093,20 @@
                 'form.bulk.browse_text': 'atau klik untuk cari fail',
                 'form.bulk.format_info': 'Format disokong: .xlsx, .xls (Saiz maksimum: 10MB)',
                 'form.bulk.processing': 'Memproses fail Excel...',
-                'form.bulk.file_selected': 'Fail "{filename}" dipilih dengan jayanya. Data pelajar akan diproses apabila anda menghantar borang pendaftaran.',
                 'form.bulk.file_processed': 'Berjaya memproses "{filename}" - Dijumpai {count} pelajar',
                 'form.bulk.no_data': 'Fail Excel kosong atau tidak mempunyai data.',
                 'form.bulk.no_students': 'Tiada data pelajar dijumpai dalam fail.',
-                'form.bulk.headers.student_name': 'Nama Pelajar',
-                'form.bulk.headers.ic_number': 'No. Kad Pengenalan',
-                'form.bulk.headers.email': 'E-mel',
-                'form.bulk.headers.tingkatan': 'Tingkatan',
-                'form.bulk.headers.phone': 'No. Telefon Pelajar',
-                'form.bulk.headers.dob': 'Tarikh Lahir',
-                'form.bulk.headers.gender': 'Jantina',
-                'form.bulk.headers.parent_name': 'Nama Ibu Bapa/Penjaga',
-                'form.bulk.headers.parent_phone': 'Telefon Ibu Bapa/Penjaga',
-                'form.bulk.headers.address': 'Alamat',
-                
-                // Form - Individual
                 'form.individual.title': 'Tambah Pelajar Individu',
                 'form.individual.description': 'Tambah pelajar satu persatu menggunakan borang di bawah',
                 'form.individual.add_btn': 'Tambah Pelajar',
-                
-                // Form - Student Details
                 'form.student.title': 'Pelajar',
                 'form.student.name': 'Nama Pelajar',
-                'form.student.name_placeholder': 'Nama penuh pelajar',
                 'form.student.ic': 'No. Kad Pengenalan',
-                'form.student.ic_placeholder': '980123456789',
                 'form.student.email': 'E-mel',
-                'form.student.email_placeholder': 'e-mel@contoh.com',
                 'form.student.phone': 'No. Telefon Pelajar',
-                'form.student.phone_placeholder': '0123456789',
                 'form.student.grade': 'Tingkatan',
                 'form.student.grade_placeholder': 'Pilih tingkatan',
                 'form.student.grade.form5': 'Tingkatan 5',
-                
-                // Form - Review
                 'form.review.title': 'Semak & Hantar',
                 'form.review.description': 'Sila semak semua maklumat sebelum menghantar pendaftaran anda.',
                 'form.review.next_title': 'Apa yang berlaku seterusnya?',
@@ -1938,19 +1114,13 @@
                 'form.review.next_2': 'Anda akan menerima e-mel pengesahan dengan butiran akaun anda',
                 'form.review.next_3': 'Pelajar akan mendapat maklumat log masuk individu',
                 'form.review.next_4': 'Anda boleh mula menggunakan platform selepas kelulusan',
-                
-                // Navigation
                 'nav.previous': 'Sebelumnya',
                 'nav.next': 'Seterusnya',
                 'nav.submit': 'Hantar Pendaftaran',
-                
-                // Validation messages
                 'validation.students_required': 'Sila tambah pelajar sama ada secara individu atau muat naik fail Excel.',
                 'validation.students_required_step': 'Sila tambah pelajar sama ada secara individu atau muat naik fail Excel sebelum meneruskan.',
                 'validation.required_fields': 'Sila lengkapkan semua medan yang diperlukan sebelum meneruskan.',
-                
-                // Success page
-                'success.title': 'Pendaftaran Berjaya!',
+                'success.title': 'Pendaftaran Berjaya! 🎉',
                 'success.step1.title': 'Sekolah Diaktifkan',
                 'success.step1.desc': 'Sekolah anda telah berjaya diaktifkan dalam sistem kami',
                 'success.step2.title': 'Pelajar Didaftarkan',
@@ -1961,61 +1131,38 @@
                 'success.next.step1': 'Tunggu e-mel pengesahan dalam masa 24-48 jam',
                 'success.next.step2': 'Kongsikan maklumat login dengan pelajar',
                 'success.next.step3': 'Mula gunakan platform setelah kelulusan',
-                'success.next.step4': 'Hubungi sokongan jika ada pertanyaan',
-                'success.contact.title': 'Butuh Bantuan?',
-                'success.contact.email': 'E-mel: etuition@uniti.edu.my',
-                'success.contact.phone': 'Telefon: +60 12-345 6789',
-                'success.btn.home': 'Kembali ke Laman Utama',
-                'success.btn.print': 'Cetak Maklumat'
+                'success.btn.home': 'Kembali ke Laman Utama'
             },
             en: {
-                // Hero section
-                'hero.title': 'Transform Education with Our Platform',
-                'hero.subtitle': 'Join thousands of schools worldwide in revolutionizing online education. Register your institution and unlock powerful tools for student management, content delivery, and academic excellence.',
+                'hero.greeting': 'School Registration',
+                'hero.title': 'Register Your School 🏫',
+                'hero.subtitle': 'Register your school and students easily. Enjoy the best online learning platform!',
                 'hero.features.setup': 'Quick Setup',
-                'hero.features.import': 'Bulk Student Import',
-                'hero.features.secure': 'Secure & Reliable',
-                'hero.features.analytics': 'Advanced Analytics',
-                
-                // Steps
+                'hero.features.import': 'Bulk Import',
+                'hero.features.secure': 'Secure',
                 'steps.school': 'School Details',
                 'steps.students': 'Add Students',
                 'steps.review': 'Review & Submit',
-                
-                // Form - School
                 'form.school.title': 'School Information',
-                'form.school.description': 'Please provide your school\'s basic information to get started with our platform.',
+                'form.school.description': 'Please provide your school\'s basic information to get started.',
                 'form.school.info_title': 'School Information',
                 'form.school.name': 'School Name',
                 'form.school.name_placeholder': 'Select your school',
-                'form.school.phone': 'School Phone Number',
-                'form.school.phone_placeholder': '+1 (555) 123-4567',
+                'form.school.phone': 'Contact Phone',
                 'form.school.email': 'School Email Address',
-                'form.school.email_placeholder': 'school@example.com',
                 'form.school.address': 'School Address',
-                'form.school.address_placeholder': 'Enter complete school address',
                 'form.school.type': 'School Type',
                 'form.school.type_placeholder': 'Select school type',
                 'form.school.types.public': 'Public School',
                 'form.school.types.private': 'Private School',
                 'form.school.types.charter': 'Charter School',
                 'form.school.types.international': 'International School',
-                'form.school.total_students': 'Total Students (Approximate)',
-                'form.school.total_placeholder': 'e.g., 500',
-                
-                // Form - Teacher/Mentor
+                'form.school.total_students': 'Total Students',
                 'form.teacher.title': 'Teacher Coordinator',
-                'form.teacher.description': 'Information of teacher or administrator who will be responsible for managing this platform.',
-                'form.teacher.name': 'Teacher Coordinator Name',
-                'form.teacher.name_placeholder': 'Teacher coordinator\'s full name',
-                'form.teacher.email': 'Teacher Coordinator Email',
-                'form.teacher.email_placeholder': 'teacher@example.com',
-                
-                // Form - Students
+                'form.teacher.name': 'Coordinator Name',
+                'form.teacher.email': 'Coordinator Email',
                 'form.students.title': 'Student Management',
                 'form.students.description': 'Add students individually or upload them in bulk using our Excel template.',
-                
-                // Form - Bulk Upload
                 'form.bulk.title': 'Bulk Student Upload',
                 'form.bulk.description': 'Save time by uploading multiple students at once using our Excel template.',
                 'form.bulk.template_title': 'Download Excel Template',
@@ -2025,61 +1172,34 @@
                 'form.bulk.browse_text': 'or click to browse files',
                 'form.bulk.format_info': 'Supported formats: .xlsx, .xls (Max size: 10MB)',
                 'form.bulk.processing': 'Processing Excel file...',
-                'form.bulk.file_selected': 'File "{filename}" selected successfully. Student data will be processed when you submit the registration form.',
                 'form.bulk.file_processed': 'Successfully processed "{filename}" - Found {count} students',
                 'form.bulk.no_data': 'Excel file is empty or contains no data.',
                 'form.bulk.no_students': 'No student data found in the file.',
-                'form.bulk.headers.student_name': 'Student Name',
-                'form.bulk.headers.ic_number': 'IC Number',
-                'form.bulk.headers.email': 'Email',
-                'form.bulk.headers.tingkatan': 'Tingkatan',
-                'form.bulk.headers.phone': 'Student\'s Phone Number',
-                'form.bulk.headers.dob': 'Date of Birth',
-                'form.bulk.headers.gender': 'Gender',
-                'form.bulk.headers.parent_name': 'Parent/Guardian Name',
-                'form.bulk.headers.parent_phone': 'Parent/Guardian Phone',
-                'form.bulk.headers.address': 'Address',
-                
-                // Form - Individual
                 'form.individual.title': 'Add Individual Students',
                 'form.individual.description': 'Add students one by one using the form below',
                 'form.individual.add_btn': 'Add Student',
-                
-                // Form - Student Details
                 'form.student.title': 'Student',
                 'form.student.name': 'Student Name',
-                'form.student.name_placeholder': 'Full student name',
                 'form.student.ic': 'IC Number',
-                'form.student.ic_placeholder': '980123456789',
                 'form.student.email': 'Email',
-                'form.student.email_placeholder': 'email@example.com',
-                'form.student.phone': 'Student\'s Phone Number',
-                'form.student.phone_placeholder': '0123456789',
+                'form.student.phone': 'Student Phone',
                 'form.student.grade': 'Tingkatan',
                 'form.student.grade_placeholder': 'Select tingkatan',
                 'form.student.grade.form5': 'Tingkatan 5',
-                
-                // Form - Review
                 'form.review.title': 'Review & Submit',
-                'form.review.description': 'Please review all the information before submitting your registration.',
+                'form.review.description': 'Please review all information before submitting your registration.',
                 'form.review.next_title': 'What happens next?',
                 'form.review.next_1': 'Our team will review your registration within 24-48 hours',
                 'form.review.next_2': 'You\'ll receive an email confirmation with your account details',
                 'form.review.next_3': 'Students will get individual login credentials',
-                'form.review.next_4': 'You can start using the platform immediately after approval',
-                
-                // Navigation
+                'form.review.next_4': 'You can start using the platform after approval',
                 'nav.previous': 'Previous',
                 'nav.next': 'Next',
                 'nav.submit': 'Submit Registration',
-                
-                // Validation messages
                 'validation.students_required': 'Please add students either individually or by uploading an Excel file.',
                 'validation.students_required_step': 'Please add students either individually or by uploading an Excel file before proceeding.',
                 'validation.required_fields': 'Please fill in all required fields before proceeding.',
-                
-                // Success page
-                'success.title': 'Registration Successful!',
+                'success.title': 'Registration Successful! 🎉',
                 'success.step1.title': 'School Activated',
                 'success.step1.desc': 'Your school has been successfully activated in our system',
                 'success.step2.title': 'Students Registered',
@@ -2090,27 +1210,20 @@
                 'success.next.step1': 'Wait for confirmation email within 24-48 hours',
                 'success.next.step2': 'Share login information with students',
                 'success.next.step3': 'Start using the platform after approval',
-                'success.next.step4': 'Contact support if you have questions',
-                'success.contact.title': 'Need Help?',
-                'success.contact.email': 'Email: etuition@uniti.edu.my',
-                'success.contact.phone': 'Phone: +60 12-345 6789',
-                'success.btn.home': 'Back to Home',
-                'success.btn.print': 'Print Information'
+                'success.btn.home': 'Back to Home'
             }
         };
 
         function switchLanguage(lang) {
             currentLanguage = lang;
             
-            // Update active language option
-            document.querySelectorAll('.language-option').forEach(option => {
+            document.querySelectorAll('.sf-language-option').forEach(option => {
                 option.classList.remove('active');
                 if (option.dataset.lang === lang) {
                     option.classList.add('active');
                 }
             });
             
-            // Update all text content
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.dataset.key;
                 if (translations[lang] && translations[lang][key]) {
@@ -2118,15 +1231,6 @@
                 }
             });
             
-            // Update placeholders
-            document.querySelectorAll('[data-placeholder-key]').forEach(element => {
-                const key = element.dataset.placeholderKey;
-                if (translations[lang] && translations[lang][key]) {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-            
-            // Update select options
             document.querySelectorAll('#schoolTypeSelect option[data-key]').forEach(option => {
                 const key = option.dataset.key;
                 if (translations[lang] && translations[lang][key]) {
@@ -2134,7 +1238,6 @@
                 }
             });
             
-            // Update student form select options (dynamically created)
             document.querySelectorAll('select[name*="[grade]"] option[data-key]').forEach(option => {
                 const key = option.dataset.key;
                 if (translations[lang] && translations[lang][key]) {
@@ -2142,8 +1245,7 @@
                 }
             });
             
-            // Reinitialize Select2 with new language
-            if (typeof initializeSchoolSelect === 'function') {
+            if (typeof initializeSchoolSelect === 'function' && $('#schoolSelect').length) {
                 $('#schoolSelect').select2('destroy');
                 initializeSchoolSelect();
             }
@@ -2153,14 +1255,96 @@
         let currentStep = 1;
         const totalSteps = 3;
         let students = [];
+        let excelDataProcessed = false; // Track if Excel data was successfully processed
+        let droppedExcelFile = null; // Store the dropped file for form submission
 
-        // Initialize the form
+        // Old student data from failed validation
+        const oldStudents = @json(old('students', []));
+        
+        // Check if there are validation errors for students
+        const hasStudentErrors = {{ $errors->has('students.*') || $errors->has('students_excel') ? 'true' : 'false' }};
+        
         document.addEventListener('DOMContentLoaded', function() {
             updateStepDisplay();
             setupEventListeners();
-            // Initialize with Malay as default
             switchLanguage('ms');
+            
+            // Restore old student data if validation failed
+            if (oldStudents && Object.keys(oldStudents).length > 0) {
+                restoreOldStudents();
+                
+                // If there are student errors, go to step 2
+                if (hasStudentErrors) {
+                    currentStep = 2;
+                    updateStepDisplay();
+                }
+            }
         });
+        
+        function restoreOldStudents() {
+            // Convert object to array if needed
+            const studentsArray = Array.isArray(oldStudents) ? oldStudents : Object.values(oldStudents);
+            
+            studentsArray.forEach((studentData, index) => {
+                if (studentData && (studentData.name || studentData.ic_number)) {
+                    addStudentFormWithData(index, studentData);
+                }
+            });
+        }
+        
+        function addStudentFormWithData(index, data) {
+            const studentCard = document.createElement('div');
+            studentCard.className = 'sf-student-card sf-fade-in';
+            studentCard.innerHTML = `
+                <button type="button" class="sf-remove-student" onclick="removeStudent(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="sf-student-card-title">
+                    <i class="fas fa-user"></i>
+                    <span data-key="form.student.title">Pelajar</span> ${index + 1}
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.name">Nama Pelajar</span> <span class="sf-required">*</span></label>
+                            <input type="text" name="students[${index}][name]" class="sf-form-control" placeholder="Nama penuh pelajar" value="${data.name || ''}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.ic">No. Kad Pengenalan</span> <span class="sf-required">*</span></label>
+                            <input type="text" name="students[${index}][ic_number]" class="sf-form-control" placeholder="980123456789" value="${data.ic_number || ''}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.email">E-mel</span></label>
+                            <input type="email" name="students[${index}][email]" class="sf-form-control" placeholder="e-mel@contoh.com" value="${data.email || ''}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.phone">No. Telefon</span></label>
+                            <input type="tel" name="students[${index}][phone]" class="sf-form-control" placeholder="0123456789" value="${data.phone || ''}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.grade">Tingkatan</span> <span class="sf-required">*</span></label>
+                            <select name="students[${index}][grade]" class="sf-form-control" required>
+                                <option value="" data-key="form.student.grade_placeholder">Pilih tingkatan</option>
+                                <option value="form5" data-key="form.student.grade.form5" ${data.grade === 'form5' ? 'selected' : ''}>Tingkatan 5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('studentsContainer').appendChild(studentCard);
+            students.push(data);
+        }
 
         function initializeSchoolSelect() {
             const placeholder = currentLanguage === 'ms' ? 'Cari dan pilih sekolah anda...' : 'Search and select your school...';
@@ -2174,19 +1358,13 @@
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
+                        return { q: params.term, page: params.page };
                     },
                     processResults: function (data, params) {
                         params.page = params.page || 1;
                         return {
                             results: data.map(function(school) {
-                                return {
-                                    id: school.id,
-                                    text: school.name
-                                };
+                                return { id: school.id, text: school.name };
                             })
                         };
                     },
@@ -2197,42 +1375,35 @@
         }
 
         function setupEventListeners() {
-            // Initialize Select2 for school selection
-            initializeSchoolSelect();
+            if ($('#schoolSelect').length) {
+                initializeSchoolSelect();
+            }
             
-            // Language switcher
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    switchLanguage(option.dataset.lang);
-                });
+            document.querySelectorAll('.sf-language-option').forEach(option => {
+                option.addEventListener('click', () => switchLanguage(option.dataset.lang));
             });
             
-            // Navigation buttons
-            document.getElementById('nextBtn').addEventListener('click', nextStep);
-            document.getElementById('prevBtn').addEventListener('click', prevStep);
+            document.getElementById('nextBtn')?.addEventListener('click', nextStep);
+            document.getElementById('prevBtn')?.addEventListener('click', prevStep);
+            document.getElementById('addStudentBtn')?.addEventListener('click', addStudentForm);
             
-            // Add student button
-            document.getElementById('addStudentBtn').addEventListener('click', addStudentForm);
-            
-            // File upload
             const uploadArea = document.getElementById('uploadArea');
             const fileInput = document.getElementById('excelFile');
             
-            uploadArea.addEventListener('click', () => fileInput.click());
-            uploadArea.addEventListener('dragover', handleDragOver);
-            uploadArea.addEventListener('drop', handleDrop);
-            fileInput.addEventListener('change', handleFileSelect);
+            if (uploadArea && fileInput) {
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', handleDragOver);
+                uploadArea.addEventListener('dragleave', (e) => e.currentTarget.classList.remove('dragover'));
+                uploadArea.addEventListener('drop', handleDrop);
+                fileInput.addEventListener('change', handleFileSelect);
+            }
             
-            // Download template
-            document.getElementById('downloadTemplate').addEventListener('click', downloadTemplate);
-            
-            // Form submission
-            document.getElementById('registrationForm').addEventListener('submit', handleSubmit);
+            document.getElementById('downloadTemplate')?.addEventListener('click', downloadTemplate);
+            document.getElementById('registrationForm')?.addEventListener('submit', handleSubmit);
         }
 
         function updateStepDisplay() {
-            // Update progress indicators
-            document.querySelectorAll('.step').forEach((step, index) => {
+            document.querySelectorAll('.sf-step').forEach((step, index) => {
                 const stepNumber = index + 1;
                 step.classList.remove('active', 'completed');
                 
@@ -2243,28 +1414,26 @@
                 }
             });
 
-            // Show/hide form sections
-            document.querySelectorAll('.form-section').forEach((section, index) => {
+            document.querySelectorAll('.sf-form-section').forEach((section, index) => {
                 section.classList.remove('active');
                 if (index + 1 === currentStep) {
                     section.classList.add('active');
                 }
             });
 
-            // Update navigation buttons
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const submitBtn = document.getElementById('submitBtn');
 
-            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+            if (prevBtn) prevBtn.style.display = currentStep > 1 ? 'inline-flex' : 'none';
             
             if (currentStep === totalSteps) {
-                nextBtn.style.display = 'none';
-                submitBtn.style.display = 'block';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (submitBtn) submitBtn.style.display = 'inline-flex';
                 populateReview();
             } else {
-                nextBtn.style.display = 'block';
-                submitBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'inline-flex';
+                if (submitBtn) submitBtn.style.display = 'none';
             }
         }
 
@@ -2273,6 +1442,7 @@
                 if (currentStep < totalSteps) {
                     currentStep++;
                     updateStepDisplay();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             }
         }
@@ -2281,11 +1451,14 @@
             if (currentStep > 1) {
                 currentStep--;
                 updateStepDisplay();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
         function validateCurrentStep() {
             const currentSection = document.getElementById(`step${currentStep}`);
+            if (!currentSection) return true;
+            
             const requiredFields = currentSection.querySelectorAll('input[required], select[required], textarea[required]');
             
             let isValid = true;
@@ -2298,10 +1471,9 @@
                 }
             });
 
-            // For step 2 (students), validate that at least one method of adding students is used
             if (currentStep === 2) {
-                const hasIndividualStudents = document.querySelectorAll('.student-card').length > 0;
-                const hasExcelFile = document.getElementById('excelFile').files.length > 0;
+                const hasIndividualStudents = document.querySelectorAll('.sf-student-card').length > 0;
+                const hasExcelFile = document.getElementById('excelFile')?.files.length > 0 || excelDataProcessed;
                 
                 if (!hasIndividualStudents && !hasExcelFile) {
                     isValid = false;
@@ -2319,43 +1491,46 @@
         function addStudentForm() {
             const studentIndex = students.length;
             const studentCard = document.createElement('div');
-            studentCard.className = 'student-card animate__animated animate__fadeInUp';
+            studentCard.className = 'sf-student-card sf-fade-in';
             studentCard.innerHTML = `
-                <button type="button" class="remove-student" onclick="removeStudent(${studentIndex})">
+                <button type="button" class="sf-remove-student" onclick="removeStudent(${studentIndex})">
                     <i class="fas fa-times"></i>
                 </button>
-                <h5><i class="fas fa-user"></i> <span data-key="form.student.title">Pelajar</span> ${studentIndex + 1}</h5>
+                <div class="sf-student-card-title">
+                    <i class="fas fa-user"></i>
+                    <span data-key="form.student.title">Pelajar</span> ${studentIndex + 1}
+                </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.name">Nama Pelajar</span> <span class="required">*</span></label>
-                            <input type="text" name="students[${studentIndex}][name]" class="form-control" data-placeholder-key="form.student.name_placeholder" placeholder="Nama penuh pelajar" required>
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.name">Nama Pelajar</span> <span class="sf-required">*</span></label>
+                            <input type="text" name="students[${studentIndex}][name]" class="sf-form-control" placeholder="Nama penuh pelajar" required>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.ic">No. Kad Pengenalan</span> <span class="required">*</span></label>
-                            <input type="text" name="students[${studentIndex}][ic_number]" class="form-control" data-placeholder-key="form.student.ic_placeholder" placeholder="980123456789" required>
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.ic">No. Kad Pengenalan</span> <span class="sf-required">*</span></label>
+                            <input type="text" name="students[${studentIndex}][ic_number]" class="sf-form-control" placeholder="980123456789" required>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.email">E-mel</span></label>
-                            <input type="email" name="students[${studentIndex}][email]" class="form-control" data-placeholder-key="form.student.email_placeholder" placeholder="e-mel@contoh.com">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.email">E-mel</span></label>
+                            <input type="email" name="students[${studentIndex}][email]" class="sf-form-control" placeholder="e-mel@contoh.com">
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.phone">No. Telefon Pelajar</span></label>
-                            <input type="tel" name="students[${studentIndex}][phone]" class="form-control" data-placeholder-key="form.student.phone_placeholder" placeholder="0123456789">
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.phone">No. Telefon</span></label>
+                            <input type="tel" name="students[${studentIndex}][phone]" class="sf-form-control" placeholder="0123456789">
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-label"><span data-key="form.student.grade">Tingkatan</span> <span class="required">*</span></label>
-                            <select name="students[${studentIndex}][grade]" class="form-control" required>
+                        <div class="sf-form-group">
+                            <label class="sf-form-label"><span data-key="form.student.grade">Tingkatan</span> <span class="sf-required">*</span></label>
+                            <select name="students[${studentIndex}][grade]" class="sf-form-control" required>
                                 <option value="" data-key="form.student.grade_placeholder">Pilih tingkatan</option>
                                 <option value="form5" data-key="form.student.grade.form5">Tingkatan 5</option>
                             </select>
@@ -2366,13 +1541,11 @@
 
             document.getElementById('studentsContainer').appendChild(studentCard);
             students.push({});
-            
-            // Apply current language translations to newly added student form
             setTimeout(() => switchLanguage(currentLanguage), 100);
         }
 
         function removeStudent(index) {
-            const studentCards = document.querySelectorAll('.student-card');
+            const studentCards = document.querySelectorAll('.sf-student-card');
             if (studentCards[index]) {
                 studentCards[index].remove();
                 students.splice(index, 1);
@@ -2381,10 +1554,12 @@
         }
 
         function updateStudentIndexes() {
-            const studentCards = document.querySelectorAll('.student-card');
+            const studentCards = document.querySelectorAll('.sf-student-card');
             studentCards.forEach((card, index) => {
-                const title = card.querySelector('h5');
-                title.innerHTML = `<i class="fas fa-user"></i> Student ${index + 1}`;
+                const title = card.querySelector('.sf-student-card-title');
+                if (title) {
+                    title.innerHTML = `<i class="fas fa-user"></i> <span data-key="form.student.title">Pelajar</span> ${index + 1}`;
+                }
                 
                 const inputs = card.querySelectorAll('input, select');
                 inputs.forEach(input => {
@@ -2393,8 +1568,8 @@
                     input.name = newName;
                 });
 
-                const removeBtn = card.querySelector('.remove-student');
-                removeBtn.setAttribute('onclick', `removeStudent(${index})`);
+                const removeBtn = card.querySelector('.sf-remove-student');
+                if (removeBtn) removeBtn.setAttribute('onclick', `removeStudent(${index})`);
             });
         }
 
@@ -2406,9 +1581,9 @@
         function handleDrop(e) {
             e.preventDefault();
             e.currentTarget.classList.remove('dragover');
-            
             const files = e.dataTransfer.files;
             if (files.length > 0) {
+                droppedExcelFile = files[0]; // Store the dropped file
                 handleFile(files[0]);
             }
         }
@@ -2416,48 +1591,42 @@
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (file) {
+                droppedExcelFile = null; // Clear any dropped file since we're using input
                 handleFile(file);
             }
         }
 
         function handleFile(file) {
             if (!file.name.match(/\.(xlsx|xls)$/)) {
-                alert('Please select a valid Excel file (.xlsx or .xls)');
+                alert('Sila pilih fail Excel yang sah (.xlsx atau .xls)');
                 return;
             }
 
             if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB');
+                alert('Saiz fail mestilah kurang daripada 10MB');
                 return;
             }
 
-            // Show upload progress
             document.getElementById('uploadProgress').style.display = 'block';
             
-            // Read and process the Excel file
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    // Get the first worksheet
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    
-                    // Convert to JSON
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
-                    // Process the data
                     processExcelData(jsonData, file.name);
-                    
                 } catch (error) {
+                    excelDataProcessed = false;
+                    droppedExcelFile = null;
                     document.getElementById('uploadProgress').style.display = 'none';
                     document.getElementById('uploadResults').style.display = 'block';
                     document.getElementById('uploadResults').innerHTML = `
-                        <div class="alert alert-danger">
+                        <div class="sf-alert sf-alert-danger">
                             <i class="fas fa-exclamation-circle"></i>
-                            Error reading Excel file: ${error.message}
+                            <span>Ralat membaca fail Excel: ${error.message}</span>
                         </div>
                     `;
                 }
@@ -2471,68 +1640,59 @@
             document.getElementById('uploadResults').style.display = 'block';
             
             if (data.length < 2) {
+                excelDataProcessed = false;
+                droppedExcelFile = null;
                 document.getElementById('uploadResults').innerHTML = `
-                    <div class="alert alert-warning">
+                    <div class="sf-alert sf-alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        ${translations[currentLanguage]['form.bulk.no_data']}
+                        <span>${translations[currentLanguage]['form.bulk.no_data']}</span>
                     </div>
                 `;
                 return;
             }
             
-            // Get headers and data rows
-            const headers = data[0];
             const rows = data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim()));
             
             if (rows.length === 0) {
+                excelDataProcessed = false;
+                droppedExcelFile = null;
                 document.getElementById('uploadResults').innerHTML = `
-                    <div class="alert alert-warning">
+                    <div class="sf-alert sf-alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        ${translations[currentLanguage]['form.bulk.no_students']}
+                        <span>${translations[currentLanguage]['form.bulk.no_students']}</span>
                     </div>
                 `;
                 return;
             }
             
-            // Create table HTML with improved styling
+            // Mark that Excel data was successfully processed
+            excelDataProcessed = true;
+            
             let tableHTML = `
-                <div class="data-summary">
+                <div class="sf-data-summary">
                     <i class="fas fa-check-circle"></i>
                     <span>${translations[currentLanguage]['form.bulk.file_processed'].replace('{filename}', fileName).replace('{count}', rows.length)}</span>
                 </div>
-                <div class="excel-data-table">
+                <div class="sf-excel-table">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>`;
+                                <tr>
+                                    <th>Nama Pelajar</th>
+                                    <th>No. KP</th>
+                                    <th>E-mel</th>
+                                    <th>Tingkatan</th>
+                                    <th>Telefon</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
             
-            // Add headers
-            const expectedHeaders = [
-                translations[currentLanguage]['form.bulk.headers.student_name'] || 'Student Name',
-                translations[currentLanguage]['form.bulk.headers.ic_number'] || 'IC Number', 
-                translations[currentLanguage]['form.bulk.headers.email'] || 'Email',
-                translations[currentLanguage]['form.bulk.headers.tingkatan'] || 'Tingkatan',
-                translations[currentLanguage]['form.bulk.headers.phone'] || 'Student\'s Phone Number',
-                translations[currentLanguage]['form.bulk.headers.dob'] || 'Date of Birth',
-                translations[currentLanguage]['form.bulk.headers.gender'] || 'Gender',
-                translations[currentLanguage]['form.bulk.headers.parent_name'] || 'Parent/Guardian Name',
-                translations[currentLanguage]['form.bulk.headers.parent_phone'] || 'Parent/Guardian Phone',
-                translations[currentLanguage]['form.bulk.headers.address'] || 'Address'
-            ];
-            
-            expectedHeaders.forEach(header => {
-                tableHTML += `<th>${header}</th>`;
-            });
-            
-            tableHTML += `</tr></thead><tbody>`;
-            
-            // Add data rows
-            rows.forEach((row, index) => {
+            rows.forEach((row) => {
                 tableHTML += '<tr>';
-                for (let i = 0; i < 10; i++) { // Ensure we show all 10 columns
+                for (let i = 0; i < 5; i++) {
                     const cellValue = row[i] || '';
-                    const displayValue = cellValue.toString().length > 30 ? 
-                        cellValue.toString().substring(0, 30) + '...' : cellValue;
+                    const displayValue = cellValue.toString().length > 25 ? 
+                        cellValue.toString().substring(0, 25) + '...' : cellValue;
                     tableHTML += `<td title="${cellValue}">${displayValue}</td>`;
                 }
                 tableHTML += '</tr>';
@@ -2544,339 +1704,127 @@
         }
 
         function downloadTemplate() {
-            // Trigger direct download of Excel template
             window.location.href = '{{ route("school.download-template") }}';
-            
-            // Optionally, also open the template view in a new tab for reference
-            // window.open('{{ route("school.student-template") }}', '_blank');
         }
 
         function populateReview() {
             const form = document.getElementById('registrationForm');
+            if (!form) return;
+            
             const formData = new FormData(form);
+            const selectedSchoolText = $('#schoolSelect option:selected').text() || 'Tidak dipilih';
             
-            // Get selected school name from Select2
-            const selectedSchoolText = $('#schoolSelect option:selected').text() || 'Not selected';
-            
-            let reviewHTML = '<div class="row">';
-            
-            // School Information Review
-            reviewHTML += `
-                <div class="col-md-8">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-school"></i> School Information</h5>
-                        </div>
-                        <div class="card-body">
+            let reviewHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="sf-feature-box">
+                            <div class="sf-feature-box-title">
+                                <i class="fas fa-school" style="color: var(--sf-ocean-bright);"></i>
+                                Maklumat Sekolah
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>School Name:</strong> ${selectedSchoolText}</p>
-                                    <p><strong>School Email:</strong> ${formData.get('school_email') || 'Not provided'}</p>
-                                    <p><strong>Phone:</strong> ${formData.get('phone') || 'Not provided'}</p>
+                                    <p><strong>Nama Sekolah:</strong> ${selectedSchoolText}</p>
+                                    <p><strong>E-mel:</strong> ${formData.get('school_email') || 'Tidak disediakan'}</p>
+                                    <p><strong>Telefon:</strong> ${formData.get('phone') || 'Tidak disediakan'}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Type:</strong> ${formData.get('school_type') || 'Not provided'}</p>
-                                    <p><strong>Total Students:</strong> ${formData.get('total_students') || 'Not specified'}</p>
+                                    <p><strong>Jenis:</strong> ${formData.get('school_type') || 'Tidak disediakan'}</p>
+                                    <p><strong>Jumlah Pelajar:</strong> ${formData.get('total_students') || 'Tidak dinyatakan'}</p>
                                 </div>
                             </div>
-                            <p><strong>Address:</strong> ${formData.get('address') || 'Not provided'}</p>
+                            <p><strong>Alamat:</strong> ${formData.get('address') || 'Tidak disediakan'}</p>
                             
-                            <hr>
-                            <h6 class="text-success"><i class="fas fa-user-tie"></i> Teacher Coordinator</h6>
+                            <hr style="border-color: var(--sf-sky-medium);">
+                            <div class="sf-feature-box-title" style="margin-bottom: 0.5rem;">
+                                <i class="fas fa-user-tie" style="color: var(--sf-mint-fresh);"></i>
+                                Guru Pembimbing
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>Name:</strong> ${formData.get('teacher_name') || 'Not provided'}</p>
+                                    <p><strong>Nama:</strong> ${formData.get('teacher_name') || 'Tidak disediakan'}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Email:</strong> ${formData.get('teacher_email') || 'Not provided'}</p>
+                                    <p><strong>E-mel:</strong> ${formData.get('teacher_email') || 'Tidak disediakan'}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-
-            // Students Review
-            const studentCount = document.querySelectorAll('.student-card').length;
-            reviewHTML += `
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fas fa-users"></i> Students Summary</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Individual Students:</strong> ${studentCount}</p>
-                            <p><strong>Bulk Upload:</strong> ${document.getElementById('excelFile').files.length > 0 ? 'File uploaded' : 'No file'}</p>
+                    <div class="col-md-4">
+                        <div class="sf-feature-box sf-green">
+                            <div class="sf-feature-box-title">
+                                <i class="fas fa-users"></i>
+                                Ringkasan Pelajar
+                            </div>
+                            <p><strong>Pelajar Individu:</strong> ${document.querySelectorAll('.sf-student-card').length}</p>
+                            <p><strong>Muat Naik Excel:</strong> ${(document.getElementById('excelFile')?.files.length > 0 || excelDataProcessed) ? 'Fail dimuat naik ✅' : 'Tiada fail'}</p>
                         </div>
                     </div>
                 </div>
             `;
-
-            reviewHTML += '</div>';
             
-            document.getElementById('reviewContent').innerHTML = reviewHTML;
+            const reviewContent = document.getElementById('reviewContent');
+            if (reviewContent) reviewContent.innerHTML = reviewHTML;
         }
 
         function handleSubmit(e) {
-            // Show loading overlay first
             document.getElementById('loadingOverlay').style.display = 'flex';
             
-            // Check if students have been added
-            const hasIndividualStudents = document.querySelectorAll('.student-card').length > 0;
-            const hasExcelFile = document.getElementById('excelFile').files.length > 0;
+            const hasIndividualStudents = document.querySelectorAll('.sf-student-card').length > 0;
+            const fileInputHasFile = document.getElementById('excelFile')?.files.length > 0;
+            const hasExcelFile = fileInputHasFile || excelDataProcessed;
             
             if (!hasIndividualStudents && !hasExcelFile) {
                 e.preventDefault();
-                // Hide loading overlay since we're not submitting
                 document.getElementById('loadingOverlay').style.display = 'none';
                 alert(translations[currentLanguage]['validation.students_required']);
                 return false;
             }
             
-            // Store form data for printing
-            storeFormDataForPrint();
+            // If file was dropped (not selected via input) and we have processed data, 
+            // we need to manually submit with the dropped file
+            if (!fileInputHasFile && droppedExcelFile && excelDataProcessed) {
+                e.preventDefault();
+                
+                const form = document.getElementById('registrationForm');
+                const formData = new FormData(form);
+                
+                // Add the dropped file to FormData
+                formData.set('students_excel', droppedExcelFile);
+                
+                // Submit via fetch with redirect: 'manual' to prevent auto-following redirects
+                // This preserves the flash session for the actual browser navigation
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    redirect: 'manual'
+                })
+                .then(response => {
+                    // Check if it's a redirect response (type will be 'opaqueredirect' with manual mode)
+                    if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 301) {
+                        // For manual redirect, we need to navigate to success page
+                        // The flash session will be available for the browser navigation
+                        window.location.href = '{{ route("school.register.success") }}';
+                    } else if (response.ok) {
+                        // Direct success without redirect
+                        window.location.href = '{{ route("school.register.success") }}';
+                    } else {
+                        // Error response - reload to show errors
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert('Ralat semasa menghantar pendaftaran. Sila cuba lagi.');
+                });
+                
+                return false;
+            }
             
-            // Form will now submit to the server
             return true;
         }
-
-        function storeFormDataForPrint() {
-            const form = document.getElementById('registrationForm');
-            const formData = new FormData(form);
-            
-            // Get selected school name
-            const selectedSchoolText = $('#schoolSelect option:selected').text() || 'Not selected';
-            
-            // Collect individual students data
-            const individualStudents = [];
-            document.querySelectorAll('.student-card').forEach((card, index) => {
-                const nameInput = card.querySelector('input[name*="[name]"]');
-                const icInput = card.querySelector('input[name*="[ic_number]"]');
-                const emailInput = card.querySelector('input[name*="[email]"]');
-                const phoneInput = card.querySelector('input[name*="[phone]"]');
-                const gradeSelect = card.querySelector('select[name*="[grade]"]');
-                
-                if (nameInput && nameInput.value) {
-                    individualStudents.push({
-                        name: nameInput.value,
-                        ic: icInput ? icInput.value : '',
-                        email: emailInput ? emailInput.value : '',
-                        phone: phoneInput ? phoneInput.value : '',
-                        grade: gradeSelect ? gradeSelect.options[gradeSelect.selectedIndex].text : ''
-                    });
-                }
-            });
-            
-            // Get Excel file info
-            const excelFile = document.getElementById('excelFile').files[0];
-            const hasExcelFile = excelFile ? true : false;
-            const excelFileName = excelFile ? excelFile.name : null;
-            
-            // Store data in localStorage
-            const printData = {
-                schoolName: selectedSchoolText,
-                schoolEmail: formData.get('school_email') || '',
-                phone: formData.get('phone') || '',
-                schoolType: formData.get('school_type') || '',
-                address: formData.get('address') || '',
-                totalStudents: formData.get('total_students') || '',
-                teacherName: formData.get('teacher_name') || '',
-                teacherEmail: formData.get('teacher_email') || '',
-                individualStudents: individualStudents,
-                hasExcelFile: hasExcelFile,
-                excelFileName: excelFileName,
-                submissionDate: new Date().toLocaleString()
-            };
-            
-            localStorage.setItem('registrationPrintData', JSON.stringify(printData));
-        }
-
-        function printRegistrationDetails() {
-            // Populate print sections with stored data
-            populatePrintDetails();
-            
-            // Set print date
-            document.getElementById('printDate').textContent = new Date().toLocaleString();
-            
-            // Trigger print
-            window.print();
-        }
-
-        function generateStudentTable(students, startIndex, title) {
-            let tableHTML = `
-                <div class="student-table-container" style="margin-bottom: 20pt; page-break-inside: avoid;">
-                    <h4 style="color: black; font-size: 14pt; margin-bottom: 10pt; page-break-after: avoid;">${title} (${students.length} ${students.length === 1 ? 'student' : 'students'})</h4>
-                    <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
-                        <thead style="display: table-header-group;">
-                            <tr style="background: #f8f9fa; page-break-inside: avoid; break-inside: avoid;">
-                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 8%;">#</th>
-                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 30%;">Name</th>
-                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 20%;">IC Number</th>
-                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 27%;">Email</th>
-                                <th style="border: 1px solid #ccc; padding: 8pt; text-align: left; width: 15%;">Grade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            students.forEach((student, index) => {
-                tableHTML += `
-                    <tr style="page-break-inside: avoid; break-inside: avoid;">
-                        <td style="border: 1px solid #ccc; padding: 8pt;">${startIndex + index + 1}</td>
-                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.name || ''}</td>
-                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.ic || ''}</td>
-                        <td style="border: 1px solid #ccc; padding: 8pt; word-break: break-all;">${student.email || ''}</td>
-                        <td style="border: 1px solid #ccc; padding: 8pt;">${student.grade || ''}</td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            return tableHTML;
-        }
-
-        function populatePrintDetails() {
-            const printData = JSON.parse(localStorage.getItem('registrationPrintData') || '{}');
-            
-            // Calculate if we need page breaks based on content size
-            const studentCount = (printData.individualStudents?.length || 0);
-            const hasExcelFile = printData.hasExcelFile;
-            const needsStudentPageBreak = studentCount > 15; // If more than 15 students, start on new page
-            
-            // Populate submission details
-            const submissionDetails = document.getElementById('printSubmissionDetails');
-            if (submissionDetails) {
-                submissionDetails.innerHTML = `
-                    <div class="detail-row">
-                        <span class="detail-label">School Name:</span>
-                        <span class="detail-value">${printData.schoolName || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">School Email:</span>
-                        <span class="detail-value">${printData.schoolEmail || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Phone Number:</span>
-                        <span class="detail-value">${printData.phone || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">School Type:</span>
-                        <span class="detail-value">${getSchoolTypeText(printData.schoolType)}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Address:</span>
-                        <span class="detail-value">${printData.address || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Estimated Total Students:</span>
-                        <span class="detail-value">${printData.totalStudents || 'Not specified'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Teacher Coordinator:</span>
-                        <span class="detail-value">${printData.teacherName || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Teacher Email:</span>
-                        <span class="detail-value">${printData.teacherEmail || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Submission Date:</span>
-                        <span class="detail-value">${printData.submissionDate || 'N/A'}</span>
-                    </div>
-                `;
-            }
-            
-                        // Populate student details
-            const studentDetails = document.getElementById('printStudentDetails');
-            if (studentDetails) {
-                let studentHTML = '';
-                
-                // Add page break before student section if needed
-                if (needsStudentPageBreak) {
-                    studentHTML += '<div class="page-break-before"></div>';
-                }
-                
-                                // Individual students
-                if (printData.individualStudents && printData.individualStudents.length > 0) {
-                    const students = printData.individualStudents;
-                    const studentsPerPage = 25; // Maximum students per table page
-                    
-                    if (students.length <= studentsPerPage) {
-                        // Single table for smaller lists
-                        studentHTML += generateStudentTable(students, 0, 'Individual Students');
-                    } else {
-                        // Split into multiple tables for large lists
-                        for (let i = 0; i < students.length; i += studentsPerPage) {
-                            const chunk = students.slice(i, i + studentsPerPage);
-                            const tableTitle = `Individual Students (Page ${Math.floor(i / studentsPerPage) + 1})`;
-                            const isFirstTable = i === 0;
-                            
-                            if (!isFirstTable) {
-                                studentHTML += '<div class="page-break-before"></div>';
-                            }
-                            
-                            studentHTML += generateStudentTable(chunk, i, tableTitle);
-                        }
-                    }
-                }
-                
-                                 // Excel file info
-                 if (printData.hasExcelFile) {
-                     studentHTML += `
-                         <div class="no-page-break" style="margin-bottom: 15pt; page-break-inside: avoid;">
-                             <h4 style="color: black; font-size: 14pt; margin-bottom: 10pt; page-break-after: avoid;">Bulk Upload</h4>
-                             <div class="detail-row">
-                                 <span class="detail-label">Excel File:</span>
-                                 <span class="detail-value">${printData.excelFileName}</span>
-                             </div>
-                             <p style="font-size: 10pt; color: #666; margin: 5pt 0;">
-                                 Students from Excel file will be processed and added to the system.
-                             </p>
-                         </div>
-                     `;
-                 }
-                
-                if (!printData.individualStudents?.length && !printData.hasExcelFile) {
-                    studentHTML = '<p style="font-size: 11pt; color: #666;">No student information available for printing.</p>';
-                }
-                
-                studentDetails.innerHTML = studentHTML;
-            }
-            
-            // Ensure notes section has proper page break handling
-            const notesSection = document.querySelector('.notes-section');
-            if (notesSection && needsStudentPageBreak) {
-                notesSection.style.pageBreakBefore = 'auto';
-                notesSection.style.breakBefore = 'auto';
-            }
-        }
-
-        function getSchoolTypeText(type) {
-            const types = {
-                'public': currentLanguage === 'ms' ? 'Sekolah Kerajaan' : 'Public School',
-                'private': currentLanguage === 'ms' ? 'Sekolah Swasta' : 'Private School',
-                'charter': currentLanguage === 'ms' ? 'Sekolah Piagam' : 'Charter School',
-                'international': currentLanguage === 'ms' ? 'Sekolah Antarabangsa' : 'International School'
-            };
-            return types[type] || type || 'N/A';
-        }
-
-        // Initialize print details if we're on the success page
-        document.addEventListener('DOMContentLoaded', function() {
-            if (document.querySelector('.success-container')) {
-                populatePrintDetails();
-                // Set print date
-                const printDateElement = document.getElementById('printDate');
-                if (printDateElement) {
-                    printDateElement.textContent = new Date().toLocaleString();
-                }
-            }
-        });
     </script>
 </body>
-</html> 
+</html>
+
