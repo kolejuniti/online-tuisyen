@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Online Tuition Platform">
+  <meta name="author" content="">
+  <link rel="icon" href="favicon.ico">
+  <title>eTuition - Learn Without Limits</title>
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --secondary: #0ea5e9;
+  --secondary-light: #38bdf8;
+  --accent: #f472b6;
+  --light: #f8fafc;
+  --dark: #0f172a;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --bg-gradient: linear-gradient(135deg, #6366f1, #0ea5e9, #8b5cf6);
+  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --border-radius: 16px;
+  --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --input-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --button-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dark);
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+  perspective: 1000px;
+}
+
+/* Background Animation */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.bg-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  filter: blur(80px);
+  opacity: 0.5;
+  border-radius: 50%;
+  animation: float 20s infinite alternate ease-in-out;
+}
+
+.shape-1 {
+  background: var(--primary);
+  width: 500px;
+  height: 500px;
+  top: -200px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  background: var(--secondary);
+  width: 600px;
+  height: 600px;
+  bottom: -200px;
+  right: -100px;
+  animation-delay: 5s;
+}
+
+.shape-3 {
+  background: var(--accent);
+  width: 300px;
+  height: 300px;
+  bottom: 10%;
+  left: 20%;
+  animation-delay: 10s;
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle var(--duration, 4s) infinite var(--delay, 0s) ease-in-out;
+}
+
+/* Login Container */
+.login-container {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+  transition: transform 0.8s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  animation: appear 1s forwards 0.5s;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateZ(0) rotateX(5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0) rotateX(0deg);
+  }
+}
+
+.login-container:hover {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+}
+
+.login-header {
+  padding: 2.5rem 2.5rem 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-wrap: wrap;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: var(--bg-gradient);
+  padding: 8px;
+  box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.5);
+  animation: pulse 3s infinite;
+}
+
+/* Specific styling for the first logo (pkibs) */
+.logo-img:first-child {
+  width: 100px;
+  height: 65px;
+  object-fit: contain;
+  background: white;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.logo-text {
+  font-size: 2.0rem;
+  font-weight: 700;
+  line-height: 1;
+  position: relative;
+  white-space: nowrap;
+}
+
+.logo-text span {
+  display: inline-block;
+  transition: var(--transition);
+}
+
+.logo-text span:first-child {
+  color: var(--text-primary);
+}
+
+.logo-text span:not(:first-child) {
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: colorShift 8s infinite alternate;
+}
+
+@keyframes colorShift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(90deg);
+  }
+}
+
+.partnership-text {
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 0.7s;
+  padding: 0 1rem;
+}
+
+.welcome-text {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 0.8s;
+}
+
+/* Tab Switcher */
+.tab-switcher {
+  display: flex;
+  margin-bottom: 2rem;
+  position: relative;
+  background: rgba(241, 245, 249, 0.7);
+  border-radius: 50px;
+  padding: 5px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 1s;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 0;
+  width: 50%;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: white;
+}
+
+.tab-slider {
+  position: absolute;
+  height: calc(100% - 10px);
+  width: calc(50% - 5px);
+  background: var(--bg-gradient);
+  border-radius: 50px;
+  top: 5px;
+  left: 5px;
+  transition: left 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  z-index: 1;
+  box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
+}
+
+.tab-slider.right {
+  left: calc(50% + 0px);
+}
+
+/* Login Body */
+.login-body {
+  padding: 0 2.5rem 2.5rem;
+}
+
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  padding: 14px 20px 14px 60px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.7);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.3px;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: var(--input-shadow);
+}
+
+.form-control::placeholder {
+  color: transparent;
+}
+
+.form-control:focus {
+  outline: none;
+  background: rgba(241, 245, 249, 0.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.input-icon {
+  position: absolute;
+  left: 22px;
+  top: 27px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--primary);
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.form-control:focus + .input-icon {
+  color: var(--primary-dark);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Form Floating Label */
+.form-floating {
+  position: relative;
+}
+
+.form-floating label {
+  position: absolute;
+  left: 60px;
+  top: 14px;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  font-size: 0.95rem;
+}
+
+.form-floating input:focus ~ label,
+.form-floating input:not(:placeholder-shown) ~ label {
+  transform: translateY(-24px) translateX(-40px) scale(0.85);
+  color: var(--primary-dark);
+  font-weight: 600;
+  background: linear-gradient(120deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Remember Me & Forgot Password */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 1.2s;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+}
+
+.form-check-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(241, 245, 249, 0.7);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  margin-right: 8px;
+}
+
+.form-check-input:checked {
+  background: var(--bg-gradient);
+}
+
+.form-check-input:checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.form-check-input:checked ~ .form-check-label {
+  color: var(--primary-dark);
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+.form-check-input:checked {
+  animation: checkboxPulse 0.3s ease-out;
+}
+
+@keyframes checkboxPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+}
+
+/* Enhanced remember me styling */
+.form-check {
+  transition: all 0.3s ease;
+}
+
+.form-check:hover {
+  transform: translateX(2px);
+}
+
+.form-check-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+.forgot-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: linear-gradient(120deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+
+.forgot-link:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: var(--bg-gradient);
+  transition: width 0.3s ease;
+}
+
+.forgot-link:hover:after {
+  width: 100%;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--bg-gradient);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: var(--button-shadow);
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards 1.4s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.submit-btn:hover:before {
+  left: 100%;
+}
+
+/* Field-specific error messages */
+.field-error-message {
+  background: rgba(254, 226, 226, 0.95);
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  border-left: 3px solid #dc2626;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  animation: slideIn 0.3s ease-out;
+  line-height: 1.4;
+  word-break: break-word;
+  position: relative;
+  z-index: 1;
+}
+
+.field-error-message i {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Invalid input styling */
+.form-control.is-invalid {
+  border: 2px solid #dc2626 !important;
+  background: rgba(254, 226, 226, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2) !important;
+}
+
+.form-control.is-invalid + .input-icon {
+  color: #dc2626 !important;
+}
+
+/* Toggle Password */
+.toggle-password {
+  position: absolute;
+  right: 20px;
+  top: 27px;
+  transform: translateY(-50%);
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.toggle-password:hover {
+  color: var(--primary-dark);
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+/* Wave animation for logo text */
+.logo-text span {
+  animation-name: wave;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.logo-text span:nth-child(1) { animation-delay: 0.0s; }
+.logo-text span:nth-child(2) { animation-delay: 0.1s; }
+.logo-text span:nth-child(3) { animation-delay: 0.2s; }
+.logo-text span:nth-child(4) { animation-delay: 0.3s; }
+.logo-text span:nth-child(5) { animation-delay: 0.4s; }
+.logo-text span:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments - Tablet */
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  .login-container {
+    max-width: 90%;
+  }
+
+  .login-header {
+    padding: 2rem 2rem 1.25rem;
+  }
+
+  .login-body {
+    padding: 0 2rem 2rem;
+  }
+
+  .logo-container {
+    gap: 12px;
+  }
+
+  .logo-img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .logo-img:first-child {
+    width: 90px;
+    height: 58px;
+  }
+
+  .logo-text {
+    font-size: 1.9rem;
+  }
+
+  .partnership-text {
+    font-size: 0.8rem;
+  }
+
+  .welcome-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-switcher {
+    max-width: 320px;
+  }
+
+  .tab-btn {
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+}
+
+/* Responsive adjustments - Mobile */
+@media (max-width: 576px) {
+  body {
+    padding: 1rem;
+  }
+
+  .login-container {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .login-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .login-body {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .form-control {
+    padding: 12px 18px 12px 50px;
+    font-size: 0.95rem;
+  }
+
+  .form-floating label {
+    left: 50px;
+    font-size: 0.9rem;
+  }
+
+  .input-icon {
+    left: 18px;
+    top: 24px;
+    font-size: 1.1rem;
+  }
+
+  .toggle-password {
+    right: 18px;
+    top: 24px;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .forgot-link {
+    align-self: flex-end;
+  }
+
+  /* Mobile logo adjustments */
+  .logo-container {
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .logo-img:first-child {
+    width: 75px;
+    height: 48px;
+  }
+
+  .logo-text {
+    font-size: 1.7rem;
+  }
+
+  .partnership-text {
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .welcome-text {
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .tab-switcher {
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-btn {
+    font-size: 0.85rem;
+    padding: 10px 0;
+  }
+
+  .submit-btn {
+    padding: 13px 18px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mobile error message styling */
+  .field-error-message {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    gap: 6px;
+  }
+
+  .field-error-message i {
+    font-size: 0.85rem;
+  }
+}
+
+/* Responsive adjustments - Small Mobile */
+@media (max-width: 400px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  .login-container {
+    border-radius: 10px;
+  }
+
+  .login-header {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .login-body {
+    padding: 0 1rem 1.25rem;
+  }
+
+  /* Stack logo elements vertically on very small screens */
+  .logo-container {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 5px;
+  }
+
+  .logo-img:first-child {
+    width: 60px;
+    height: 40px;
+  }
+
+  .logo-text {
+    font-size: 1.4rem;
+  }
+
+  .partnership-text {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .welcome-text {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .tab-switcher {
+    padding: 4px;
+    margin-bottom: 1.25rem;
+  }
+
+  .tab-btn {
+    font-size: 0.8rem;
+    padding: 8px 0;
+  }
+
+  .form-control {
+    padding: 11px 16px 11px 45px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .form-floating label {
+    left: 45px;
+    font-size: 0.85rem;
+    top: 12px;
+  }
+
+  .input-icon {
+    left: 16px;
+    top: 21px;
+    font-size: 1rem;
+  }
+
+  .toggle-password {
+    right: 14px;
+    top: 21px;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-options {
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-check-label {
+    font-size: 0.8rem;
+  }
+
+  .forgot-link {
+    font-size: 0.8rem;
+  }
+
+  .submit-btn {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  /* Small mobile error message styling */
+  .field-error-message {
+    padding: 7px 10px;
+    font-size: 0.75rem;
+    margin-top: 6px;
+    gap: 5px;
+    border-radius: 6px;
+  }
+
+  .field-error-message i {
+    font-size: 0.8rem;
+  }
+}
+
+/* Focus Indicator */
+.focus-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--bg-gradient);
+  transition: all 0.4s ease;
+  border-radius: 10px;
+}
+
+.form-control:focus ~ .focus-indicator {
+  width: 80%;
+  left: 10%;
+}
+
+/* Password strength indicator */
+.password-strength {
+  height: 5px;
+  border-radius: 3px;
+  width: 100%;
+  background: #e5e7eb;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+
+.password-strength-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+}
+
+/* Modified responsive stars effect */
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+}
+  </style>
+</head>
+
+<body>
+  <!-- Background elements -->
+  <div class="background">
+    <div class="bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="stars" id="stars"></div>
+  </div>
+  
+  <div class="login-container" id="loginContainer">
+    <div class="login-header">
+      <div class="logo-container" id="logoContainer">
+        <img src="assets/images/logo/pkibs.png" alt="eTuition Logo" class="logo-img">
+        <div class="logo-text">
+          <span>e</span>
+          <span>T</span>
+          <span>u</span>
+          <span>i</span>
+          <span>t</span>
+          <span>i</span>
+          <span>o</span>
+          <span>n</span>
+        </div>
+        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
+      </div>
+      
+      <p class="partnership-text">Program bekerjasama Penglibatan Ibu Bapa, Komuniti Dan Sektor Swasta (PIBKS) dan Kolej UNITI</p>
+      
+      <h5 class="welcome-text">Welcome back! Sign in to continue learning</h5>
+      
+      <div class="tab-switcher">
+        <span class="tab-slider" id="tabSlider"></span>
+        <button class="tab-btn active" id="userTab">Teacher Login</button>
+        <button class="tab-btn" id="studentTab">Student Login</button>
+      </div>
+    </div>
+    
+    <div class="login-body">
+      <!-- Teacher Login Form -->
+      <div class="tab-content active" id="userContent">
+        <form action="{{ route('login') }}" method="post" id="userForm">
+          @csrf
+          <input type="hidden" name="login_type" value="user">
+          
+          <div class="form-group form-floating">
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder=" " required value="{{ old('email') }}">
+            <div class="input-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <label for="userEmail">Email address</label>
+            <div class="focus-indicator"></div>
+            @error('email')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
+          
+          <div class="form-group form-floating">
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="userPassword" placeholder=" " required>
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <label for="userPassword">Password</label>
+            <i class="fas fa-eye toggle-password" id="userTogglePassword"></i>
+            <div class="focus-indicator"></div>
+            <div class="password-strength">
+              <div class="password-strength-bar" id="userPasswordStrength"></div>
+            </div>
+            @error('password')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
+          
+          <div class="form-options">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="remember" id="userRemember">
+              <label class="form-check-label" for="userRemember">
+                Remember me
+              </label>
+            </div>
+            <a href="javascript:void(0)" class="forgot-link" id="userForgot">
+              Forgot password?
+            </a>
+          </div>
+          
+          <button type="submit" class="submit-btn" id="userSubmit">
+            <span class="btn-text">Sign In</span>
+          </button>
+        </form>
+      </div>
+      
+      <!-- Student Login Form -->
+      <div class="tab-content" id="studentContent">
+        <form action="{{ route('login') }}" method="post" id="studentForm">
+          @csrf
+          <input type="hidden" name="login_type" value="student">
+          
+          <div class="form-group form-floating">
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="studentEmail" placeholder=" " required value="{{ old('email') }}">
+            <div class="input-icon">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <label for="studentEmail">Email address</label>
+            <div class="focus-indicator"></div>
+            @error('email')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
+          
+          <div class="form-group form-floating">
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="studentPassword" placeholder=" " required>
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <label for="studentPassword">Password</label>
+            <i class="fas fa-eye toggle-password" id="studentTogglePassword"></i>
+            <div class="focus-indicator"></div>
+            <div class="password-strength">
+              <div class="password-strength-bar" id="studentPasswordStrength"></div>
+            </div>
+            @error('password')
+            <div class="field-error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
+          
+          <div class="form-options">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="remember" id="studentRemember">
+              <label class="form-check-label" for="studentRemember">
+                Remember me
+              </label>
+            </div>
+            <a href="javascript:void(0)" class="forgot-link" id="studentForgot">
+              Forgot password?
+            </a>
+          </div>
+          
+          <button type="submit" class="submit-btn" id="studentSubmit">
+            <span class="btn-text">Sign In</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="scripts.js"></script>
+  <script>
+    // Helper function to update checkbox styling
+function updateCheckboxStyle(checkbox, isChecked) {
+  const label = checkbox.nextElementSibling;
+  
+  if (isChecked) {
+    label.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
+    label.style.fontWeight = '600';
+    // Add a subtle glow effect
+    checkbox.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
+  } else {
+    label.style.color = '';
+    label.style.fontWeight = '';
+    checkbox.style.boxShadow = '';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize stars background
+  initializeStars();
+  
+  // Initialize the login container with animations
+  initializeLoginContainer();
+  
+  // Initialize form events and animations
+  initializeFormEvents();
+  
+  // Initialize tab switching
+  initializeTabSwitching();
+  
+  // Initialize 3D tilt effect
+  initializeTiltEffect();
+  
+  // Initialize any error messages present in the session
+  renderErrorMessages();
+  
+  // Handle form errors - show correct tab based on login_type
+  handleFormErrors();
+  
+  // Restore emails after all initialization is complete
+  setTimeout(() => {
+    restoreRememberedEmails();
+  }, 200);
+});
+
+// Create star particles in the background
+function initializeStars() {
+  const stars = document.getElementById('stars');
+  const maxStars = 100;
+  
+  for (let i = 0; i < maxStars; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    
+    // Random size between 1px and 3px
+    const size = Math.random() * 2 + 1;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    
+    // Random position
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    
+    // Random animation duration and delay
+    const duration = Math.random() * 3 + 2; // 2-5 seconds
+    const delay = Math.random() * 5; // 0-5 seconds
+    star.style.setProperty('--duration', `${duration}s`);
+    star.style.setProperty('--delay', `${delay}s`);
+    
+    stars.appendChild(star);
+  }
+  
+  // Add some shooting stars occasionally
+  setInterval(createShootingStar, 8000);
+}
+
+function createShootingStar() {
+  const stars = document.getElementById('stars');
+  const shootingStar = document.createElement('div');
+  shootingStar.className = 'star shooting-star';
+  
+  // Set position and style
+  shootingStar.style.left = `${Math.random() * 100}%`;
+  shootingStar.style.top = '0';
+  shootingStar.style.width = '2px';
+  shootingStar.style.height = '80px';
+  shootingStar.style.opacity = '1';
+  shootingStar.style.background = 'linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%)';
+  shootingStar.style.transform = 'rotate(35deg)';
+  shootingStar.style.borderRadius = '0';
+  
+  // Animation
+  shootingStar.style.animation = 'shooting 1s ease-out';
+  
+  stars.appendChild(shootingStar);
+  
+  // Remove after animation completes
+  setTimeout(() => {
+    shootingStar.remove();
+  }, 1000);
+}
+
+// Initialize login container animations
+function initializeLoginContainer() {
+  const logoContainer = document.getElementById('logoContainer');
+  const logoLetters = document.querySelectorAll('.logo-text span');
+  
+  // Add hover interaction to logo
+  logoContainer.addEventListener('mouseenter', () => {
+    logoLetters.forEach(letter => {
+      letter.style.animationPlayState = 'paused';
+      letter.style.transform = 'translateY(-8px)';
+      letter.style.transition = 'transform 0.3s ease';
+    });
+  });
+  
+  logoContainer.addEventListener('mouseleave', () => {
+    logoLetters.forEach(letter => {
+      letter.style.animationPlayState = 'running';
+      letter.style.transform = '';
+    });
+  });
+  
+  // Add interaction to form buttons and inputs
+  document.querySelectorAll('.submit-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', createButtonRipple);
+  });
+}
+
+// Create interactive ripple effect on buttons
+function createButtonRipple(e) {
+  const button = e.currentTarget;
+  
+  // Remove any existing ripples
+  const existingRipple = button.querySelector('.ripple');
+  if (existingRipple) {
+    existingRipple.remove();
+  }
+  
+  // Create ripple element
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  button.appendChild(ripple);
+  
+  // Position the ripple
+  const rect = button.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+  ripple.style.position = 'absolute';
+  ripple.style.borderRadius = '50%';
+  ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+  ripple.style.transform = 'scale(0)';
+  ripple.style.animation = 'ripple 0.6s linear';
+  
+  // Clean up after animation completes
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+}
+
+// Initialize tab switching
+function initializeTabSwitching() {
+  const userTab = document.getElementById('userTab');
+  const studentTab = document.getElementById('studentTab');
+  const tabSlider = document.getElementById('tabSlider');
+  const userContent = document.getElementById('userContent');
+  const studentContent = document.getElementById('studentContent');
+  
+  userTab.addEventListener('click', () => {
+    tabSlider.classList.remove('right');
+    userTab.classList.add('active');
+    studentTab.classList.remove('active');
+    
+    // Content switching with animation
+    fadeOut(studentContent, () => {
+      studentContent.classList.remove('active');
+      userContent.classList.add('active');
+      fadeIn(userContent);
+    });
+    
+    // Update hidden input
+    document.querySelector('input[name="login_type"]').value = 'user';
+    
+    // Load remembered email for user tab if remember is checked
+    loadRememberedEmailForTab('user');
+  });
+  
+  studentTab.addEventListener('click', () => {
+    tabSlider.classList.add('right');
+    studentTab.classList.add('active');
+    userTab.classList.remove('active');
+    
+    // Content switching with animation
+    fadeOut(userContent, () => {
+      userContent.classList.remove('active');
+      studentContent.classList.add('active');
+      fadeIn(studentContent);
+    });
+    
+    // Update hidden input
+    document.querySelector('input[name="login_type"]').value = 'student';
+    
+    // Load remembered email for student tab if remember is checked
+    loadRememberedEmailForTab('student');
+  });
+}
+
+// Load remembered email for the active tab
+function loadRememberedEmailForTab(userType) {
+  if (userType === 'user') {
+    const userEmailField = document.getElementById('userEmail');
+    const userRememberCheckbox = document.getElementById('userRemember');
+    const savedUserEmail = localStorage.getItem('remembered_user_email');
+    
+    if (savedUserEmail && userRememberCheckbox.checked && !userEmailField.value) {
+      userEmailField.value = savedUserEmail;
+    }
+  } else if (userType === 'student') {
+    const studentEmailField = document.getElementById('studentEmail');
+    const studentRememberCheckbox = document.getElementById('studentRemember');
+    const savedStudentEmail = localStorage.getItem('remembered_student_email');
+    
+    if (savedStudentEmail && studentRememberCheckbox.checked && !studentEmailField.value) {
+      studentEmailField.value = savedStudentEmail;
+    }
+  }
+}
+
+// Restore remembered emails on page load
+function restoreRememberedEmails() {
+  console.log('🔄 Starting email restoration process...');
+  
+  const userEmailField = document.getElementById('userEmail');
+  const studentEmailField = document.getElementById('studentEmail');
+  const userRememberCheckbox = document.getElementById('userRemember');
+  const studentRememberCheckbox = document.getElementById('studentRemember');
+  
+  // Get saved emails and remember states directly from localStorage
+  const savedUserEmail = localStorage.getItem('remembered_user_email');
+  const savedStudentEmail = localStorage.getItem('remembered_student_email');
+  const userRememberState = localStorage.getItem('remember_userRemember');
+  const studentRememberState = localStorage.getItem('remember_studentRemember');
+  
+  console.log('📧 Saved user email:', savedUserEmail);
+  console.log('📧 Saved student email:', savedStudentEmail);
+  console.log('☑️ User remember state:', userRememberState);
+  console.log('☑️ Student remember state:', studentRememberState);
+  
+  // Restore teacher email and checkbox state
+  if (userRememberState === 'true') {
+    console.log('✅ Restoring teacher email and checkbox...');
+    userRememberCheckbox.checked = true;
+    updateCheckboxStyle(userRememberCheckbox, true);
+    
+    if (savedUserEmail) {
+      userEmailField.value = savedUserEmail;
+      showRememberMessage('Teacher email restored', 'info');
+      console.log('✅ Teacher email restored:', savedUserEmail);
+    }
+  } else {
+    console.log('❌ User remember state is not true, skipping restoration');
+  }
+  
+  // Restore student email and checkbox state
+  if (studentRememberState === 'true') {
+    console.log('✅ Restoring student email and checkbox...');
+    studentRememberCheckbox.checked = true;
+    updateCheckboxStyle(studentRememberCheckbox, true);
+    
+    if (savedStudentEmail) {
+      studentEmailField.value = savedStudentEmail;
+      showRememberMessage('Student email restored', 'info');
+      console.log('✅ Student email restored:', savedStudentEmail);
+    }
+  } else {
+    console.log('❌ Student remember state is not true (' + studentRememberState + '), skipping restoration');
+    // If we have a saved email but no remember state, check if we should restore anyway
+    if (savedStudentEmail && !studentRememberState) {
+      console.log('🔧 Found saved student email but no remember state, checking localStorage keys...');
+      // Let's debug what keys exist in localStorage
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.includes('remember') || key.includes('student')) {
+          console.log('🔍 localStorage key found:', key, '=', localStorage.getItem(key));
+        }
+      }
+    }
+  }
+  
+  console.log('🔄 Email restoration process completed');
+}
+
+// Fade out animation with callback
+function fadeOut(element, callback) {
+  element.style.opacity = '1';
+  element.style.transform = 'translateY(0)';
+  
+  // Create animation
+  element.animate([
+    { opacity: 1, transform: 'translateY(0)' },
+    { opacity: 0, transform: 'translateY(-20px)' }
+  ], {
+    duration: 300,
+    easing: 'ease-out',
+    fill: 'forwards'
+  }).onfinish = callback;
+}
+
+// Fade in animation
+function fadeIn(element) {
+  element.style.opacity = '0';
+  element.style.transform = 'translateY(20px)';
+  
+  // Create animation
+  element.animate([
+    { opacity: 0, transform: 'translateY(20px)' },
+    { opacity: 1, transform: 'translateY(0)' }
+  ], {
+    duration: 300,
+    easing: 'ease-out',
+    fill: 'forwards'
+  });
+}
+
+// Initialize input field events and animations
+function initializeFormEvents() {
+  // Initialize email persistence
+  initializeEmailPersistence();
+  
+  // Toggle password visibility
+  document.querySelectorAll('.toggle-password').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const passwordField = this.previousElementSibling.previousElementSibling;
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      
+      // Toggle eye icon
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  });
+  
+  // Form submission animation
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      // Validate the form
+      if (!this.checkValidity()) {
+        e.preventDefault();
+        this.reportValidity();
+        return;
+      }
+      
+      const btn = this.querySelector('.submit-btn');
+      const btnText = btn.querySelector('.btn-text');
+      
+      // Disable the button
+      btn.disabled = true;
+      
+      // Create loading animation
+      btnText.innerHTML = '<span class="spinner"></span>Signing in...';
+      
+      // Add gradient animation
+      btn.style.backgroundSize = '400% 400%';
+      btn.style.animation = 'gradient-shift 3s ease infinite';
+    });
+  });
+  
+  // Password strength indicator
+  document.querySelectorAll('input[type="password"]').forEach(input => {
+    const strengthBar = document.getElementById(input.id + 'Strength');
+    const strengthContainer = input.parentElement.querySelector('.password-strength');
+    
+    input.addEventListener('focus', () => {
+      strengthContainer.style.display = 'block';
+    });
+    
+    input.addEventListener('blur', () => {
+      if (input.value.length === 0) {
+        strengthContainer.style.display = 'none';
+      }
+    });
+    
+    input.addEventListener('input', () => {
+      const strength = getPasswordStrength(input.value);
+      strengthBar.style.width = `${strength}%`;
+      
+      // Change color based on strength
+      if (strength < 33) {
+        strengthBar.style.background = '#ef4444';
+      } else if (strength < 66) {
+        strengthBar.style.background = '#f59e0b';
+      } else {
+        strengthBar.style.background = '#10b981';
+      }
+    });
+  });
+  
+  // Interactive form feedback
+  document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', () => {
+      input.parentElement.classList.add('focused');
+      input.parentElement.querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1.1)';
+    });
+    
+    input.addEventListener('blur', () => {
+      input.parentElement.classList.remove('focused');
+      input.parentElement.querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1)';
+    });
+  });
+  
+  // Checkbox animation and remember me persistence
+  document.querySelectorAll('.form-check-input').forEach(checkbox => {
+    console.log('🔗 Attaching event listener to checkbox:', checkbox.id);
+    
+    checkbox.addEventListener('change', function() {
+      const isChecked = this.checked;
+      const rememberKey = `remember_${this.id}`;
+      
+      console.log('☑️ Checkbox changed:', this.id, 'checked:', isChecked);
+      console.log('🔑 Using localStorage key:', rememberKey);
+      
+      // Save remember me state to localStorage
+      localStorage.setItem(rememberKey, isChecked.toString());
+      console.log('💾 Saved to localStorage:', rememberKey, '=', isChecked.toString());
+      
+      // Verify it was saved
+      const savedValue = localStorage.getItem(rememberKey);
+      console.log('✅ Verification - Retrieved value:', savedValue);
+      
+      // Update visual styling
+      updateCheckboxStyle(this, isChecked);
+      
+      // Add subtle animation feedback
+      this.parentElement.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.05)' },
+        { transform: 'scale(1)' }
+      ], {
+        duration: 200,
+        easing: 'ease-out'
+      });
+    });
+  });
+
+
+
+// Initialize email persistence functionality
+function initializeEmailPersistence() {
+  const userEmailField = document.getElementById('userEmail');
+  const studentEmailField = document.getElementById('studentEmail');
+  const userRememberCheckbox = document.getElementById('userRemember');
+  const studentRememberCheckbox = document.getElementById('studentRemember');
+
+
+
+  // Save/clear email when remember me checkbox changes
+  userRememberCheckbox.addEventListener('change', function() {
+    console.log('👤 User remember checkbox changed:', this.checked);
+    console.log('📧 Current user email field value:', userEmailField.value);
+    
+    if (this.checked) {
+      // Save current email if there is one, otherwise just save the state
+      if (userEmailField.value.trim()) {
+        localStorage.setItem('remembered_user_email', userEmailField.value.trim());
+        showRememberMessage('Teacher email will be remembered', 'success');
+        console.log('💾 Saved user email:', userEmailField.value.trim());
+      } else {
+        console.log('⚠️ No email to save yet, but remember state saved');
+      }
+    } else {
+      // Clear saved email when unchecked
+      localStorage.removeItem('remembered_user_email');
+      showRememberMessage('Teacher email will no longer be remembered', 'info');
+      console.log('🗑️ Cleared user email from storage');
+    }
+  });
+
+  studentRememberCheckbox.addEventListener('change', function() {
+    console.log('👤 Student remember checkbox changed:', this.checked);
+    console.log('📧 Current student email field value:', studentEmailField.value);
+    
+    if (this.checked) {
+      // Save current email if there is one, otherwise just save the state
+      if (studentEmailField.value.trim()) {
+        localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
+        showRememberMessage('Student email will be remembered', 'success');
+        console.log('💾 Saved student email:', studentEmailField.value.trim());
+      } else {
+        console.log('⚠️ No email to save yet, but remember state saved');
+      }
+    } else {
+      // Clear saved email when unchecked
+      localStorage.removeItem('remembered_student_email');
+      showRememberMessage('Student email will no longer be remembered', 'info');
+      console.log('🗑️ Cleared student email from storage');
+    }
+  });
+
+  // Save email when typing if remember me is checked
+  userEmailField.addEventListener('input', function() {
+    console.log('⌨️ User typing email:', this.value);
+    if (userRememberCheckbox.checked && this.value.trim()) {
+      localStorage.setItem('remembered_user_email', this.value.trim());
+      console.log('💾 Auto-saved user email while typing:', this.value.trim());
+    }
+  });
+
+  studentEmailField.addEventListener('input', function() {
+    console.log('⌨️ Student typing email:', this.value);
+    if (studentRememberCheckbox.checked && this.value.trim()) {
+      localStorage.setItem('remembered_student_email', this.value.trim());
+      console.log('💾 Auto-saved student email while typing:', this.value.trim());
+    }
+  });
+
+  // Handle form submission to save email
+  document.getElementById('userForm').addEventListener('submit', function(e) {
+    console.log('📝 User form submitted');
+    console.log('☑️ Remember checked:', userRememberCheckbox.checked);
+    console.log('📧 Email value:', userEmailField.value.trim());
+    
+    if (userRememberCheckbox.checked && userEmailField.value.trim()) {
+      localStorage.setItem('remembered_user_email', userEmailField.value.trim());
+      console.log('💾 Final save of user email on submit:', userEmailField.value.trim());
+    } else if (!userRememberCheckbox.checked) {
+      localStorage.removeItem('remembered_user_email');
+      console.log('🗑️ Removed user email on submit (remember unchecked)');
+    }
+  });
+
+  document.getElementById('studentForm').addEventListener('submit', function(e) {
+    console.log('📝 Student form submitted');
+    console.log('☑️ Remember checked:', studentRememberCheckbox.checked);
+    console.log('📧 Email value:', studentEmailField.value.trim());
+    
+    if (studentRememberCheckbox.checked && studentEmailField.value.trim()) {
+      localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
+      console.log('💾 Final save of student email on submit:', studentEmailField.value.trim());
+    } else if (!studentRememberCheckbox.checked) {
+      localStorage.removeItem('remembered_student_email');
+      console.log('🗑️ Removed student email on submit (remember unchecked)');
+    }
+  });
+}
+  
+  // Forgot password link animation
+  document.querySelectorAll('.forgot-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Add pulsing animation
+      this.animate([
+        { transform: 'scale(1)', opacity: 1 },
+        { transform: 'scale(1.05)', opacity: 0.8 },
+        { transform: 'scale(1)', opacity: 1 }
+      ], {
+        duration: 800,
+        easing: 'ease'
+      });
+      
+      // Show a message (in real implementation, this would open a modal or redirect)
+      const form = this.closest('form');
+      const email = form.querySelector('input[type="email"]').value;
+      
+      if (email) {
+        showMessage('Password reset link has been sent to your email');
+      } else {
+        showMessage('Please enter your email address first');
+      }
+    });
+  });
+}
+
+// Calculate password strength on a scale of 0-100
+function getPasswordStrength(password) {
+  if (!password) return 0;
+  
+  const length = Math.min(password.length * 10, 40);
+  let complexity = 0;
+  
+  // Check for different character types
+  if (/[A-Z]/.test(password)) complexity += 15;
+  if (/[a-z]/.test(password)) complexity += 10;
+  if (/[0-9]/.test(password)) complexity += 15;
+  if (/[^A-Za-z0-9]/.test(password)) complexity += 20;
+  
+  return Math.min(length + complexity, 100);
+}
+
+// Initialize 3D tilt effect
+function initializeTiltEffect() {
+  const loginContainer = document.getElementById('loginContainer');
+  let containerRect = loginContainer.getBoundingClientRect();
+  let centerX, centerY;
+  
+  // Recalculate the container dimensions on resize
+  window.addEventListener('resize', () => {
+    containerRect = loginContainer.getBoundingClientRect();
+    centerX = containerRect.left + containerRect.width / 2;
+    centerY = containerRect.top + containerRect.height / 2;
+  });
+  
+  // Calculate initial center
+  centerX = containerRect.left + containerRect.width / 2;
+  centerY = containerRect.top + containerRect.height / 2;
+  
+  document.addEventListener('mousemove', e => {
+    if (window.innerWidth <= 768) return; // Disable on mobile
+    
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
+    
+    // Calculate distance from center
+    const distance = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+    const maxDistance = Math.sqrt(containerRect.width * containerRect.width / 4 + containerRect.height * containerRect.height / 4);
+    
+    // Only apply effect if mouse is close enough to the container
+    if (distance < maxDistance * 1.5) {
+      // Calculate rotation angle - stronger when closer to container
+      const strength = (1 - distance / (maxDistance * 1.5)) * 5;
+      const rotateY = -mouseX / 25 * strength;
+      const rotateX = mouseY / 25 * strength;
+      
+      // Apply 3D rotation with smooth transition
+      loginContainer.style.transition = distance < maxDistance ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out';
+      loginContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      
+      // Add subtle shadow movement
+      const shadowX = -rotateY / 2;
+      const shadowY = rotateX / 2;
+      loginContainer.style.boxShadow = `${shadowX}px ${shadowY}px 30px rgba(0, 0, 0, 0.2)`;
+    } else {
+      // Reset when mouse is far away
+      resetTilt();
+    }
+  });
+  
+  // Reset tilt when mouse leaves window
+  document.addEventListener('mouseleave', resetTilt);
+  
+  function resetTilt() {
+    loginContainer.style.transition = 'transform 0.8s ease-out, box-shadow 0.8s ease-out';
+    loginContainer.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    loginContainer.style.boxShadow = 'var(--card-shadow)';
+  }
+}
+
+// Show feedback messages
+function showMessage(message) {
+  // Create message element if it doesn't exist
+  let messageElement = document.getElementById('feedbackMessage');
+  
+  if (!messageElement) {
+    messageElement = document.createElement('div');
+    messageElement.id = 'feedbackMessage';
+    messageElement.style.position = 'fixed';
+    messageElement.style.bottom = '20px';
+    messageElement.style.left = '50%';
+    messageElement.style.transform = 'translateX(-50%)';
+    messageElement.style.backgroundColor = 'rgba(79, 70, 229, 0.9)';
+    messageElement.style.color = 'white';
+    messageElement.style.padding = '10px 20px';
+    messageElement.style.borderRadius = '8px';
+    messageElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    messageElement.style.zIndex = '1000';
+    messageElement.style.opacity = '0';
+    messageElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    document.body.appendChild(messageElement);
+  }
+  
+  // Set message and show
+  messageElement.textContent = message;
+  messageElement.style.opacity = '1';
+  messageElement.style.transform = 'translateX(-50%) translateY(0)';
+  
+  // Hide after 3 seconds
+  setTimeout(() => {
+    messageElement.style.opacity = '0';
+    messageElement.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 3000);
+}
+
+// Show remember me specific messages
+function showRememberMessage(message, type = 'info') {
+  // Create remember message element if it doesn't exist
+  let messageElement = document.getElementById('rememberMessage');
+  
+  if (!messageElement) {
+    messageElement = document.createElement('div');
+    messageElement.id = 'rememberMessage';
+    messageElement.style.position = 'fixed';
+    messageElement.style.top = '20px';
+    messageElement.style.right = '20px';
+    messageElement.style.padding = '8px 16px';
+    messageElement.style.borderRadius = '6px';
+    messageElement.style.fontSize = '0.85rem';
+    messageElement.style.fontWeight = '500';
+    messageElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    messageElement.style.zIndex = '1000';
+    messageElement.style.opacity = '0';
+    messageElement.style.transition = 'all 0.3s ease';
+    messageElement.style.transform = 'translateX(100%)';
+    messageElement.style.maxWidth = '300px';
+    document.body.appendChild(messageElement);
+  }
+  
+  // Set colors based on type
+  if (type === 'info') {
+    messageElement.style.backgroundColor = 'rgba(14, 165, 233, 0.95)';
+    messageElement.style.color = 'white';
+    messageElement.innerHTML = `<i class="fas fa-info-circle" style="margin-right: 6px;"></i>${message}`;
+  } else if (type === 'success') {
+    messageElement.style.backgroundColor = 'rgba(34, 197, 94, 0.95)';
+    messageElement.style.color = 'white';
+    messageElement.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 6px;"></i>${message}`;
+  }
+  
+  // Show message
+  messageElement.style.opacity = '1';
+  messageElement.style.transform = 'translateX(0)';
+  
+  // Hide after 4 seconds
+  setTimeout(() => {
+    messageElement.style.opacity = '0';
+    messageElement.style.transform = 'translateX(100%)';
+  }, 4000);
+}
+
+// Handle error messages from server - animate field-specific error messages
+function renderErrorMessages() {
+  const fieldErrors = document.querySelectorAll('.field-error-message');
+  
+  // Animate any field-specific error messages
+  fieldErrors.forEach((errorMsg, index) => {
+    errorMsg.animate([
+      { opacity: 0, transform: 'translateY(-10px)' },
+      { opacity: 1, transform: 'translateY(0)' }
+    ], {
+      duration: 400,
+      delay: index * 100,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  });
+}
+
+// Handle form errors and show correct tab
+function handleFormErrors() {
+  // Check if there are validation errors
+  const hasErrors = document.querySelector('.field-error-message');
+  
+  if (hasErrors) {
+    // Get the old login_type from Laravel's old() helper
+    const oldLoginType = '{{ old("login_type") }}';
+    
+    if (oldLoginType === 'student') {
+      // Switch to student tab
+      const studentTab = document.getElementById('studentTab');
+      const userTab = document.getElementById('userTab');
+      const tabSlider = document.getElementById('tabSlider');
+      const userContent = document.getElementById('userContent');
+      const studentContent = document.getElementById('studentContent');
+      
+      // Update tab appearance
+      tabSlider.classList.add('right');
+      studentTab.classList.add('active');
+      userTab.classList.remove('active');
+      
+      // Switch content
+      userContent.classList.remove('active');
+      studentContent.classList.add('active');
+      
+      // Update hidden input value for future submissions
+      const hiddenInput = document.querySelector('input[name="login_type"]');
+      if (hiddenInput) {
+        hiddenInput.value = 'student';
+      }
+    }
+    
+    // Add error animation to field error messages
+    document.querySelectorAll('.field-error-message').forEach(errorMsg => {
+      errorMsg.animate([
+        { opacity: 0, transform: 'translateY(-10px)' },
+        { opacity: 1, transform: 'translateY(0)' }
+      ], {
+        duration: 400,
+        easing: 'ease-out'
+      });
+    });
+  }
+}
+
+// Add CSS animation rule for ripple effect
+if (!document.getElementById('rippleStyle')) {
+  const style = document.createElement('style');
+  style.id = 'rippleStyle';
+  style.textContent = `
+    @keyframes ripple {
+      to {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes shooting {
+      from {
+        transform: translateY(0) translateX(0) rotate(35deg);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh) translateX(100vw) rotate(35deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes gradient-shift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+  </script>
+</body>
+</html>

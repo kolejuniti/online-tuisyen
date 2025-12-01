@@ -1,2054 +1,1190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Online Tuition Platform">
-  <meta name="author" content="">
-  <link rel="icon" href="favicon.ico">
-  <title>eTuition - Learn Without Limits</title>
-  
-  <!-- External CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    :root {
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --primary-dark: #4f46e5;
-  --secondary: #0ea5e9;
-  --secondary-light: #38bdf8;
-  --accent: #f472b6;
-  --light: #f8fafc;
-  --dark: #0f172a;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --bg-gradient: linear-gradient(135deg, #6366f1, #0ea5e9, #8b5cf6);
-  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --border-radius: 16px;
-  --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --input-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  --button-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--dark);
-  position: relative;
-  overflow: hidden;
-  padding: 2rem;
-  perspective: 1000px;
-}
-
-/* Background Animation */
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-.bg-shapes {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.shape {
-  position: absolute;
-  filter: blur(80px);
-  opacity: 0.5;
-  border-radius: 50%;
-  animation: float 20s infinite alternate ease-in-out;
-}
-
-.shape-1 {
-  background: var(--primary);
-  width: 500px;
-  height: 500px;
-  top: -200px;
-  left: -100px;
-  animation-delay: 0s;
-}
-
-.shape-2 {
-  background: var(--secondary);
-  width: 600px;
-  height: 600px;
-  bottom: -200px;
-  right: -100px;
-  animation-delay: 5s;
-}
-
-.shape-3 {
-  background: var(--accent);
-  width: 300px;
-  height: 300px;
-  bottom: 10%;
-  left: 20%;
-  animation-delay: 10s;
-}
-
-/* Stars */
-.stars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: twinkle var(--duration, 4s) infinite var(--delay, 0s) ease-in-out;
-}
-
-/* Login Container */
-.login-container {
-  width: 100%;
-  max-width: 480px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
-  transition: transform 0.8s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  opacity: 0;
-  animation: appear 1s forwards 0.5s;
-}
-
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(30px) translateZ(0) rotateX(5deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateZ(0) rotateX(0deg);
-  }
-}
-
-.login-container:hover {
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-}
-
-.login-header {
-  padding: 2.5rem 2.5rem 1.5rem;
-  text-align: center;
-  position: relative;
-}
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 1.5rem;
-  transform: scale(1);
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  flex-wrap: wrap;
-}
-
-.logo-container:hover {
-  transform: scale(1.05);
-}
-
-.logo-img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 12px;
-  background: var(--bg-gradient);
-  padding: 8px;
-  box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.5);
-  animation: pulse 3s infinite;
-}
-
-/* Specific styling for the first logo (pkibs) */
-.logo-img:first-child {
-  width: 100px;
-  height: 65px;
-  object-fit: contain;
-  background: white;
-  border: 2px solid #e5e7eb;
-  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-  }
-}
-
-.logo-text {
-  font-size: 2.0rem;
-  font-weight: 700;
-  line-height: 1;
-  position: relative;
-  white-space: nowrap;
-}
-
-.logo-text span {
-  display: inline-block;
-  transition: var(--transition);
-}
-
-.logo-text span:first-child {
-  color: var(--text-primary);
-}
-
-.logo-text span:not(:first-child) {
-  background: var(--bg-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: colorShift 8s infinite alternate;
-}
-
-@keyframes colorShift {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(90deg);
-  }
-}
-
-.partnership-text {
-  color: var(--text-secondary);
-  font-weight: 400;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards 0.7s;
-  padding: 0 1rem;
-}
-
-.welcome-text {
-  color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards 0.8s;
-}
-
-/* Tab Switcher */
-.tab-switcher {
-  display: flex;
-  margin-bottom: 2rem;
-  position: relative;
-  background: rgba(241, 245, 249, 0.7);
-  border-radius: 50px;
-  padding: 5px;
-  max-width: 350px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-  transform: translateY(20px);
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards 1s;
-}
-
-.tab-btn {
-  background: transparent;
-  border: none;
-  padding: 12px 0;
-  width: 50%;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-  position: relative;
-  z-index: 2;
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  color: white;
-}
-
-.tab-slider {
-  position: absolute;
-  height: calc(100% - 10px);
-  width: calc(50% - 5px);
-  background: var(--bg-gradient);
-  border-radius: 50px;
-  top: 5px;
-  left: 5px;
-  transition: left 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-  z-index: 1;
-  box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
-}
-
-.tab-slider.right {
-  left: calc(50% + 0px);
-}
-
-/* Login Body */
-.login-body {
-  padding: 0 2.5rem 2.5rem;
-}
-
-.tab-content {
-  display: none;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.5s ease;
-}
-
-.tab-content.active {
-  display: block;
-  animation: fadeInUp 0.8s forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Form Styling */
-.form-group {
-  margin-bottom: 1.8rem;
-  position: relative;
-}
-
-.form-control {
-  width: 100%;
-  padding: 14px 20px 14px 60px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 12px;
-  background: rgba(241, 245, 249, 0.7);
-  color: var(--text-primary);
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 0.3px;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(5px);
-  box-shadow: var(--input-shadow);
-}
-
-.form-control::placeholder {
-  color: transparent;
-}
-
-.form-control:focus {
-  outline: none;
-  background: rgba(241, 245, 249, 0.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.input-icon {
-  position: absolute;
-  left: 22px;
-  top: 27px;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  color: var(--primary);
-  transition: all 0.4s ease;
-  z-index: 2;
-}
-
-.form-control:focus + .input-icon {
-  color: var(--primary-dark);
-  transform: translateY(-50%) scale(1.1);
-}
-
-/* Form Floating Label */
-.form-floating {
-  position: relative;
-}
-
-.form-floating label {
-  position: absolute;
-  left: 60px;
-  top: 14px;
-  color: var(--text-secondary);
-  transition: all 0.3s ease;
-  pointer-events: none;
-  font-size: 0.95rem;
-}
-
-.form-floating input:focus ~ label,
-.form-floating input:not(:placeholder-shown) ~ label {
-  transform: translateY(-24px) translateX(-40px) scale(0.85);
-  color: var(--primary-dark);
-  font-weight: 600;
-  background: linear-gradient(120deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Remember Me & Forgot Password */
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards 1.2s;
-}
-
-.form-check {
-  display: flex;
-  align-items: center;
-}
-
-.form-check-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: rgba(241, 245, 249, 0.7);
-  border-radius: 6px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
-  margin-right: 8px;
-}
-
-.form-check-input:checked {
-  background: var(--bg-gradient);
-}
-
-.form-check-input:checked::after {
-  content: '✓';
-  color: white;
-  font-size: 12px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.form-check-label {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.form-check-input:checked ~ .form-check-label {
-  color: var(--primary-dark);
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-}
-
-.form-check-input:checked {
-  animation: checkboxPulse 0.3s ease-out;
-}
-
-@keyframes checkboxPulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  }
-}
-
-/* Enhanced remember me styling */
-.form-check {
-  transition: all 0.3s ease;
-}
-
-.form-check:hover {
-  transform: translateX(2px);
-}
-
-.form-check-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
-}
-
-.forgot-link {
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  background: linear-gradient(120deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  position: relative;
-}
-
-.forgot-link:after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background: var(--bg-gradient);
-  transition: width 0.3s ease;
-}
-
-.forgot-link:hover:after {
-  width: 100%;
-}
-
-/* Submit Button */
-.submit-btn {
-  width: 100%;
-  padding: 15px 20px;
-  border: none;
-  border-radius: 12px;
-  background: var(--bg-gradient);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  box-shadow: var(--button-shadow);
-  transition: all 0.5s ease;
-  position: relative;
-  overflow: hidden;
-  transform: translateY(20px);
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards 1.4s;
-}
-
-.submit-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5);
-}
-
-.submit-btn:active {
-  transform: translateY(0);
-}
-
-.submit-btn:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: 0.5s;
-}
-
-.submit-btn:hover:before {
-  left: 100%;
-}
-
-/* Field-specific error messages */
-.field-error-message {
-  background: rgba(254, 226, 226, 0.95);
-  color: #b91c1c;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  margin-top: 10px;
-  border-left: 3px solid #dc2626;
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  animation: slideIn 0.3s ease-out;
-  line-height: 1.4;
-  word-break: break-word;
-  position: relative;
-  z-index: 1;
-}
-
-.field-error-message i {
-  font-size: 0.9rem;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Invalid input styling */
-.form-control.is-invalid {
-  border: 2px solid #dc2626 !important;
-  background: rgba(254, 226, 226, 0.1) !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-}
-
-.form-control.is-invalid:focus {
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2) !important;
-}
-
-.form-control.is-invalid + .input-icon {
-  color: #dc2626 !important;
-}
-
-/* Toggle Password */
-.toggle-password {
-  position: absolute;
-  right: 20px;
-  top: 27px;
-  transform: translateY(-50%);
-  color: var(--primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-}
-
-.toggle-password:hover {
-  color: var(--primary-dark);
-}
-
-/* Animations */
-@keyframes float {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    transform: translateY(-20px) translateX(10px);
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-  }
-}
-
-@keyframes twinkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-}
-
-/* Wave animation for logo text */
-.logo-text span {
-  animation-name: wave;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-.logo-text span:nth-child(1) { animation-delay: 0.0s; }
-.logo-text span:nth-child(2) { animation-delay: 0.1s; }
-.logo-text span:nth-child(3) { animation-delay: 0.2s; }
-.logo-text span:nth-child(4) { animation-delay: 0.3s; }
-.logo-text span:nth-child(5) { animation-delay: 0.4s; }
-.logo-text span:nth-child(6) { animation-delay: 0.5s; }
-
-@keyframes wave {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Loading spinner */
-.spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 0.8s ease-in-out infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Responsive adjustments - Tablet */
-@media (max-width: 768px) {
-  body {
-    padding: 1.5rem;
-  }
-
-  .login-container {
-    max-width: 90%;
-  }
-
-  .login-header {
-    padding: 2rem 2rem 1.25rem;
-  }
-
-  .login-body {
-    padding: 0 2rem 2rem;
-  }
-
-  .logo-container {
-    gap: 12px;
-  }
-
-  .logo-img {
-    width: 55px;
-    height: 55px;
-  }
-
-  .logo-img:first-child {
-    width: 90px;
-    height: 58px;
-  }
-
-  .logo-text {
-    font-size: 1.9rem;
-  }
-
-  .partnership-text {
-    font-size: 0.8rem;
-  }
-
-  .welcome-text {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .tab-switcher {
-    max-width: 320px;
-  }
-
-  .tab-btn {
-    font-size: 0.9rem;
-    padding: 10px 0;
-  }
-}
-
-/* Responsive adjustments - Mobile */
-@media (max-width: 576px) {
-  body {
-    padding: 1rem;
-  }
-
-  .login-container {
-    max-width: 100%;
-    border-radius: 12px;
-  }
-
-  .login-header {
-    padding: 1.5rem 1.5rem 1rem;
-  }
-
-  .login-body {
-    padding: 0 1.5rem 1.5rem;
-  }
-
-  .form-control {
-    padding: 12px 18px 12px 50px;
-    font-size: 0.95rem;
-  }
-
-  .form-floating label {
-    left: 50px;
-    font-size: 0.9rem;
-  }
-
-  .input-icon {
-    left: 18px;
-    top: 24px;
-    font-size: 1.1rem;
-  }
-
-  .toggle-password {
-    right: 18px;
-    top: 24px;
-  }
-
-  .form-options {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .forgot-link {
-    align-self: flex-end;
-  }
-
-  /* Mobile logo adjustments */
-  .logo-container {
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-
-  .logo-img {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-  }
-
-  .logo-img:first-child {
-    width: 75px;
-    height: 48px;
-  }
-
-  .logo-text {
-    font-size: 1.7rem;
-  }
-
-  .partnership-text {
-    font-size: 0.75rem;
-    padding: 0 0.5rem;
-  }
-
-  .welcome-text {
-    font-size: 0.95rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .tab-switcher {
-    max-width: 100%;
-    margin-bottom: 1.5rem;
-  }
-
-  .tab-btn {
-    font-size: 0.85rem;
-    padding: 10px 0;
-  }
-
-  .submit-btn {
-    padding: 13px 18px;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  /* Mobile error message styling */
-  .field-error-message {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    margin-top: 8px;
-    gap: 6px;
-  }
-
-  .field-error-message i {
-    font-size: 0.85rem;
-  }
-}
-
-/* Responsive adjustments - Small Mobile */
-@media (max-width: 400px) {
-  body {
-    padding: 0.75rem;
-  }
-
-  .login-container {
-    border-radius: 10px;
-  }
-
-  .login-header {
-    padding: 1.25rem 1rem 0.75rem;
-  }
-
-  .login-body {
-    padding: 0 1rem 1.25rem;
-  }
-
-  /* Stack logo elements vertically on very small screens */
-  .logo-container {
-    flex-direction: row;
-    gap: 8px;
-  }
-
-  .logo-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    padding: 5px;
-  }
-
-  .logo-img:first-child {
-    width: 60px;
-    height: 40px;
-  }
-
-  .logo-text {
-    font-size: 1.4rem;
-  }
-
-  .partnership-text {
-    font-size: 0.7rem;
-    line-height: 1.3;
-  }
-
-  .welcome-text {
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-  }
-
-  .tab-switcher {
-    padding: 4px;
-    margin-bottom: 1.25rem;
-  }
-
-  .tab-btn {
-    font-size: 0.8rem;
-    padding: 8px 0;
-  }
-
-  .form-control {
-    padding: 11px 16px 11px 45px;
-    font-size: 0.9rem;
-    border-radius: 10px;
-  }
-
-  .form-floating label {
-    left: 45px;
-    font-size: 0.85rem;
-    top: 12px;
-  }
-
-  .input-icon {
-    left: 16px;
-    top: 21px;
-    font-size: 1rem;
-  }
-
-  .toggle-password {
-    right: 14px;
-    top: 21px;
-  }
-
-  .form-group {
-    margin-bottom: 1.25rem;
-  }
-
-  .form-options {
-    gap: 0.6rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .form-check-label {
-    font-size: 0.8rem;
-  }
-
-  .forgot-link {
-    font-size: 0.8rem;
-  }
-
-  .submit-btn {
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    border-radius: 10px;
-  }
-
-  /* Small mobile error message styling */
-  .field-error-message {
-    padding: 7px 10px;
-    font-size: 0.75rem;
-    margin-top: 6px;
-    gap: 5px;
-    border-radius: 6px;
-  }
-
-  .field-error-message i {
-    font-size: 0.8rem;
-  }
-}
-
-/* Focus Indicator */
-.focus-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 3px;
-  background: var(--bg-gradient);
-  transition: all 0.4s ease;
-  border-radius: 10px;
-}
-
-.form-control:focus ~ .focus-indicator {
-  width: 80%;
-  left: 10%;
-}
-
-/* Password strength indicator */
-.password-strength {
-  height: 5px;
-  border-radius: 3px;
-  width: 100%;
-  background: #e5e7eb;
-  margin-top: 8px;
-  position: relative;
-  overflow: hidden;
-  display: none;
-}
-
-.password-strength-bar {
-  height: 100%;
-  width: 0;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
-}
-
-/* Modified responsive stars effect */
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-}
-  </style>
-</head>
-
-<body>
-  <!-- Background elements -->
-  <div class="background">
-    <div class="bg-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-    </div>
-    <div class="stars" id="stars"></div>
-  </div>
-  
-  <div class="login-container" id="loginContainer">
-    <div class="login-header">
-      <div class="logo-container" id="logoContainer">
-        <img src="assets/images/logo/pkibs.png" alt="eTuition Logo" class="logo-img">
-        <div class="logo-text">
-          <span>e</span>
-          <span>T</span>
-          <span>u</span>
-          <span>i</span>
-          <span>t</span>
-          <span>i</span>
-          <span>o</span>
-          <span>n</span>
-        </div>
-        <img src="assets/images/logo/Kolej-UNITI.png" alt="eTuition Logo" class="logo-img">
-      </div>
-      
-      <p class="partnership-text">Program bekerjasama Penglibatan Ibu Bapa, Komuniti Dan Sektor Swasta (PIBKS) dan Kolej UNITI</p>
-      
-      <h5 class="welcome-text">Welcome back! Sign in to continue learning</h5>
-      
-      <div class="tab-switcher">
-        <span class="tab-slider" id="tabSlider"></span>
-        <button class="tab-btn active" id="userTab">Teacher Login</button>
-        <button class="tab-btn" id="studentTab">Student Login</button>
-      </div>
-    </div>
-    
-    <div class="login-body">
-      <!-- Teacher Login Form -->
-      <div class="tab-content active" id="userContent">
-        <form action="{{ route('login') }}" method="post" id="userForm">
-          @csrf
-          <input type="hidden" name="login_type" value="user">
-          
-          <div class="form-group form-floating">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder=" " required value="{{ old('email') }}">
-            <div class="input-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <label for="userEmail">Email address</label>
-            <div class="focus-indicator"></div>
-            @error('email')
-            <div class="field-error-message">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ $message }}
-            </div>
-            @enderror
-          </div>
-          
-          <div class="form-group form-floating">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="userPassword" placeholder=" " required>
-            <div class="input-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-            <label for="userPassword">Password</label>
-            <i class="fas fa-eye toggle-password" id="userTogglePassword"></i>
-            <div class="focus-indicator"></div>
-            <div class="password-strength">
-              <div class="password-strength-bar" id="userPasswordStrength"></div>
-            </div>
-            @error('password')
-            <div class="field-error-message">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ $message }}
-            </div>
-            @enderror
-          </div>
-          
-          <div class="form-options">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="remember" id="userRemember">
-              <label class="form-check-label" for="userRemember">
-                Remember me
-              </label>
-            </div>
-            <a href="javascript:void(0)" class="forgot-link" id="userForgot">
-              Forgot password?
-            </a>
-          </div>
-          
-          <button type="submit" class="submit-btn" id="userSubmit">
-            <span class="btn-text">Sign In</span>
-          </button>
-        </form>
-      </div>
-      
-      <!-- Student Login Form -->
-      <div class="tab-content" id="studentContent">
-        <form action="{{ route('login') }}" method="post" id="studentForm">
-          @csrf
-          <input type="hidden" name="login_type" value="student">
-          
-          <div class="form-group form-floating">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="studentEmail" placeholder=" " required value="{{ old('email') }}">
-            <div class="input-icon">
-              <i class="fas fa-id-card"></i>
-            </div>
-            <label for="studentEmail">Email address</label>
-            <div class="focus-indicator"></div>
-            @error('email')
-            <div class="field-error-message">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ $message }}
-            </div>
-            @enderror
-          </div>
-          
-          <div class="form-group form-floating">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="studentPassword" placeholder=" " required>
-            <div class="input-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-            <label for="studentPassword">Password</label>
-            <i class="fas fa-eye toggle-password" id="studentTogglePassword"></i>
-            <div class="focus-indicator"></div>
-            <div class="password-strength">
-              <div class="password-strength-bar" id="studentPasswordStrength"></div>
-            </div>
-            @error('password')
-            <div class="field-error-message">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ $message }}
-            </div>
-            @enderror
-          </div>
-          
-          <div class="form-options">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="remember" id="studentRemember">
-              <label class="form-check-label" for="studentRemember">
-                Remember me
-              </label>
-            </div>
-            <a href="javascript:void(0)" class="forgot-link" id="studentForgot">
-              Forgot password?
-            </a>
-          </div>
-          
-          <button type="submit" class="submit-btn" id="studentSubmit">
-            <span class="btn-text">Sign In</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  <!-- JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="scripts.js"></script>
-  <script>
-    // Helper function to update checkbox styling
-function updateCheckboxStyle(checkbox, isChecked) {
-  const label = checkbox.nextElementSibling;
-  
-  if (isChecked) {
-    label.style.color = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark');
-    label.style.fontWeight = '600';
-    // Add a subtle glow effect
-    checkbox.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
-  } else {
-    label.style.color = '';
-    label.style.fontWeight = '';
-    checkbox.style.boxShadow = '';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  // Initialize stars background
-  initializeStars();
-  
-  // Initialize the login container with animations
-  initializeLoginContainer();
-  
-  // Initialize form events and animations
-  initializeFormEvents();
-  
-  // Initialize tab switching
-  initializeTabSwitching();
-  
-  // Initialize 3D tilt effect
-  initializeTiltEffect();
-  
-  // Initialize any error messages present in the session
-  renderErrorMessages();
-  
-  // Handle form errors - show correct tab based on login_type
-  handleFormErrors();
-  
-  // Restore emails after all initialization is complete
-  setTimeout(() => {
-    restoreRememberedEmails();
-  }, 200);
-});
-
-// Create star particles in the background
-function initializeStars() {
-  const stars = document.getElementById('stars');
-  const maxStars = 100;
-  
-  for (let i = 0; i < maxStars; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    
-    // Random size between 1px and 3px
-    const size = Math.random() * 2 + 1;
-    star.style.width = `${size}px`;
-    star.style.height = `${size}px`;
-    
-    // Random position
-    star.style.left = `${Math.random() * 100}%`;
-    star.style.top = `${Math.random() * 100}%`;
-    
-    // Random animation duration and delay
-    const duration = Math.random() * 3 + 2; // 2-5 seconds
-    const delay = Math.random() * 5; // 0-5 seconds
-    star.style.setProperty('--duration', `${duration}s`);
-    star.style.setProperty('--delay', `${delay}s`);
-    
-    stars.appendChild(star);
-  }
-  
-  // Add some shooting stars occasionally
-  setInterval(createShootingStar, 8000);
-}
-
-function createShootingStar() {
-  const stars = document.getElementById('stars');
-  const shootingStar = document.createElement('div');
-  shootingStar.className = 'star shooting-star';
-  
-  // Set position and style
-  shootingStar.style.left = `${Math.random() * 100}%`;
-  shootingStar.style.top = '0';
-  shootingStar.style.width = '2px';
-  shootingStar.style.height = '80px';
-  shootingStar.style.opacity = '1';
-  shootingStar.style.background = 'linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 80%)';
-  shootingStar.style.transform = 'rotate(35deg)';
-  shootingStar.style.borderRadius = '0';
-  
-  // Animation
-  shootingStar.style.animation = 'shooting 1s ease-out';
-  
-  stars.appendChild(shootingStar);
-  
-  // Remove after animation completes
-  setTimeout(() => {
-    shootingStar.remove();
-  }, 1000);
-}
-
-// Initialize login container animations
-function initializeLoginContainer() {
-  const logoContainer = document.getElementById('logoContainer');
-  const logoLetters = document.querySelectorAll('.logo-text span');
-  
-  // Add hover interaction to logo
-  logoContainer.addEventListener('mouseenter', () => {
-    logoLetters.forEach(letter => {
-      letter.style.animationPlayState = 'paused';
-      letter.style.transform = 'translateY(-8px)';
-      letter.style.transition = 'transform 0.3s ease';
-    });
-  });
-  
-  logoContainer.addEventListener('mouseleave', () => {
-    logoLetters.forEach(letter => {
-      letter.style.animationPlayState = 'running';
-      letter.style.transform = '';
-    });
-  });
-  
-  // Add interaction to form buttons and inputs
-  document.querySelectorAll('.submit-btn').forEach(btn => {
-    btn.addEventListener('mouseenter', createButtonRipple);
-  });
-}
-
-// Create interactive ripple effect on buttons
-function createButtonRipple(e) {
-  const button = e.currentTarget;
-  
-  // Remove any existing ripples
-  const existingRipple = button.querySelector('.ripple');
-  if (existingRipple) {
-    existingRipple.remove();
-  }
-  
-  // Create ripple element
-  const ripple = document.createElement('span');
-  ripple.className = 'ripple';
-  button.appendChild(ripple);
-  
-  // Position the ripple
-  const rect = button.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  
-  ripple.style.width = ripple.style.height = `${size}px`;
-  ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-  ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-  ripple.style.position = 'absolute';
-  ripple.style.borderRadius = '50%';
-  ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-  ripple.style.transform = 'scale(0)';
-  ripple.style.animation = 'ripple 0.6s linear';
-  
-  // Clean up after animation completes
-  setTimeout(() => {
-    ripple.remove();
-  }, 600);
-}
-
-// Initialize tab switching
-function initializeTabSwitching() {
-  const userTab = document.getElementById('userTab');
-  const studentTab = document.getElementById('studentTab');
-  const tabSlider = document.getElementById('tabSlider');
-  const userContent = document.getElementById('userContent');
-  const studentContent = document.getElementById('studentContent');
-  
-  userTab.addEventListener('click', () => {
-    tabSlider.classList.remove('right');
-    userTab.classList.add('active');
-    studentTab.classList.remove('active');
-    
-    // Content switching with animation
-    fadeOut(studentContent, () => {
-      studentContent.classList.remove('active');
-      userContent.classList.add('active');
-      fadeIn(userContent);
-    });
-    
-    // Update hidden input
-    document.querySelector('input[name="login_type"]').value = 'user';
-    
-    // Load remembered email for user tab if remember is checked
-    loadRememberedEmailForTab('user');
-  });
-  
-  studentTab.addEventListener('click', () => {
-    tabSlider.classList.add('right');
-    studentTab.classList.add('active');
-    userTab.classList.remove('active');
-    
-    // Content switching with animation
-    fadeOut(userContent, () => {
-      userContent.classList.remove('active');
-      studentContent.classList.add('active');
-      fadeIn(studentContent);
-    });
-    
-    // Update hidden input
-    document.querySelector('input[name="login_type"]').value = 'student';
-    
-    // Load remembered email for student tab if remember is checked
-    loadRememberedEmailForTab('student');
-  });
-}
-
-// Load remembered email for the active tab
-function loadRememberedEmailForTab(userType) {
-  if (userType === 'user') {
-    const userEmailField = document.getElementById('userEmail');
-    const userRememberCheckbox = document.getElementById('userRemember');
-    const savedUserEmail = localStorage.getItem('remembered_user_email');
-    
-    if (savedUserEmail && userRememberCheckbox.checked && !userEmailField.value) {
-      userEmailField.value = savedUserEmail;
-    }
-  } else if (userType === 'student') {
-    const studentEmailField = document.getElementById('studentEmail');
-    const studentRememberCheckbox = document.getElementById('studentRemember');
-    const savedStudentEmail = localStorage.getItem('remembered_student_email');
-    
-    if (savedStudentEmail && studentRememberCheckbox.checked && !studentEmailField.value) {
-      studentEmailField.value = savedStudentEmail;
-    }
-  }
-}
-
-// Restore remembered emails on page load
-function restoreRememberedEmails() {
-  console.log('🔄 Starting email restoration process...');
-  
-  const userEmailField = document.getElementById('userEmail');
-  const studentEmailField = document.getElementById('studentEmail');
-  const userRememberCheckbox = document.getElementById('userRemember');
-  const studentRememberCheckbox = document.getElementById('studentRemember');
-  
-  // Get saved emails and remember states directly from localStorage
-  const savedUserEmail = localStorage.getItem('remembered_user_email');
-  const savedStudentEmail = localStorage.getItem('remembered_student_email');
-  const userRememberState = localStorage.getItem('remember_userRemember');
-  const studentRememberState = localStorage.getItem('remember_studentRemember');
-  
-  console.log('📧 Saved user email:', savedUserEmail);
-  console.log('📧 Saved student email:', savedStudentEmail);
-  console.log('☑️ User remember state:', userRememberState);
-  console.log('☑️ Student remember state:', studentRememberState);
-  
-  // Restore teacher email and checkbox state
-  if (userRememberState === 'true') {
-    console.log('✅ Restoring teacher email and checkbox...');
-    userRememberCheckbox.checked = true;
-    updateCheckboxStyle(userRememberCheckbox, true);
-    
-    if (savedUserEmail) {
-      userEmailField.value = savedUserEmail;
-      showRememberMessage('Teacher email restored', 'info');
-      console.log('✅ Teacher email restored:', savedUserEmail);
-    }
-  } else {
-    console.log('❌ User remember state is not true, skipping restoration');
-  }
-  
-  // Restore student email and checkbox state
-  if (studentRememberState === 'true') {
-    console.log('✅ Restoring student email and checkbox...');
-    studentRememberCheckbox.checked = true;
-    updateCheckboxStyle(studentRememberCheckbox, true);
-    
-    if (savedStudentEmail) {
-      studentEmailField.value = savedStudentEmail;
-      showRememberMessage('Student email restored', 'info');
-      console.log('✅ Student email restored:', savedStudentEmail);
-    }
-  } else {
-    console.log('❌ Student remember state is not true (' + studentRememberState + '), skipping restoration');
-    // If we have a saved email but no remember state, check if we should restore anyway
-    if (savedStudentEmail && !studentRememberState) {
-      console.log('🔧 Found saved student email but no remember state, checking localStorage keys...');
-      // Let's debug what keys exist in localStorage
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.includes('remember') || key.includes('student')) {
-          console.log('🔍 localStorage key found:', key, '=', localStorage.getItem(key));
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Masuk - eTuition Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('css/student-friendly.css') }}" rel="stylesheet">
+    <style>
+        /* Login Page Specific Styles */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
         }
-      }
-    }
-  }
-  
-  console.log('🔄 Email restoration process completed');
-}
 
-// Fade out animation with callback
-function fadeOut(element, callback) {
-  element.style.opacity = '1';
-  element.style.transform = 'translateY(0)';
-  
-  // Create animation
-  element.animate([
-    { opacity: 1, transform: 'translateY(0)' },
-    { opacity: 0, transform: 'translateY(-20px)' }
-  ], {
-    duration: 300,
-    easing: 'ease-out',
-    fill: 'forwards'
-  }).onfinish = callback;
-}
+        .login-hero {
+            padding: 2.5rem 0 2rem;
+            text-align: center;
+        }
 
-// Fade in animation
-function fadeIn(element) {
-  element.style.opacity = '0';
-  element.style.transform = 'translateY(20px)';
-  
-  // Create animation
-  element.animate([
-    { opacity: 0, transform: 'translateY(20px)' },
-    { opacity: 1, transform: 'translateY(0)' }
-  ], {
-    duration: 300,
-    easing: 'ease-out',
-    fill: 'forwards'
-  });
-}
+        .login-hero-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
 
-// Initialize input field events and animations
-function initializeFormEvents() {
-  // Initialize email persistence
-  initializeEmailPersistence();
-  
-  // Toggle password visibility
-  document.querySelectorAll('.toggle-password').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-      const passwordField = this.previousElementSibling.previousElementSibling;
-      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordField.setAttribute('type', type);
-      
-      // Toggle eye icon
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
-  });
-  
-  // Form submission animation
-  document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-      // Validate the form
-      if (!this.checkValidity()) {
-        e.preventDefault();
-        this.reportValidity();
-        return;
-      }
-      
-      const btn = this.querySelector('.submit-btn');
-      const btnText = btn.querySelector('.btn-text');
-      
-      // Disable the button
-      btn.disabled = true;
-      
-      // Create loading animation
-      btnText.innerHTML = '<span class="spinner"></span>Signing in...';
-      
-      // Add gradient animation
-      btn.style.backgroundSize = '400% 400%';
-      btn.style.animation = 'gradient-shift 3s ease infinite';
-    });
-  });
-  
-  // Password strength indicator
-  document.querySelectorAll('input[type="password"]').forEach(input => {
-    const strengthBar = document.getElementById(input.id + 'Strength');
-    const strengthContainer = input.parentElement.querySelector('.password-strength');
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0 1rem 3rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: var(--sf-radius-2xl);
+            box-shadow: var(--sf-shadow-lg);
+            border: 3px solid var(--sf-sky-light);
+            overflow: hidden;
+            opacity: 0;
+            animation: sf-cardPop 0.6s ease forwards 0.5s;
+        }
+
+        /* Partnership Header */
+        .login-partnership {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--sf-sky-light) 0%, rgba(189, 224, 254, 0.3) 100%);
+            border-bottom: 2px dashed rgba(189, 224, 254, 0.5);
+            text-align: center;
+        }
+
+        .brand-centered {
+            font-size: 2.25rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-centered .brand-e {
+            color: var(--sf-ocean-bright);
+        }
+
+        .brand-centered .brand-tuition {
+            background: linear-gradient(135deg, var(--sf-coral-warm), var(--sf-coral-bright));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+            transition: var(--sf-transition-normal);
+            opacity: 0.85;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .logo-separator {
+            color: var(--sf-text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .partnership-label {
+            font-size: 0.75rem;
+            color: var(--sf-text-soft);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            line-height: 1.4;
+        }
+
+        /* Tab Switcher */
+        .login-tabs {
+            display: flex;
+            background: var(--sf-cream-bg);
+            position: relative;
+            border-bottom: 2px solid var(--sf-sky-light);
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 1.1rem 1rem;
+            background: none;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--sf-text-soft);
+            cursor: pointer;
+            transition: var(--sf-transition-normal);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .login-tab i {
+            font-size: 1rem;
+            transition: var(--sf-transition-normal);
+        }
+
+        .login-tab:hover {
+            color: var(--sf-ocean-bright);
+            background: rgba(189, 224, 254, 0.2);
+        }
+
+        .login-tab.active {
+            color: var(--sf-ocean-bright);
+            background: white;
+        }
+
+        .login-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--sf-ocean-bright), var(--sf-ocean-soft));
+            border-radius: 3px 3px 0 0;
+        }
+
+        .login-tab.active i {
+            color: var(--sf-coral-warm);
+        }
+
+        /* Form Content */
+        .login-form-wrapper {
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: sf-fadeUp 0.4s ease forwards;
+        }
+
+        /* Welcome Message */
+        .form-welcome {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+
+        .form-welcome-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--sf-sky-light), var(--sf-sky-medium));
+            border-radius: var(--sf-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: sf-bounce-gentle 3s ease-in-out infinite;
+        }
+
+        .form-welcome-icon i {
+            font-size: 1.5rem;
+            color: var(--sf-ocean-bright);
+        }
+
+        .form-welcome-icon.teacher-icon {
+            background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(255, 140, 107, 0.2));
+        }
+
+        .form-welcome-icon.teacher-icon i {
+            color: var(--sf-coral-warm);
+        }
+
+        .form-welcome h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--sf-text-dark);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-welcome p {
+            font-size: 0.9rem;
+            color: var(--sf-text-soft);
+            font-weight: 500;
+        }
+
+        /* Form Groups */
+        .sf-form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .sf-input-wrapper {
+            position: relative;
+        }
+
+        .sf-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--sf-ocean-soft);
+            font-size: 1rem;
+            transition: var(--sf-transition-normal);
+            z-index: 2;
+        }
+
+        .sf-form-control {
+            padding-left: 2.75rem !important;
+        }
+
+        .sf-form-control:focus + .sf-input-icon,
+        .sf-form-control:not(:placeholder-shown) + .sf-input-icon {
+            color: var(--sf-ocean-bright);
+        }
+
+        .sf-toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--sf-text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: var(--sf-transition-normal);
+            z-index: 2;
+        }
+
+        .sf-toggle-password:hover {
+            color: var(--sf-ocean-bright);
+        }
+
+        /* Error Messages */
+        .sf-field-error {
+            background: var(--sf-danger-soft);
+            color: #c53030;
+            padding: 0.65rem 0.9rem;
+            border-radius: var(--sf-radius-sm);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--sf-danger);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-weight: 600;
+            animation: sf-fadeUp 0.3s ease;
+        }
+
+        .sf-field-error i {
+            margin-top: 0.1rem;
+            flex-shrink: 0;
+        }
+
+        .sf-form-control.is-invalid {
+            border-color: var(--sf-danger) !important;
+            background: rgba(239, 107, 107, 0.05) !important;
+        }
+
+        /* Form Options Row */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .sf-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+        }
+
+        .sf-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--sf-sky-medium);
+            border-radius: var(--sf-radius-sm);
+            background: white;
+            cursor: pointer;
+            position: relative;
+            transition: var(--sf-transition-normal);
+        }
+
+        .sf-checkbox:checked {
+            background: linear-gradient(135deg, var(--sf-ocean-bright), var(--sf-ocean-soft));
+            border-color: var(--sf-ocean-bright);
+        }
+
+        .sf-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .sf-checkbox:hover {
+            border-color: var(--sf-ocean-soft);
+        }
+
+        .sf-checkbox-label {
+            font-size: 0.875rem;
+            color: var(--sf-text-warm);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sf-forgot-link {
+            font-size: 0.875rem;
+            color: var(--sf-ocean-bright);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--sf-transition-normal);
+            position: relative;
+        }
+
+        .sf-forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--sf-ocean-bright), var(--sf-coral-warm));
+            transition: width 0.3s ease;
+        }
+
+        .sf-forgot-link:hover::after {
+            width: 100%;
+        }
+
+        .sf-forgot-link:hover {
+            color: var(--sf-coral-warm);
+        }
+
+        /* Submit Button */
+        .sf-submit-btn {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--sf-radius-lg);
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--sf-transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sf-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .sf-submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .sf-submit-btn.teacher-btn {
+            background: linear-gradient(135deg, var(--sf-coral-warm), var(--sf-coral-bright));
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 140, 107, 0.35);
+        }
+
+        .sf-submit-btn.teacher-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 140, 107, 0.45);
+        }
+
+        .sf-submit-btn.student-btn {
+            background: linear-gradient(135deg, var(--sf-ocean-bright), var(--sf-ocean-soft));
+            color: white;
+            box-shadow: 0 6px 20px rgba(91, 164, 230, 0.35);
+        }
+
+        .sf-submit-btn.student-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(91, 164, 230, 0.45);
+        }
+
+        .sf-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .sf-submit-btn i {
+            transition: transform var(--sf-transition-normal);
+        }
+
+        .sf-submit-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Loading Spinner */
+        .sf-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: sf-spin 0.8s linear infinite;
+        }
+
+        @keyframes sf-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Divider */
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .login-divider-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--sf-sky-medium), transparent);
+        }
+
+        .login-divider-text {
+            font-size: 0.8rem;
+            color: var(--sf-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Register Link */
+        .register-prompt {
+            text-align: center;
+            padding-top: 0.5rem;
+        }
+
+        .register-prompt p {
+            font-size: 0.9rem;
+            color: var(--sf-text-soft);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .sf-register-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.25rem;
+            background: var(--sf-sky-light);
+            color: var(--sf-ocean-bright);
+            border-radius: var(--sf-radius-full);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: var(--sf-transition-normal);
+            border: 2px solid transparent;
+        }
+
+        .sf-register-link:hover {
+            background: white;
+            border-color: var(--sf-ocean-soft);
+            color: var(--sf-ocean-deep);
+            transform: translateY(-2px);
+            box-shadow: var(--sf-shadow-sm);
+        }
+
+        .sf-register-link i {
+            transition: transform var(--sf-transition-normal);
+        }
+
+        .sf-register-link:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            padding: 1.5rem 0 2.5rem;
+        }
+
+        .login-footer-emojis {
+            font-size: 1.25rem;
+            letter-spacing: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .login-footer-text {
+            font-size: 0.8rem;
+            color: var(--sf-text-light);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .login-hero {
+                padding: 2rem 0 1.5rem;
+            }
+
+            .login-partnership {
+                padding: 1.25rem 1.25rem;
+            }
+
+            .brand-centered {
+                font-size: 1.85rem;
+            }
+
+            .logo-row {
+                gap: 0.75rem;
+            }
+
+            .logo-img {
+                height: 35px;
+            }
+
+            .login-form-wrapper {
+                padding: 1.5rem;
+            }
+
+            .form-welcome-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .form-welcome-icon i {
+                font-size: 1.25rem;
+            }
+
+            .form-welcome h3 {
+                font-size: 1.1rem;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sf-forgot-link {
+                align-self: flex-end;
+            }
+
+            .login-tab {
+                font-size: 0.85rem;
+                padding: 1rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .brand-centered {
+                font-size: 1.6rem;
+            }
+
+            .logo-img {
+                height: 30px;
+            }
+
+            .logo-separator {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="sf-body">
+    <!-- Background Pattern -->
+    <div class="sf-bg-pattern"></div>
     
-    input.addEventListener('focus', () => {
-      strengthContainer.style.display = 'block';
-    });
-    
-    input.addEventListener('blur', () => {
-      if (input.value.length === 0) {
-        strengthContainer.style.display = 'none';
-      }
-    });
-    
-    input.addEventListener('input', () => {
-      const strength = getPasswordStrength(input.value);
-      strengthBar.style.width = `${strength}%`;
-      
-      // Change color based on strength
-      if (strength < 33) {
-        strengthBar.style.background = '#ef4444';
-      } else if (strength < 66) {
-        strengthBar.style.background = '#f59e0b';
-      } else {
-        strengthBar.style.background = '#10b981';
-      }
-    });
-  });
-  
-  // Interactive form feedback
-  document.querySelectorAll('.form-control').forEach(input => {
-    input.addEventListener('focus', () => {
-      input.parentElement.classList.add('focused');
-      input.parentElement.querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1.1)';
-    });
-    
-    input.addEventListener('blur', () => {
-      input.parentElement.classList.remove('focused');
-      input.parentElement.querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1)';
-    });
-  });
-  
-  // Checkbox animation and remember me persistence
-  document.querySelectorAll('.form-check-input').forEach(checkbox => {
-    console.log('🔗 Attaching event listener to checkbox:', checkbox.id);
-    
-    checkbox.addEventListener('change', function() {
-      const isChecked = this.checked;
-      const rememberKey = `remember_${this.id}`;
-      
-      console.log('☑️ Checkbox changed:', this.id, 'checked:', isChecked);
-      console.log('🔑 Using localStorage key:', rememberKey);
-      
-      // Save remember me state to localStorage
-      localStorage.setItem(rememberKey, isChecked.toString());
-      console.log('💾 Saved to localStorage:', rememberKey, '=', isChecked.toString());
-      
-      // Verify it was saved
-      const savedValue = localStorage.getItem(rememberKey);
-      console.log('✅ Verification - Retrieved value:', savedValue);
-      
-      // Update visual styling
-      updateCheckboxStyle(this, isChecked);
-      
-      // Add subtle animation feedback
-      this.parentElement.animate([
-        { transform: 'scale(1)' },
-        { transform: 'scale(1.05)' },
-        { transform: 'scale(1)' }
-      ], {
-        duration: 200,
-        easing: 'ease-out'
-      });
-    });
-  });
+    <!-- Floating Shapes -->
+    <div class="sf-floating-shapes">
+        <div class="sf-shape sf-shape-1"></div>
+        <div class="sf-shape sf-shape-2"></div>
+        <div class="sf-shape sf-shape-3"></div>
+    </div>
 
+    <div class="login-wrapper">
+        <!-- Language Switcher -->
+        <div class="sf-language-switcher">
+            <div class="sf-language-selector">
+                <div class="sf-language-option active" data-lang="ms">
+                    <i class="fas fa-globe-asia"></i>
+                    <span>BM</span>
+                </div>
+                <div class="sf-language-option" data-lang="en">
+                    <i class="fas fa-globe"></i>
+                    <span>EN</span>
+                </div>
+            </div>
+        </div>
 
+        <!-- Hero Section -->
+        <section class="login-hero">
+            <div class="login-hero-content">
+                <p class="sf-hero-greeting" data-key="hero.greeting">Selamat Kembali!</p>
+                <h1 class="sf-hero-title" data-key="hero.title">
+                    <span class="sf-wave">👋</span> Log Masuk ke <span class="sf-highlight">eTuition</span>
+                </h1>
+                <p class="sf-hero-subtitle" data-key="hero.subtitle">
+                    Teruskan perjalanan pembelajaran anda bersama kami!
+                </p>
+            </div>
+        </section>
 
-// Initialize email persistence functionality
-function initializeEmailPersistence() {
-  const userEmailField = document.getElementById('userEmail');
-  const studentEmailField = document.getElementById('studentEmail');
-  const userRememberCheckbox = document.getElementById('userRemember');
-  const studentRememberCheckbox = document.getElementById('studentRemember');
+        <!-- Login Container -->
+        <div class="login-container">
+            <div class="login-card">
+                <!-- Partnership Header -->
+                <div class="login-partnership">
+                    <div class="brand-centered">
+                        <span class="brand-e">e</span><span class="brand-tuition">Tuition</span>
+                    </div>
+                    <div class="logo-row">
+                        <img src="{{ asset('assets/images/logo/pkibs.png') }}" alt="PIBKS Logo" class="logo-img">
+                        {{-- <span class="logo-separator">×</span> --}}
+                        <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" class="logo-img">
+                    </div>
+                    <p class="partnership-label" data-key="partnership.label">Program PIBKS & Kolej UNITI</p>
+                </div>
 
+                <!-- Tab Switcher -->
+                <div class="login-tabs">
+                    <button class="login-tab active" id="teacherTab" data-tab="teacher">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span data-key="tab.teacher">Guru</span>
+                    </button>
+                    <button class="login-tab" id="studentTab" data-tab="student">
+                        <i class="fas fa-user-graduate"></i>
+                        <span data-key="tab.student">Pelajar</span>
+                    </button>
+                </div>
 
+                <!-- Form Content -->
+                <div class="login-form-wrapper">
+                    <!-- Teacher Login Form -->
+                    <div class="tab-content active" id="teacherContent">
+                        <div class="form-welcome">
+                            <div class="form-welcome-icon teacher-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <h3 data-key="teacher.welcome.title">Selamat Datang, Cikgu! 📖</h3>
+                            <p data-key="teacher.welcome.subtitle">Log masuk untuk mengurus kelas anda</p>
+                        </div>
 
-  // Save/clear email when remember me checkbox changes
-  userRememberCheckbox.addEventListener('change', function() {
-    console.log('👤 User remember checkbox changed:', this.checked);
-    console.log('📧 Current user email field value:', userEmailField.value);
-    
-    if (this.checked) {
-      // Save current email if there is one, otherwise just save the state
-      if (userEmailField.value.trim()) {
-        localStorage.setItem('remembered_user_email', userEmailField.value.trim());
-        showRememberMessage('Teacher email will be remembered', 'success');
-        console.log('💾 Saved user email:', userEmailField.value.trim());
-      } else {
-        console.log('⚠️ No email to save yet, but remember state saved');
-      }
-    } else {
-      // Clear saved email when unchecked
-      localStorage.removeItem('remembered_user_email');
-      showRememberMessage('Teacher email will no longer be remembered', 'info');
-      console.log('🗑️ Cleared user email from storage');
-    }
-  });
+                        <form action="{{ route('login') }}" method="post" id="teacherForm">
+                            @csrf
+                            <input type="hidden" name="login_type" value="user">
 
-  studentRememberCheckbox.addEventListener('change', function() {
-    console.log('👤 Student remember checkbox changed:', this.checked);
-    console.log('📧 Current student email field value:', studentEmailField.value);
-    
-    if (this.checked) {
-      // Save current email if there is one, otherwise just save the state
-      if (studentEmailField.value.trim()) {
-        localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
-        showRememberMessage('Student email will be remembered', 'success');
-        console.log('💾 Saved student email:', studentEmailField.value.trim());
-      } else {
-        console.log('⚠️ No email to save yet, but remember state saved');
-      }
-    } else {
-      // Clear saved email when unchecked
-      localStorage.removeItem('remembered_student_email');
-      showRememberMessage('Student email will no longer be remembered', 'info');
-      console.log('🗑️ Cleared student email from storage');
-    }
-  });
+                            <div class="sf-form-group">
+                                <label class="sf-form-label" data-key="form.email">
+                                    <i class="fas fa-envelope"></i> E-mel
+                                </label>
+                                <div class="sf-input-wrapper">
+                                    <input type="email" 
+                                           name="email" 
+                                           class="sf-form-control @error('email') is-invalid @enderror" 
+                                           id="teacherEmail"
+                                           placeholder="cikgu@example.com"
+                                           required 
+                                           value="{{ old('email') }}">
+                                    <i class="fas fa-envelope sf-input-icon"></i>
+                                </div>
+                                @error('email')
+                                <div class="sf-field-error">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                                @enderror
+                            </div>
 
-  // Save email when typing if remember me is checked
-  userEmailField.addEventListener('input', function() {
-    console.log('⌨️ User typing email:', this.value);
-    if (userRememberCheckbox.checked && this.value.trim()) {
-      localStorage.setItem('remembered_user_email', this.value.trim());
-      console.log('💾 Auto-saved user email while typing:', this.value.trim());
-    }
-  });
+                            <div class="sf-form-group">
+                                <label class="sf-form-label" data-key="form.password">
+                                    <i class="fas fa-lock"></i> Kata Laluan
+                                </label>
+                                <div class="sf-input-wrapper">
+                                    <input type="password" 
+                                           name="password" 
+                                           class="sf-form-control @error('password') is-invalid @enderror" 
+                                           id="teacherPassword"
+                                           placeholder="••••••••"
+                                           required>
+                                    <i class="fas fa-lock sf-input-icon"></i>
+                                    <i class="fas fa-eye sf-toggle-password" id="teacherToggle"></i>
+                                </div>
+                                @error('password')
+                                <div class="sf-field-error">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                                @enderror
+                            </div>
 
-  studentEmailField.addEventListener('input', function() {
-    console.log('⌨️ Student typing email:', this.value);
-    if (studentRememberCheckbox.checked && this.value.trim()) {
-      localStorage.setItem('remembered_student_email', this.value.trim());
-      console.log('💾 Auto-saved student email while typing:', this.value.trim());
-    }
-  });
+                            <div class="form-options">
+                                <label class="sf-checkbox-wrapper">
+                                    <input type="checkbox" name="remember" class="sf-checkbox" id="teacherRemember">
+                                    <span class="sf-checkbox-label" data-key="form.remember">Ingat saya</span>
+                                </label>
+                                <a href="javascript:void(0)" class="sf-forgot-link" id="teacherForgot" data-key="form.forgot">
+                                    Lupa kata laluan?
+                                </a>
+                            </div>
 
-  // Handle form submission to save email
-  document.getElementById('userForm').addEventListener('submit', function(e) {
-    console.log('📝 User form submitted');
-    console.log('☑️ Remember checked:', userRememberCheckbox.checked);
-    console.log('📧 Email value:', userEmailField.value.trim());
-    
-    if (userRememberCheckbox.checked && userEmailField.value.trim()) {
-      localStorage.setItem('remembered_user_email', userEmailField.value.trim());
-      console.log('💾 Final save of user email on submit:', userEmailField.value.trim());
-    } else if (!userRememberCheckbox.checked) {
-      localStorage.removeItem('remembered_user_email');
-      console.log('🗑️ Removed user email on submit (remember unchecked)');
-    }
-  });
+                            <button type="submit" class="sf-submit-btn teacher-btn" id="teacherSubmit">
+                                <span class="btn-text" data-key="form.submit.teacher">Log Masuk sebagai Guru</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
 
-  document.getElementById('studentForm').addEventListener('submit', function(e) {
-    console.log('📝 Student form submitted');
-    console.log('☑️ Remember checked:', studentRememberCheckbox.checked);
-    console.log('📧 Email value:', studentEmailField.value.trim());
-    
-    if (studentRememberCheckbox.checked && studentEmailField.value.trim()) {
-      localStorage.setItem('remembered_student_email', studentEmailField.value.trim());
-      console.log('💾 Final save of student email on submit:', studentEmailField.value.trim());
-    } else if (!studentRememberCheckbox.checked) {
-      localStorage.removeItem('remembered_student_email');
-      console.log('🗑️ Removed student email on submit (remember unchecked)');
-    }
-  });
-}
-  
-  // Forgot password link animation
-  document.querySelectorAll('.forgot-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Add pulsing animation
-      this.animate([
-        { transform: 'scale(1)', opacity: 1 },
-        { transform: 'scale(1.05)', opacity: 0.8 },
-        { transform: 'scale(1)', opacity: 1 }
-      ], {
-        duration: 800,
-        easing: 'ease'
-      });
-      
-      // Show a message (in real implementation, this would open a modal or redirect)
-      const form = this.closest('form');
-      const email = form.querySelector('input[type="email"]').value;
-      
-      if (email) {
-        showMessage('Password reset link has been sent to your email');
-      } else {
-        showMessage('Please enter your email address first');
-      }
-    });
-  });
-}
+                    <!-- Student Login Form -->
+                    <div class="tab-content" id="studentContent">
+                        <div class="form-welcome">
+                            <div class="form-welcome-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3 data-key="student.welcome.title">Hai, Pelajar! 🎒</h3>
+                            <p data-key="student.welcome.subtitle">Log masuk untuk teruskan belajar</p>
+                        </div>
 
-// Calculate password strength on a scale of 0-100
-function getPasswordStrength(password) {
-  if (!password) return 0;
-  
-  const length = Math.min(password.length * 10, 40);
-  let complexity = 0;
-  
-  // Check for different character types
-  if (/[A-Z]/.test(password)) complexity += 15;
-  if (/[a-z]/.test(password)) complexity += 10;
-  if (/[0-9]/.test(password)) complexity += 15;
-  if (/[^A-Za-z0-9]/.test(password)) complexity += 20;
-  
-  return Math.min(length + complexity, 100);
-}
+                        <form action="{{ route('login') }}" method="post" id="studentForm">
+                            @csrf
+                            <input type="hidden" name="login_type" value="student">
 
-// Initialize 3D tilt effect
-function initializeTiltEffect() {
-  const loginContainer = document.getElementById('loginContainer');
-  let containerRect = loginContainer.getBoundingClientRect();
-  let centerX, centerY;
-  
-  // Recalculate the container dimensions on resize
-  window.addEventListener('resize', () => {
-    containerRect = loginContainer.getBoundingClientRect();
-    centerX = containerRect.left + containerRect.width / 2;
-    centerY = containerRect.top + containerRect.height / 2;
-  });
-  
-  // Calculate initial center
-  centerX = containerRect.left + containerRect.width / 2;
-  centerY = containerRect.top + containerRect.height / 2;
-  
-  document.addEventListener('mousemove', e => {
-    if (window.innerWidth <= 768) return; // Disable on mobile
-    
-    const mouseX = e.clientX - centerX;
-    const mouseY = e.clientY - centerY;
-    
-    // Calculate distance from center
-    const distance = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-    const maxDistance = Math.sqrt(containerRect.width * containerRect.width / 4 + containerRect.height * containerRect.height / 4);
-    
-    // Only apply effect if mouse is close enough to the container
-    if (distance < maxDistance * 1.5) {
-      // Calculate rotation angle - stronger when closer to container
-      const strength = (1 - distance / (maxDistance * 1.5)) * 5;
-      const rotateY = -mouseX / 25 * strength;
-      const rotateX = mouseY / 25 * strength;
-      
-      // Apply 3D rotation with smooth transition
-      loginContainer.style.transition = distance < maxDistance ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out';
-      loginContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      
-      // Add subtle shadow movement
-      const shadowX = -rotateY / 2;
-      const shadowY = rotateX / 2;
-      loginContainer.style.boxShadow = `${shadowX}px ${shadowY}px 30px rgba(0, 0, 0, 0.2)`;
-    } else {
-      // Reset when mouse is far away
-      resetTilt();
-    }
-  });
-  
-  // Reset tilt when mouse leaves window
-  document.addEventListener('mouseleave', resetTilt);
-  
-  function resetTilt() {
-    loginContainer.style.transition = 'transform 0.8s ease-out, box-shadow 0.8s ease-out';
-    loginContainer.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-    loginContainer.style.boxShadow = 'var(--card-shadow)';
-  }
-}
+                            <div class="sf-form-group">
+                                <label class="sf-form-label" data-key="form.email">
+                                    <i class="fas fa-envelope"></i> E-mel
+                                </label>
+                                <div class="sf-input-wrapper">
+                                    <input type="email" 
+                                           name="email" 
+                                           class="sf-form-control @error('email') is-invalid @enderror" 
+                                           id="studentEmail"
+                                           placeholder="pelajar@example.com"
+                                           required 
+                                           value="{{ old('email') }}">
+                                    <i class="fas fa-envelope sf-input-icon"></i>
+                                </div>
+                                @error('email')
+                                <div class="sf-field-error">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                                @enderror
+                            </div>
 
-// Show feedback messages
-function showMessage(message) {
-  // Create message element if it doesn't exist
-  let messageElement = document.getElementById('feedbackMessage');
-  
-  if (!messageElement) {
-    messageElement = document.createElement('div');
-    messageElement.id = 'feedbackMessage';
-    messageElement.style.position = 'fixed';
-    messageElement.style.bottom = '20px';
-    messageElement.style.left = '50%';
-    messageElement.style.transform = 'translateX(-50%)';
-    messageElement.style.backgroundColor = 'rgba(79, 70, 229, 0.9)';
-    messageElement.style.color = 'white';
-    messageElement.style.padding = '10px 20px';
-    messageElement.style.borderRadius = '8px';
-    messageElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-    messageElement.style.zIndex = '1000';
-    messageElement.style.opacity = '0';
-    messageElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    document.body.appendChild(messageElement);
-  }
-  
-  // Set message and show
-  messageElement.textContent = message;
-  messageElement.style.opacity = '1';
-  messageElement.style.transform = 'translateX(-50%) translateY(0)';
-  
-  // Hide after 3 seconds
-  setTimeout(() => {
-    messageElement.style.opacity = '0';
-    messageElement.style.transform = 'translateX(-50%) translateY(20px)';
-  }, 3000);
-}
+                            <div class="sf-form-group">
+                                <label class="sf-form-label" data-key="form.password">
+                                    <i class="fas fa-lock"></i> Kata Laluan
+                                </label>
+                                <div class="sf-input-wrapper">
+                                    <input type="password" 
+                                           name="password" 
+                                           class="sf-form-control @error('password') is-invalid @enderror" 
+                                           id="studentPassword"
+                                           placeholder="••••••••"
+                                           required>
+                                    <i class="fas fa-lock sf-input-icon"></i>
+                                    <i class="fas fa-eye sf-toggle-password" id="studentToggle"></i>
+                                </div>
+                                @error('password')
+                                <div class="sf-field-error">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                                @enderror
+                            </div>
 
-// Show remember me specific messages
-function showRememberMessage(message, type = 'info') {
-  // Create remember message element if it doesn't exist
-  let messageElement = document.getElementById('rememberMessage');
-  
-  if (!messageElement) {
-    messageElement = document.createElement('div');
-    messageElement.id = 'rememberMessage';
-    messageElement.style.position = 'fixed';
-    messageElement.style.top = '20px';
-    messageElement.style.right = '20px';
-    messageElement.style.padding = '8px 16px';
-    messageElement.style.borderRadius = '6px';
-    messageElement.style.fontSize = '0.85rem';
-    messageElement.style.fontWeight = '500';
-    messageElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-    messageElement.style.zIndex = '1000';
-    messageElement.style.opacity = '0';
-    messageElement.style.transition = 'all 0.3s ease';
-    messageElement.style.transform = 'translateX(100%)';
-    messageElement.style.maxWidth = '300px';
-    document.body.appendChild(messageElement);
-  }
-  
-  // Set colors based on type
-  if (type === 'info') {
-    messageElement.style.backgroundColor = 'rgba(14, 165, 233, 0.95)';
-    messageElement.style.color = 'white';
-    messageElement.innerHTML = `<i class="fas fa-info-circle" style="margin-right: 6px;"></i>${message}`;
-  } else if (type === 'success') {
-    messageElement.style.backgroundColor = 'rgba(34, 197, 94, 0.95)';
-    messageElement.style.color = 'white';
-    messageElement.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 6px;"></i>${message}`;
-  }
-  
-  // Show message
-  messageElement.style.opacity = '1';
-  messageElement.style.transform = 'translateX(0)';
-  
-  // Hide after 4 seconds
-  setTimeout(() => {
-    messageElement.style.opacity = '0';
-    messageElement.style.transform = 'translateX(100%)';
-  }, 4000);
-}
+                            <div class="form-options">
+                                <label class="sf-checkbox-wrapper">
+                                    <input type="checkbox" name="remember" class="sf-checkbox" id="studentRemember">
+                                    <span class="sf-checkbox-label" data-key="form.remember">Ingat saya</span>
+                                </label>
+                                <a href="javascript:void(0)" class="sf-forgot-link" id="studentForgot" data-key="form.forgot">
+                                    Lupa kata laluan?
+                                </a>
+                            </div>
 
-// Handle error messages from server - animate field-specific error messages
-function renderErrorMessages() {
-  const fieldErrors = document.querySelectorAll('.field-error-message');
-  
-  // Animate any field-specific error messages
-  fieldErrors.forEach((errorMsg, index) => {
-    errorMsg.animate([
-      { opacity: 0, transform: 'translateY(-10px)' },
-      { opacity: 1, transform: 'translateY(0)' }
-    ], {
-      duration: 400,
-      delay: index * 100,
-      easing: 'ease-out',
-      fill: 'forwards'
-    });
-  });
-}
+                            <button type="submit" class="sf-submit-btn student-btn" id="studentSubmit">
+                                <span class="btn-text" data-key="form.submit.student">Log Masuk sebagai Pelajar</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
 
-// Handle form errors and show correct tab
-function handleFormErrors() {
-  // Check if there are validation errors
-  const hasErrors = document.querySelector('.field-error-message');
-  
-  if (hasErrors) {
-    // Get the old login_type from Laravel's old() helper
-    const oldLoginType = '{{ old("login_type") }}';
-    
-    if (oldLoginType === 'student') {
-      // Switch to student tab
-      const studentTab = document.getElementById('studentTab');
-      const userTab = document.getElementById('userTab');
-      const tabSlider = document.getElementById('tabSlider');
-      const userContent = document.getElementById('userContent');
-      const studentContent = document.getElementById('studentContent');
-      
-      // Update tab appearance
-      tabSlider.classList.add('right');
-      studentTab.classList.add('active');
-      userTab.classList.remove('active');
-      
-      // Switch content
-      userContent.classList.remove('active');
-      studentContent.classList.add('active');
-      
-      // Update hidden input value for future submissions
-      const hiddenInput = document.querySelector('input[name="login_type"]');
-      if (hiddenInput) {
-        hiddenInput.value = 'student';
-      }
-    }
-    
-    // Add error animation to field error messages
-    document.querySelectorAll('.field-error-message').forEach(errorMsg => {
-      errorMsg.animate([
-        { opacity: 0, transform: 'translateY(-10px)' },
-        { opacity: 1, transform: 'translateY(0)' }
-      ], {
-        duration: 400,
-        easing: 'ease-out'
-      });
-    });
-  }
-}
+                    <!-- Divider -->
+                    <div class="login-divider">
+                        <div class="login-divider-line"></div>
+                        <span class="login-divider-text" data-key="divider.or">atau</span>
+                        <div class="login-divider-line"></div>
+                    </div>
 
-// Add CSS animation rule for ripple effect
-if (!document.getElementById('rippleStyle')) {
-  const style = document.createElement('style');
-  style.id = 'rippleStyle';
-  style.textContent = `
-    @keyframes ripple {
-      to {
-        transform: scale(2);
-        opacity: 0;
-      }
-    }
-    
-    @keyframes shooting {
-      from {
-        transform: translateY(0) translateX(0) rotate(35deg);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(100vh) translateX(100vw) rotate(35deg);
-        opacity: 0;
-      }
-    }
-    
-    @keyframes gradient-shift {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
-  </script>
+                    <!-- Register Prompt -->
+                    <div class="register-prompt">
+                        <p data-key="register.prompt">Belum ada akaun?</p>
+                        <a href="{{ route('register.choice') }}" class="sf-register-link">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-key="register.button">Daftar Sekarang</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <div class="login-footer-emojis">📚 ✨ 🎓</div>
+            <p class="login-footer-text" data-key="footer.text">Belajar dengan seronok!</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Language translations
+        let currentLanguage = 'ms';
+        
+        const translations = {
+            ms: {
+                'hero.greeting': 'Selamat Kembali!',
+                'hero.title': '👋 Log Masuk ke eTuition',
+                'hero.subtitle': 'Teruskan perjalanan pembelajaran anda bersama kami!',
+                'partnership.label': 'Program PIBKS & Kolej UNITI',
+                'tab.teacher': 'Guru',
+                'tab.student': 'Pelajar',
+                'teacher.welcome.title': 'Selamat Datang, Cikgu! 📖',
+                'teacher.welcome.subtitle': 'Log masuk untuk mengurus kelas anda',
+                'student.welcome.title': 'Hai, Pelajar! 🎒',
+                'student.welcome.subtitle': 'Log masuk untuk teruskan belajar',
+                'form.email': 'E-mel',
+                'form.password': 'Kata Laluan',
+                'form.remember': 'Ingat saya',
+                'form.forgot': 'Lupa kata laluan?',
+                'form.submit.teacher': 'Log Masuk sebagai Guru',
+                'form.submit.student': 'Log Masuk sebagai Pelajar',
+                'divider.or': 'atau',
+                'register.prompt': 'Belum ada akaun?',
+                'register.button': 'Daftar Sekarang',
+                'footer.text': 'Belajar dengan seronok!'
+            },
+            en: {
+                'hero.greeting': 'Welcome Back!',
+                'hero.title': '👋 Sign In to eTuition',
+                'hero.subtitle': 'Continue your learning journey with us!',
+                'partnership.label': 'PIBKS & UNITI College Program',
+                'tab.teacher': 'Teacher',
+                'tab.student': 'Student',
+                'teacher.welcome.title': 'Welcome, Teacher! 📖',
+                'teacher.welcome.subtitle': 'Sign in to manage your classes',
+                'student.welcome.title': 'Hi, Student! 🎒',
+                'student.welcome.subtitle': 'Sign in to continue learning',
+                'form.email': 'Email',
+                'form.password': 'Password',
+                'form.remember': 'Remember me',
+                'form.forgot': 'Forgot password?',
+                'form.submit.teacher': 'Sign In as Teacher',
+                'form.submit.student': 'Sign In as Student',
+                'divider.or': 'or',
+                'register.prompt': "Don't have an account?",
+                'register.button': 'Register Now',
+                'footer.text': 'Learn with fun!'
+            }
+        };
+
+        // Language switching
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            document.querySelectorAll('.sf-language-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.lang === lang) {
+                    option.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.dataset.key;
+                if (translations[lang] && translations[lang][key]) {
+                    if (key === 'hero.title') {
+                        if (lang === 'ms') {
+                            element.innerHTML = '<span class="sf-wave">👋</span> Log Masuk ke <span class="sf-highlight">eTuition</span>';
+                        } else {
+                            element.innerHTML = '<span class="sf-wave">👋</span> Sign In to <span class="sf-highlight">eTuition</span>';
+                        }
+                    } else if (key === 'form.email') {
+                        element.innerHTML = `<i class="fas fa-envelope"></i> ${translations[lang][key]}`;
+                    } else if (key === 'form.password') {
+                        element.innerHTML = `<i class="fas fa-lock"></i> ${translations[lang][key]}`;
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            const teacherTab = document.getElementById('teacherTab');
+            const studentTab = document.getElementById('studentTab');
+            const teacherContent = document.getElementById('teacherContent');
+            const studentContent = document.getElementById('studentContent');
+
+            if (tabName === 'teacher') {
+                teacherTab.classList.add('active');
+                studentTab.classList.remove('active');
+                teacherContent.classList.add('active');
+                studentContent.classList.remove('active');
+            } else {
+                studentTab.classList.add('active');
+                teacherTab.classList.remove('active');
+                studentContent.classList.add('active');
+                teacherContent.classList.remove('active');
+            }
+        }
+
+        // Toggle password visibility
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            
+            if (toggle && input) {
+                toggle.addEventListener('click', () => {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    toggle.classList.toggle('fa-eye');
+                    toggle.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+
+        // Form submission with loading state
+        function setupFormSubmission(formId, buttonId) {
+            const form = document.getElementById(formId);
+            const button = document.getElementById(buttonId);
+            
+            if (form && button) {
+                form.addEventListener('submit', function(e) {
+                    if (!this.checkValidity()) {
+                        e.preventDefault();
+                        this.reportValidity();
+                        return;
+                    }
+                    
+                    button.disabled = true;
+                    const btnText = button.querySelector('.btn-text');
+                    const originalText = btnText.textContent;
+                    btnText.innerHTML = '<span class="sf-spinner"></span> ' + (currentLanguage === 'ms' ? 'Sedang log masuk...' : 'Signing in...');
+                    button.querySelector('i.fa-arrow-right')?.remove();
+                });
+            }
+        }
+
+        // Remember me functionality
+        function setupRememberMe() {
+            const teacherRemember = document.getElementById('teacherRemember');
+            const studentRemember = document.getElementById('studentRemember');
+            const teacherEmail = document.getElementById('teacherEmail');
+            const studentEmail = document.getElementById('studentEmail');
+
+            // Restore saved state
+            if (localStorage.getItem('remember_teacher') === 'true') {
+                teacherRemember.checked = true;
+                const savedEmail = localStorage.getItem('teacher_email');
+                if (savedEmail && !teacherEmail.value) {
+                    teacherEmail.value = savedEmail;
+                }
+            }
+
+            if (localStorage.getItem('remember_student') === 'true') {
+                studentRemember.checked = true;
+                const savedEmail = localStorage.getItem('student_email');
+                if (savedEmail && !studentEmail.value) {
+                    studentEmail.value = savedEmail;
+                }
+            }
+
+            // Save on change
+            teacherRemember?.addEventListener('change', function() {
+                localStorage.setItem('remember_teacher', this.checked);
+                if (!this.checked) localStorage.removeItem('teacher_email');
+            });
+
+            studentRemember?.addEventListener('change', function() {
+                localStorage.setItem('remember_student', this.checked);
+                if (!this.checked) localStorage.removeItem('student_email');
+            });
+
+            // Save email on input
+            teacherEmail?.addEventListener('input', function() {
+                if (teacherRemember.checked) {
+                    localStorage.setItem('teacher_email', this.value);
+                }
+            });
+
+            studentEmail?.addEventListener('input', function() {
+                if (studentRemember.checked) {
+                    localStorage.setItem('student_email', this.value);
+                }
+            });
+
+            // Save on form submit
+            document.getElementById('teacherForm')?.addEventListener('submit', function() {
+                if (teacherRemember.checked && teacherEmail.value) {
+                    localStorage.setItem('teacher_email', teacherEmail.value);
+                }
+            });
+
+            document.getElementById('studentForm')?.addEventListener('submit', function() {
+                if (studentRemember.checked && studentEmail.value) {
+                    localStorage.setItem('student_email', studentEmail.value);
+                }
+            });
+        }
+
+        // Forgot password handler
+        function setupForgotPassword() {
+            document.querySelectorAll('.sf-forgot-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = this.closest('.tab-content').querySelector('form');
+                    const email = form.querySelector('input[type="email"]').value;
+                    
+                    if (email) {
+                        showNotification(currentLanguage === 'ms' 
+                            ? 'Pautan reset kata laluan telah dihantar ke e-mel anda' 
+                            : 'Password reset link has been sent to your email', 'success');
+                    } else {
+                        showNotification(currentLanguage === 'ms' 
+                            ? 'Sila masukkan alamat e-mel anda dahulu' 
+                            : 'Please enter your email address first', 'info');
+                    }
+                });
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            let notification = document.getElementById('sf-notification');
+            
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'sf-notification';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    font-family: 'Nunito', sans-serif;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                    z-index: 9999;
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    max-width: 320px;
+                `;
+                document.body.appendChild(notification);
+            }
+            
+            const colors = {
+                info: { bg: '#e8f4fc', color: '#3d8bd4', icon: 'fa-info-circle' },
+                success: { bg: '#a7e8c8', color: '#2d7a5e', icon: 'fa-check-circle' },
+                error: { bg: '#fde8e8', color: '#c53030', icon: 'fa-exclamation-circle' }
+            };
+            
+            const style = colors[type] || colors.info;
+            notification.style.background = style.bg;
+            notification.style.color = style.color;
+            notification.innerHTML = `<i class="fas ${style.icon}"></i> ${message}`;
+            
+            // Show
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Hide after 4 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+            }, 4000);
+        }
+
+        // Handle form errors - show correct tab
+        function handleFormErrors() {
+            const hasErrors = document.querySelector('.sf-field-error');
+            if (hasErrors) {
+                const oldLoginType = '{{ old("login_type") }}';
+                if (oldLoginType === 'student') {
+                    switchTab('student');
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language switcher
+            document.querySelectorAll('.sf-language-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    switchLanguage(option.dataset.lang);
+                });
+            });
+            switchLanguage('ms');
+            
+            // Tab switcher
+            document.getElementById('teacherTab')?.addEventListener('click', () => switchTab('teacher'));
+            document.getElementById('studentTab')?.addEventListener('click', () => switchTab('student'));
+            
+            // Password toggles
+            setupPasswordToggle('teacherToggle', 'teacherPassword');
+            setupPasswordToggle('studentToggle', 'studentPassword');
+            
+            // Form submissions
+            setupFormSubmission('teacherForm', 'teacherSubmit');
+            setupFormSubmission('studentForm', 'studentSubmit');
+            
+            // Remember me
+            setupRememberMe();
+            
+            // Forgot password
+            setupForgotPassword();
+            
+            // Handle errors
+            handleFormErrors();
+        });
+    </script>
 </body>
 </html>
