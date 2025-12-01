@@ -52,17 +52,19 @@
         }
 
         .sf-auth-logo {
-            width: 80px;
-            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
             margin: 0 auto 1.25rem;
             animation: sf-bounce-gentle 3s ease-in-out infinite;
         }
 
         .sf-auth-logo img {
-            width: 100%;
-            height: 100%;
+            height: 55px;
+            width: auto;
             object-fit: contain;
-            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
         }
 
         .sf-auth-title {
@@ -223,6 +225,7 @@
         <div class="sf-auth-card">
             <div class="sf-auth-header">
                 <div class="sf-auth-logo">
+                    <img src="{{ asset('assets/images/logo/pkibs.png') }}" alt="PIBKS Logo">
                     <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo">
                 </div>
                 <h1 class="sf-auth-title">Pengesahan Guru Penyelaras 🔐</h1>

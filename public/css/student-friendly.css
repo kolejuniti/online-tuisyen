@@ -207,6 +207,11 @@ body.sf-body {
     50% { transform: rotate(-5deg) translateY(-8px); }
 }
 
+@keyframes sf-bounce-vertical {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
 .sf-hero-greeting {
     font-size: 0.9rem;
     font-weight: 700;

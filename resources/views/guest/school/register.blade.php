@@ -599,8 +599,9 @@
 
         <div class="container">
             <div class="sf-hero-content">
-                <div style="width: 90px; height: 90px; margin: 0 auto 1.5rem; animation: sf-bounce-gentle 3s ease-in-out infinite;">
-                    <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));">
+                <div class="sf-logo-row" style="display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin: 0 auto 1.5rem; animation: sf-bounce-vertical 3s ease-in-out infinite;">
+                    <img src="{{ asset('assets/images/logo/pkibs.png') }}" alt="PIBKS Logo" style="height: 60px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));">
+                    <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" style="height: 60px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));">
                 </div>
                 <p class="sf-hero-greeting" data-key="hero.greeting">Pendaftaran Sekolah</p>
                 <h1 class="sf-hero-title" data-key="hero.title">

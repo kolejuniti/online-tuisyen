@@ -167,8 +167,9 @@
                     <span data-key="back">Kembali</span>
                 </a>
                 
-                <div class="sf-fade-in sf-fade-in-delay-1" style="width: 90px; height: 90px; margin: 0 auto 1rem; animation: sf-bounce-gentle 3s ease-in-out infinite;">
-                    <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));">
+                <div class="sf-fade-in sf-fade-in-delay-1 sf-logo-row" style="display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin: 0 auto 1rem; animation: sf-bounce-vertical 3s ease-in-out infinite;">
+                    <img src="{{ asset('assets/images/logo/pkibs.png') }}" alt="PIBKS Logo" style="height: 55px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));">
+                    <img src="{{ asset('assets/images/logo/Kolej-UNITI.png') }}" alt="UNITI Logo" style="height: 55px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));">
                 </div>
                 <h1 class="sf-hero-title" data-key="hero.title">
                     <span class="sf-wave">✏️</span> Daftar sebagai <span class="sf-highlight">Pelajar</span>
