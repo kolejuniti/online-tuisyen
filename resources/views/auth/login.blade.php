@@ -84,7 +84,7 @@
         }
 
         .logo-img {
-            height: 40px;
+            height: 70px;
             width: auto;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
@@ -570,7 +570,7 @@
             }
 
             .logo-img {
-                height: 35px;
+                height: 46px;
             }
 
             .login-form-wrapper {
@@ -611,7 +611,7 @@
             }
 
             .logo-img {
-                height: 30px;
+                height: 40px;
             }
 
             .logo-separator {
